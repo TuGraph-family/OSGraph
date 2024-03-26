@@ -1,12 +1,12 @@
 class BrowserStore {
-  set(key: string, value: unknown) {
-    localStorage.setItem(key, JSON.stringify(value));
+  set(key: string, value: string) {
+    localStorage.setItem(key, value);
   }
   get(key: string) {
     try {
-      return JSON.parse(localStorage.getItem(key) || "{}");
-    } catch (e) {
       return localStorage.getItem(key);
+    } catch (e) {
+      console.warn(e);
     }
   }
 }
