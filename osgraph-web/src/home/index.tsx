@@ -6,7 +6,7 @@ export default () => {
   const { t } = useTranslation();
   return (
     <div>
-      <a href="/graph">graph</a>
+      <a href="/result">graph</a>
       <h1
         css={css`
           font-size: 48px;

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../home";
-import Graph from "../graph";
+import Result from "../result";
+import Share from "../share";
 import NotFound from "../404";
 
 const router = createBrowserRouter([
@@ -9,8 +10,12 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/graph",
-    element: <Graph />,
+    path: "/result",
+    element: <Result />,
+  },
+  {
+    path: "/share",
+    element: <Share />,
   },
   {
     path: "*",
