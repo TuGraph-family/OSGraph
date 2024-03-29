@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>folder-filled</title>
+    <g id="设计稿" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-交互说明" transform="translate(-671.000000, -5421.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="编组-16" transform="translate(40.000000, 4907.000000)">
+                <g id="编组-236" transform="translate(40.000000, 352.000000)">
+                    <g id="编组-235" transform="translate(0.000000, 30.000000)">
+                        <g id="编组-233" transform="translate(583.000000, 124.000000)">
+                            <g id="folder-filled" transform="translate(8.000000, 8.000000)">
+                                <rect id="矩形" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                                <path d="M13.75,4.6625 L8.140625,4.6625 L6.3078125,2.909375 C6.284375,2.8875 6.253125,2.875 6.221875,2.875 L2.25,2.875 C1.9734375,2.875 1.75,3.0984375 1.75,3.375 L1.75,12.625 C1.75,12.9015625 1.9734375,13.125 2.25,13.125 L13.75,13.125 C14.0265625,13.125 14.25,12.9015625 14.25,12.625 L14.25,5.1625 C14.25,4.8859375 14.0265625,4.6625 13.75,4.6625 Z" id="路径"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
