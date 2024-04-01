@@ -1,0 +1,149 @@
+.home {
+  width: 100%;
+  height: 5394px;
+  color: #fff;
+  position: relative;
+  background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*HEGUT6CmGUwAAAAAAAAAAAAADu3UAQ/original");
+  .home-header {
+    height: 900px;
+    width: 100%;
+    position: relative;
+    .header-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .open-source {
+      position: absolute;
+      left: 160px;
+      top: 220px;
+      z-index: 1;
+      width: 661px;
+      height: 448px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .title {
+      width: 661px;
+      height: 219px;
+    }
+  }
+  .tuGraph-project {
+    width: 100%;
+    height: 600px;
+    margin-top: 80px;
+    .project-body {
+      padding: 0 169px;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      .title-left,
+      .title-right {
+        width: 400px;
+        height: 120px;
+        margin-top: 240px;
+        .project-info {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          height: 48px;
+          .info-video {
+            height: 48px;
+            width: 48px;
+          }
+          .info-title {
+            font-size: 40px;
+            font-weight: 500px;
+            margin-left: 18px;
+          }
+        }
+        .project-parse {
+          font-size: 16px;
+          opacity: 0.65;
+        }
+      }
+      .tuGraphImg-right {
+        width: 600px;
+        height: 600px;
+        margin-left: 71px;
+      }
+      .tuGraphImg-left {
+        width: 600px;
+        height: 600px;
+      }
+    }
+  }
+
+  .tuGraph-icon {
+    display: flex;
+    flex-direction: row;
+
+    .tuGraph-website {
+      width: 24px;
+      height: 22px;
+      border-radius: 50%;
+    }
+    .tuGraph-website:hover {
+      animation: pulse 5s infinite;
+    }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 8px 6px #fff;
+      }
+      50% {
+        box-shadow: 0 0 8px 6px #fff;
+      }
+      100% {
+        box-shadow: 0 0 8px 6px #fff;
+      }
+    }
+    .tuGraph-img {
+      width: 110px;
+      height: 22px;
+    }
+  }
+
+  .home-bottom {
+    width: 100%;
+    height: 245px;
+    position: absolute;
+    bottom: 0;
+    background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*vTtiR4wwqAYAAAAAAAAAAAAADu3UAQ/original");
+    background-size: 100% 340px;
+    display: flex;
+    justify-content: center;
+    .bottom-img {
+      width: 536px;
+      height: 40px;
+      display: flex;
+      position: absolute;
+      bottom: 32px;
+      justify-content: space-between;
+      align-items: center;
+      .tuGraph-url {
+        width: 112px;
+        height: 24px;
+      }
+      .gitHub-url {
+        width: 96px;
+        height: 28px;
+      }
+      .antv-url {
+        width: 76px;
+        height: 28px;
+      }
+    }
+    .bottom-link {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+}
