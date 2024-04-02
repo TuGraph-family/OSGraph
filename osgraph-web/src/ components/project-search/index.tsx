@@ -1,13 +1,13 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { Select, ConfigProvider, theme } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import {
-  getExecuteQueryTemplate,
-  getExecuteFullTextQuery,
-  getListQueryTemplate,
-} from "../../services/homePage";
+import { ConfigProvider, Select, theme } from "antd";
 import { debounce, isEmpty } from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  getExecuteFullTextQuery,
+  getExecuteQueryTemplate,
+  getListQueryTemplate
+} from "../../services/homePage";
 import styles from "./index.module.less";
 
 export const ProjectSearch: React.FC<{
@@ -16,26 +16,26 @@ export const ProjectSearch: React.FC<{
   defaultStyle?: boolean;
 }> = ({ needFixed, debounceTimeout = 800, defaultStyle }) => {
   const navigate = useNavigate();
-  const [queryList, setQueryList] = useState<object>([]);
+  const [queryList, setQueryList] = useState<any[]>([]);
   const [state, setState] = useState<{
     querySource: string;
     templateParameterList: object;
-    textQuery: object;
-    warehouseValue: string;
+    textQuery: any[];
+    warehouseValue: string | null;
     templateId: string;
   }>({
     querySource: "github_repo",
     templateParameterList: [],
     textQuery: [],
     warehouseValue: null,
-    templateId: "",
+    templateId: ""
   });
   const {
     querySource,
     templateParameterList,
     textQuery,
     warehouseValue,
-    templateId,
+    templateId
   } = state;
 
   const styleObj: React.CSSProperties = {
@@ -45,7 +45,7 @@ export const ProjectSearch: React.FC<{
     height: defaultStyle ? 32 : 56,
     marginLeft: defaultStyle ? 16 : 0,
     border: defaultStyle ? "1px solid #f2f2f2" : "1px solid #ffffff",
-    background: defaultStyle ? "#ffffff" : "",
+    background: defaultStyle ? "#ffffff" : ""
   };
 
   useEffect(() => {
@@ -76,20 +76,20 @@ export const ProjectSearch: React.FC<{
         return {
           parameterName: switchName(parameterName),
           parameterValue: !parameterValue ? value : parameterValue,
-          valueType: valueType,
+          valueType: valueType
         };
       }
     );
   };
-
-  const handleProjectChange = (value: string, item: any) => {
+  // @ts-ignore
+  const handleProjectChange = (value: any, item: any) => {
     setState({
       ...state,
       querySource: item.data.querySource,
       templateParameterList: item.data.templateParameterList,
       templateId: item.data.id,
       warehouseValue: null,
-      textQuery: [],
+      textQuery: []
     });
   };
 
@@ -99,7 +99,7 @@ export const ProjectSearch: React.FC<{
         (res) => {
           setState({
             ...state,
-            textQuery: res,
+            textQuery: res
           });
         }
       );
@@ -110,7 +110,7 @@ export const ProjectSearch: React.FC<{
   const handelWarehouseChange = (value: string) => {
     setState({
       ...state,
-      warehouseValue: value,
+      warehouseValue: value
     });
 
     const filterList = queryList?.filter(
@@ -125,7 +125,7 @@ export const ProjectSearch: React.FC<{
           ? filterList[0]?.templateParameterList
           : templateParameterList,
         value
-      ),
+      )
     }).then((res) => {
       if (res?.success) {
         navigate("/result", { state: res.data });
@@ -137,9 +137,7 @@ export const ProjectSearch: React.FC<{
     <div className={styles["project-search"]} style={styleObj}>
       <ConfigProvider
         theme={{
-          algorithm: defaultStyle
-            ? theme.defaultAlgorithm
-            : theme.darkAlgorithm,
+          algorithm: defaultStyle ? theme.defaultAlgorithm : theme.darkAlgorithm
         }}
       >
         <Select
