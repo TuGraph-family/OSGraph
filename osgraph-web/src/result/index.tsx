@@ -5,7 +5,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { OSGraph } from "../controller";
 import { GraphView } from "../components";
+import { ProjectSearch } from "../ components/project-search";
 import { GRAPH_STYLE } from "./style";
+import { useLocation } from "react-router-dom";
 
 const MOCKDAT = {
   nodes: [
@@ -478,6 +480,8 @@ const MOCKDAT = {
 };
 
 export default () => {
+  const location = useLocation();
+  const graphData = location.state;
   const { t } = useTranslation();
   const [open, setIsOpen] = React.useState(false);
   const [shareLink, setShareLink] = React.useState("");
@@ -515,9 +519,9 @@ export default () => {
     <OSGraph>
       <div className="graph-container" css={GRAPH_STYLE}>
         <div className="header">
-          <div>
+          <div className="sel">
             <a href="/">{t`back`}</a>
-            <select name="" id=""></select>
+            <ProjectSearch needFixed={false} defaultStyle={true} />
           </div>
           <div className="control">
             <button onClick={share}>{t`share`}</button>
@@ -526,7 +530,7 @@ export default () => {
         </div>
         <div className="graph">
           <GraphView
-            data={MOCKDAT}
+            data={graphData || MOCKDAT}
             onReady={(graph) => (graphRef.current = graph)}
           />
         </div>
