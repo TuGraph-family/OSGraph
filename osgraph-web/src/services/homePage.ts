@@ -49,8 +49,5 @@ export const getExecuteQueryTemplate = async (params: {
     }
   );
 
-  if (!response?.success) {
-    return [];
-  }
   return response;
 };
