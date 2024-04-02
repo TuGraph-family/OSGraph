@@ -1,12 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { useTranslation } from "react-i18next";
-import styles from "./index.module.less";
+import { useEffect, useState } from "react";
 import { ProjectSearch } from "../ components/project-search";
-import { getListQueryTemplate } from "../services/homePage";
-import React, { useEffect, useState } from "react";
+import styles from "./index.module.less";
 
 export default () => {
-  const { t } = useTranslation();
   const [needFixed, setNeedFixed] = useState<boolean>(false);
   useEffect(() => {
     window.onscroll = function () {
