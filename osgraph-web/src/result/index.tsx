@@ -5,9 +5,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { OSGraph } from "../controller";
 import { GraphView } from "../components";
-import { ProjectSearch } from "../ components/project-search";
+import { ProjectSearch } from "../components";
 import { GRAPH_STYLE } from "./style";
 import { useLocation } from "react-router-dom";
+import { isEmpty } from "lodash";
 
 const MOCKDAT = {
   nodes: [
@@ -481,7 +482,7 @@ const MOCKDAT = {
 
 export default () => {
   const location = useLocation();
-  const graphData = location.state;
+  const [graphData, setGraphData] = React.useState(location.state);
   const { t } = useTranslation();
   const [open, setIsOpen] = React.useState(false);
   const [shareLink, setShareLink] = React.useState("");
@@ -521,7 +522,15 @@ export default () => {
         <div className="header">
           <div className="sel">
             <a href="/">{t`back`}</a>
-            <ProjectSearch needFixed={false} defaultStyle={true} />
+            <ProjectSearch
+              needFixed={false}
+              defaultStyle={true}
+              onSearch={(searchData) => {
+                if (!isEmpty(searchData)) {
+                  setGraphData(searchData);
+                }
+              }}
+            />
           </div>
           <div className="control">
             <button onClick={share}>{t`share`}</button>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Select, ConfigProvider, theme } from "antd";
+import { Select, ConfigProvider, theme, message } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import {
   getExecuteQueryTemplate,
@@ -14,14 +14,15 @@ export const ProjectSearch: React.FC<{
   needFixed: boolean;
   debounceTimeout?: number;
   defaultStyle?: boolean;
-}> = ({ needFixed, debounceTimeout = 800, defaultStyle }) => {
+  onSearch?: (searchData: any) => void;
+}> = ({ needFixed, debounceTimeout = 800, defaultStyle, onSearch }) => {
   const navigate = useNavigate();
-  const [queryList, setQueryList] = useState<object>([]);
+  const [queryList, setQueryList] = useState<any[]>([]);
   const [state, setState] = useState<{
     querySource: string;
-    templateParameterList: object;
-    textQuery: object;
-    warehouseValue: string;
+    templateParameterList: any[];
+    textQuery: any[];
+    warehouseValue: string | null;
     templateId: string;
   }>({
     querySource: "github_repo",
@@ -54,14 +55,16 @@ export const ProjectSearch: React.FC<{
     });
   }, []);
 
-  const switchName = (parameterName: string) => {
+  const switchName = (parameterName: string, parameterValue: string) => {
     switch (parameterName) {
       case "start_timestamp":
-        return new Date().setMonth(new Date().getMonth() - 1);
+        return Math.floor(
+          new Date().setMonth(new Date().getMonth() - 1) / 1000
+        );
       case "end_timestamp":
-        return new Date().getTime();
+        return Math.floor(new Date().getTime() / 1000);
       default:
-        return parameterName;
+        return parameterValue;
     }
   };
 
@@ -74,8 +77,8 @@ export const ProjectSearch: React.FC<{
       }) => {
         const { parameterName, parameterValue, valueType } = item;
         return {
-          parameterName: switchName(parameterName),
-          parameterValue: !parameterValue ? value : parameterValue,
+          parameterName: parameterName,
+          parameterValue: switchName(parameterName, parameterValue || value),
           valueType: valueType,
         };
       }
@@ -128,7 +131,13 @@ export const ProjectSearch: React.FC<{
       ),
     }).then((res) => {
       if (res?.success) {
+        if (defaultStyle) {
+          onSearch?.(res.data);
+          return;
+        }
         navigate("/result", { state: res.data });
+      } else {
+        message.error(res.message);
       }
     });
   };
@@ -153,7 +162,7 @@ export const ProjectSearch: React.FC<{
           suffixIcon={<DownOutlined className={styles["project-icon"]} />}
           onChange={handleProjectChange}
         >
-          {queryList?.map((item) => {
+          {queryList.map((item) => {
             return (
               <Select.Option
                 value={item.templateType}
