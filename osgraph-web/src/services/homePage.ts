@@ -1,5 +1,5 @@
 import request from "umi-request";
-const HTTP_SERVICE_URL = `${window.location.protocol}//${window.location.hostname}:9000`;
+import { HTTP_SERVICE_URL } from "../constants/index";
 
 export const getListQueryTemplate = async () => {
   const response = await request(
