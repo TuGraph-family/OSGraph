@@ -1,21 +1,39 @@
-import { DownOutlined } from "@ant-design/icons";
-import { ConfigProvider, Select, message, theme } from "antd";
-import { debounce, isEmpty } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useMemo, useEffect } from "react";
+import { Select, ConfigProvider, theme, message } from "antd";
 import {
-  getExecuteFullTextQuery,
   getExecuteQueryTemplate,
-  getListQueryTemplate
+  getExecuteFullTextQuery,
+  getListQueryTemplate,
 } from "../../services/homePage";
+import { debounce, isEmpty } from "lodash";
+import { useNavigate } from "react-router-dom";
 import styles from "./index.module.less";
 
 export const ProjectSearch: React.FC<{
   needFixed: boolean;
   debounceTimeout?: number;
+  graphWarehouseValue?: string;
+  graphProjectValue?: string;
+  graphQuerySource?: string;
+  graphSearchValue?: string;
+  graphTemplateId?: string;
+  graphParameterList?: any[];
   defaultStyle?: boolean;
   onSearch?: (searchData: any) => void;
-}> = ({ needFixed, debounceTimeout = 800, defaultStyle, onSearch }) => {
+  templateType?: string | any;
+}> = ({
+  needFixed,
+  debounceTimeout = 800,
+  defaultStyle,
+  onSearch,
+  templateType,
+  graphWarehouseValue,
+  graphProjectValue,
+  graphQuerySource,
+  graphSearchValue,
+  graphTemplateId,
+  graphParameterList,
+}) => {
   const navigate = useNavigate();
   const [queryList, setQueryList] = useState<any[]>([]);
   const [state, setState] = useState<{
@@ -24,29 +42,59 @@ export const ProjectSearch: React.FC<{
     textQuery: any[];
     warehouseValue: string | null;
     templateId: string;
+    projectValue: string;
+    placeholderValue: string;
+    searchValue: string;
   }>({
     querySource: "github_repo",
-    templateParameterList: [],
+    templateParameterList: graphParameterList || [],
     textQuery: [],
-    warehouseValue: null,
-    templateId: ""
+    warehouseValue: graphWarehouseValue || null,
+    templateId: graphTemplateId || "1",
+    projectValue: graphProjectValue || "REPO_CONTRIBUTE",
+    placeholderValue: "请输入 GitHub 仓库名称",
+    searchValue: "",
   });
   const {
     querySource,
     templateParameterList,
     textQuery,
     warehouseValue,
-    templateId
+    templateId,
+    projectValue,
+    placeholderValue,
+    searchValue,
   } = state;
 
+  const placeholderName = (
+    value:
+      | "REPO_CONTRIBUTE"
+      | "REPO_ECOLOGY"
+      | "REPO_COMMUNITY"
+      | "ACCT_ACTIVITY"
+      | "ACCT_PARTNER"
+      | "ACCT_INTEREST"
+  ) => {
+    const placeholder = {
+      REPO_CONTRIBUTE: "请输入 GitHub 仓库名称",
+      REPO_ECOLOGY: "请输入 GitHub 仓库名称",
+      REPO_COMMUNITY: "请输入 GitHub 仓库名称",
+      ACCT_ACTIVITY: "请输入 GitHub 账户名称",
+      ACCT_PARTNER: "请输入 GitHub 账户名称",
+      ACCT_INTEREST: "请输入 GitHub 账户名称",
+    };
+    return placeholder[value];
+  };
+
   const styleObj: React.CSSProperties = {
-    width: needFixed ? "calc(100% - 320px)" : defaultStyle ? "320px" : "650px",
+    width: needFixed ? "calc(100% - 320px)" : defaultStyle ? "400px" : "650px",
     position: needFixed ? "fixed" : "relative",
     top: needFixed ? 24 : 0,
     height: defaultStyle ? 32 : 56,
     marginLeft: defaultStyle ? 16 : 0,
     border: defaultStyle ? "1px solid #f2f2f2" : "1px solid #ffffff",
-    background: defaultStyle ? "#ffffff" : ""
+    background: defaultStyle ? "#ffffff" : "",
+    borderRadius: defaultStyle ? "6px" : "12px",
   };
 
   useEffect(() => {
@@ -54,6 +102,22 @@ export const ProjectSearch: React.FC<{
       setQueryList(res);
     });
   }, []);
+
+  useEffect(() => {
+    if (graphQuerySource && graphSearchValue) {
+      getExecuteFullTextQueryList(graphQuerySource, graphSearchValue);
+    }
+  }, [graphQuerySource, graphSearchValue]);
+
+  useEffect(() => {
+    if (templateType) {
+      setState({
+        ...state,
+        projectValue: templateType,
+        placeholderValue: placeholderName(templateType),
+      });
+    }
+  }, [templateType]);
 
   const switchName = (parameterName: string, parameterValue: string) => {
     switch (parameterName) {
@@ -79,33 +143,38 @@ export const ProjectSearch: React.FC<{
         return {
           parameterName: parameterName,
           parameterValue: switchName(parameterName, parameterValue || value),
-          valueType: valueType
+          valueType: valueType,
         };
       }
     );
   };
-  // @ts-ignore
-  const handleProjectChange = (value: any, item: any) => {
+
+  const handleProjectChange = (value: string | any, item: any) => {
     setState({
       ...state,
       querySource: item.data.querySource,
       templateParameterList: item.data.templateParameterList,
       templateId: item.data.id,
       warehouseValue: null,
-      textQuery: []
+      textQuery: [],
+      projectValue: value,
+      placeholderValue: placeholderName(value),
+    });
+  };
+
+  const getExecuteFullTextQueryList = (indexName: string, keyword: string) => {
+    getExecuteFullTextQuery({ indexName, keyword }).then((res) => {
+      setState({
+        ...state,
+        textQuery: res,
+        searchValue: keyword,
+      });
     });
   };
 
   const handelWarehouseSearch = useMemo(() => {
     const loadOptions = (value: string) => {
-      getExecuteFullTextQuery({ indexName: querySource, keyword: value }).then(
-        (res) => {
-          setState({
-            ...state,
-            textQuery: res
-          });
-        }
-      );
+      getExecuteFullTextQueryList(querySource, value);
     };
     return debounce(loadOptions, debounceTimeout);
   }, [textQuery, debounceTimeout, querySource]);
@@ -113,29 +182,50 @@ export const ProjectSearch: React.FC<{
   const handelWarehouseChange = (value: string) => {
     setState({
       ...state,
-      warehouseValue: value
+      warehouseValue: value,
     });
-
     const filterList = queryList?.filter(
       (item: { templateType: string }) =>
         item.templateType === "REPO_CONTRIBUTE"
     );
+    const templateList = handleJson(
+      isEmpty(templateParameterList)
+        ? filterList[0]?.templateParameterList
+        : templateParameterList,
+      value
+    );
+
+    const paramsValue = templateList
+      ?.map((item: { parameterValue: string }) => {
+        return item.parameterValue;
+      })
+      .join(",");
 
     getExecuteQueryTemplate({
       templateId: templateId || filterList[0]?.id,
-      templateParameterList: handleJson(
-        isEmpty(templateParameterList)
-          ? filterList[0]?.templateParameterList
-          : templateParameterList,
-        value
-      )
+      templateParameterList: templateList,
     }).then((res) => {
       if (res?.success) {
         if (defaultStyle) {
-          onSearch?.(res.data);
+          onSearch?.({
+            searchData: res.data,
+            graphTemplateId: templateId,
+            graphParamsValue: paramsValue,
+          });
           return;
         }
-        navigate("/result", { state: res.data });
+        navigate("/result", {
+          state: {
+            data: res.data,
+            warehouseValue: value,
+            projectValue,
+            querySource,
+            searchValue,
+            templateId,
+            paramsValue,
+            templateParameterList,
+          },
+        });
       } else {
         message.error(res.message);
       }
@@ -146,7 +236,9 @@ export const ProjectSearch: React.FC<{
     <div className={styles["project-search"]} style={styleObj}>
       <ConfigProvider
         theme={{
-          algorithm: defaultStyle ? theme.defaultAlgorithm : theme.darkAlgorithm
+          algorithm: defaultStyle
+            ? theme.defaultAlgorithm
+            : theme.darkAlgorithm,
         }}
       >
         <Select
@@ -154,10 +246,24 @@ export const ProjectSearch: React.FC<{
             defaultStyle ? styles["default-project"] : styles["project-sel"]
           }
           popupClassName={defaultStyle ? "" : "project"}
-          defaultValue="项目贡献"
+          value={projectValue}
           placeholder="Borderless"
           variant="borderless"
-          suffixIcon={<DownOutlined className={styles["project-icon"]} />}
+          suffixIcon={
+            defaultStyle ? (
+              <img
+                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*pwLCT6dY-6cAAAAAAAAAAAAADu3UAQ/original"
+                alt=""
+                className={styles["project-icon"]}
+              />
+            ) : (
+              <img
+                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*EfbWTZEGfiIAAAAAAAAAAAAADu3UAQ/original"
+                alt=""
+                className={styles["project-icon"]}
+              />
+            )
+          }
           onChange={handleProjectChange}
         >
           {queryList.map((item) => {
@@ -179,9 +285,15 @@ export const ProjectSearch: React.FC<{
               : styles["warehouse-name"]
           }
           showSearch
-          popupClassName={defaultStyle ? "" : "warehouse"}
-          dropdownStyle={{ width: needFixed ? "calc(100% - 320px)" : "650px" }}
-          placeholder="请输入 GitHub 仓库名称"
+          popupClassName={defaultStyle ? "graph" : "warehouse"}
+          dropdownStyle={{
+            width: needFixed
+              ? "calc(100% - 320px)"
+              : defaultStyle
+              ? "400px"
+              : "650px",
+          }}
+          placeholder={placeholderValue}
           optionFilterProp="children"
           variant="borderless"
           onSearch={handelWarehouseSearch}

@@ -8,12 +8,13 @@ import Org from "../../assets/org.svg";
 import User from "../../assets/user.svg";
 import Country from "../../assets/country.svg";
 import Project from "../../assets/project.svg";
+import { isEmpty } from "lodash";
 
 const ICON_MAPPING = {
-  org: Org,
-  user: User,
+  organization: Org,
+  github_user: User,
   country: Country,
-  project: Project,
+  github_repo: Project,
 };
 
 interface IProps {
@@ -26,7 +27,7 @@ export const GraphView = React.memo(
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
     const { nodes } = data;
-    const types = uniq(nodes.map((item) => item.nodeType));
+    const types = uniq(nodes?.map((item) => item.nodeType));
 
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
@@ -39,7 +40,7 @@ export const GraphView = React.memo(
         node: {
           style: {
             size: (d) => d.size,
-            labelText: (d) => d.label,
+            labelText: (d) => d?.properties?.name,
             iconHeight: (d) => d.size / 2,
             iconWidth: (d) => d.size / 2,
             iconSrc: (d) => ICON_MAPPING[d.nodeType],
@@ -52,7 +53,7 @@ export const GraphView = React.memo(
         edge: {
           style: {
             type: (item) => item.type || "line",
-            labelText: (d) => d.label,
+            labelText: (d) => `${d?.edgeType}\n${d?.properties?.count || 0}个`,
             endArrow: true,
             labelBackgroundFill: "#fff",
             labelBackground: true,
@@ -85,12 +86,14 @@ export const GraphView = React.memo(
     };
 
     React.useEffect(() => {
-      if (!containerRef.current) return;
-      renderGraph();
-      return () => {
-        if (graphRef.current) graphRef.current.destroy();
-      };
-    }, [containerRef.current]);
+      if (!isEmpty(data.nodes) && !isEmpty(data.edges)) {
+        if (!containerRef.current) return;
+        renderGraph();
+        return () => {
+          if (graphRef.current) graphRef.current.destroy();
+        };
+      }
+    }, [containerRef.current, data]);
 
     return <div ref={containerRef} style={{ height: "100%" }}></div>;
   },
