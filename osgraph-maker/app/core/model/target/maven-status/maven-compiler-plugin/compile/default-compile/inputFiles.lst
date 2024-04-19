@@ -1,0 +1,16 @@
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphproject/GraphProjectVO.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/TemplateParameterRequest.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/FullTextQueryGithubRepoVO.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/SearchRequestOption.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/FullTextQueryVO.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/es/ElasticSearchQuery.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/es/FullTextIndexNameEnum.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/TemplateTypeEnum.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/TuMakerExecuteTemplateRequest.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/TemplateQueryTypeEnum.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/PersonLPageDto.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/ExecuteEngineEnum.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/es/MatchPhrase.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/IndexClientSearchException.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/QueryTemplateVO.java
+/Users/yuanxiaohua/javaCode/tumaker/app/core/model/src/main/java/com/alipay/tumaker/core/model/tumaker/graphquerytemplate/ValueTypeEnum.java

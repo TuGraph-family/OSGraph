@@ -1,0 +1,34 @@
+{
+  "groups": [
+    {
+      "name": "tumaker.agent",
+      "type": "com.alipay.tumaker.spi.core.model.properties.TumakerAgentProperties",
+      "sourceType": "com.alipay.tumaker.spi.core.model.properties.TumakerAgentProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "tumaker.agent.passwd",
+      "type": "java.lang.String",
+      "sourceType": "com.alipay.tumaker.spi.core.model.properties.TumakerAgentProperties"
+    },
+    {
+      "name": "tumaker.agent.ssh-port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.alipay.tumaker.spi.core.model.properties.TumakerAgentProperties",
+      "defaultValue": 22
+    },
+    {
+      "name": "tumaker.agent.type",
+      "type": "java.lang.String",
+      "sourceType": "com.alipay.tumaker.spi.core.model.properties.TumakerAgentProperties"
+    },
+    {
+      "name": "tumaker.agent.user",
+      "type": "java.lang.String",
+      "description": "ssh",
+      "sourceType": "com.alipay.tumaker.spi.core.model.properties.TumakerAgentProperties"
+    }
+  ],
+  "hints": []
+}
