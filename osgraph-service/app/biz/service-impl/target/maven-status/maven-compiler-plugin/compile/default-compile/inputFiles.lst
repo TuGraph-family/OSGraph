@@ -1,6 +1,0 @@
-/Users/yuanxiaohua/javaCode/tumaker/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/TuMakerAnalysisManagerImpl.java
-/Users/yuanxiaohua/javaCode/tumaker/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/ElasticSearchClientManagerImpl.java
-/Users/yuanxiaohua/javaCode/tumaker/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/app/ApplicationTestManagerImpl.java
-/Users/yuanxiaohua/javaCode/tumaker/app/biz/service-impl/src/main/java/com/alipay/tumaker/core/service/graphanalysis/TuMakerTemplateManagerImpl.java
-/Users/yuanxiaohua/javaCode/tumaker/app/biz/service-impl/src/main/java/com/alipay/tumaker/core/service/querytemplate/TuMakerQueryTemplateDataManagerImpl.java
-/Users/yuanxiaohua/javaCode/tumaker/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/util/CovertUtils.java
