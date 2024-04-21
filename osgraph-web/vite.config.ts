@@ -29,7 +29,10 @@ export default defineConfig({
           return "static/[ext]/name1-[hash].[ext]";
         }
       }
-    }
-    // assetsInlineLimit: 1
+    },
+    assetsInlineLimit: 1
+  },
+  server: {
+    host: "0.0.0.0"
   }
 });

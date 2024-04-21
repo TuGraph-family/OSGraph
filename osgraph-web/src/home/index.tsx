@@ -1,12 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import styles from "./index.module.less";
-import { ProjectSearch } from "../components";
 import { useEffect, useState } from "react";
+import { ProjectSearch } from "../components";
+import { getIsMobile } from "../utils/isMobile";
+import styles from "./index.module.less";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);
   const [templateType, setTemplateType] = useState<string>("REPO_CONTRIBUTE");
+  const isMobile = getIsMobile();
 
   const switchType = (value: number) => {
     if (value >= 980 && value <= 1580) {
@@ -42,6 +44,18 @@ export default () => {
         setNeedFixed(false);
       }
     };
+    const video = document.getElementById("video") as HTMLVideoElement;
+    if (video) {
+      video.src =
+        "https://mass-office.alipay.com/huamei_koqzbu/afts/file/FqCfRa9wOpwAAAAAAAAAABAADnV5AQBr";
+      video.addEventListener("play", () => {
+        video.style.visibility = "visible";
+      });
+    }
+    const firstPage = document.getElementById("firstPage");
+    if (firstPage && isMobile) {
+      firstPage.style.height = "40vh";
+    }
   }, []);
 
   return (
@@ -51,13 +65,14 @@ export default () => {
         src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*YzqCQbdW7nUAAAAAAAAAAAAADu3UAQ/original"
         alt=""
       />
-      <div className={styles["home-header"]}>
+      <div className={styles["home-header"]} id="firstPage">
         <video
-          src="https://mass-office.alipay.com/huamei_koqzbu/afts/file/FqCfRa9wOpwAAAAAAAAAABAADnV5AQBr"
           autoPlay
           loop
           muted
           className={styles["header-img"]}
+          id="video"
+          style={{ visibility: "hidden" }}
         ></video>
         <div className={styles["open-source"]}>
           <img

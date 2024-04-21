@@ -5,7 +5,7 @@ export const getListQueryTemplate = async () => {
   const response = await request(
     `${HTTP_SERVICE_URL}/tumaker/api/template/listQueryTemplate`,
     {
-      method: "get",
+      method: "get"
     }
   );
 
@@ -23,7 +23,7 @@ export const getExecuteFullTextQuery = async (params: {
     `${HTTP_SERVICE_URL}/tumaker/api/template/executeFullTextQuery`,
     {
       method: "post",
-      params: params,
+      params: params
     }
   );
 
@@ -45,7 +45,7 @@ export const getExecuteQueryTemplate = async (params: {
     `${HTTP_SERVICE_URL}/tumaker/api/template/executeQueryTemplate`,
     {
       method: "post",
-      data: params,
+      data: params
     }
   );
 

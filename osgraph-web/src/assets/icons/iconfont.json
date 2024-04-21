@@ -1,0 +1,79 @@
+{
+  "id": "4508010",
+  "name": "OSGraph",
+  "font_family": "os-iconfont",
+  "css_prefix_text": "os-icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "40007382",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "39995131",
+      "name": "USE_1",
+      "font_class": "USE_1",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "39995130",
+      "name": "USE_2",
+      "font_class": "USE_2",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "39995129",
+      "name": "USE_4",
+      "font_class": "USE_4",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "39995128",
+      "name": "USE_3",
+      "font_class": "USE_3",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "39944209",
+      "name": "company",
+      "font_class": "company",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "39944208",
+      "name": "github_organization",
+      "font_class": "github_organization",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "39944207",
+      "name": "country",
+      "font_class": "country",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "39944206",
+      "name": "topic",
+      "font_class": "topic",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "39944205",
+      "name": "github_repo",
+      "font_class": "github_repo",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    }
+  ]
+}
