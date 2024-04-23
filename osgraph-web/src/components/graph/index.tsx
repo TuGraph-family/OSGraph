@@ -71,7 +71,7 @@ export const GraphView = React.memo(
         },
         layout: {
           type: "force",
-          linkDistance: 260
+          linkDistance: 240
         },
         behaviors: [
           { type: "zoom-canvas", sensitivity: 0.1 },

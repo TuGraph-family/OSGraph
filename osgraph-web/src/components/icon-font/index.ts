@@ -6,7 +6,7 @@ export const fontFamily = "os-iconfont";
 const icons = fonts.glyphs.map((icon) => {
   return {
     name: icon.name,
-    unicode: String.fromCodePoint(icon.unicode_decimal) // `\\u${icon.unicode}`,
+    unicode: String.fromCodePoint(icon.unicode_decimal)
   };
 });
 export const iconLoader = (type: string) => {
