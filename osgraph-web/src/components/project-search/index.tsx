@@ -45,7 +45,7 @@ export const ProjectSearch: React.FC<{
     querySource: string;
     templateParameterList: any[];
     textQuery: any[];
-    warehouseValue?: string;
+    warehouseValue: string | null;
     templateId: string;
     projectValue?: string;
     placeholderValue: string;
@@ -55,6 +55,7 @@ export const ProjectSearch: React.FC<{
     querySource: "github_repo",
     templateParameterList: graphParameterList || [],
     textQuery: [],
+    warehouseValue: graphWarehouseValue || null,
     templateId: graphTemplateId || "1",
     projectValue: graphProjectValue || "REPO_CONTRIBUTE",
     placeholderValue: "请输入 GitHub 仓库名称",
@@ -217,7 +218,7 @@ export const ProjectSearch: React.FC<{
   }, [graphProjectValue]);
   useEffect(() => {
     setState((draft) => {
-      draft.warehouseValue = graphWarehouseValue || undefined;
+      draft.warehouseValue = graphWarehouseValue || null;
     });
   }, [graphWarehouseValue]);
 
