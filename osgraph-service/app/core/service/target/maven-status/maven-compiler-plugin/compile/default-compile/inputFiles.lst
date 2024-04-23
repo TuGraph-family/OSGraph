@@ -1,6 +1,0 @@
-/javaCode/OSGraph/osgraph-service/app/core/service/src/main/java/com/alipay/tumaker/core/service/querytemplate/TuMakerQueryTemplateDataManager.java
-/javaCode/OSGraph/osgraph-service/app/core/service/src/main/java/com/alipay/tumaker/core/service/app/ApplicationTestManager.java
-/javaCode/OSGraph/osgraph-service/app/core/service/src/main/java/com/alipay/tumaker/core/service/graphanalysis/ElasticSearchClientManager.java
-/javaCode/OSGraph/osgraph-service/app/core/service/src/main/java/com/alipay/tumaker/core/service/common/PlatformConfigManager.java
-/javaCode/OSGraph/osgraph-service/app/core/service/src/main/java/com/alipay/tumaker/core/service/graphanalysis/TuMakerTemplateManager.java
-/javaCode/OSGraph/osgraph-service/app/core/service/src/main/java/com/alipay/tumaker/core/service/graphanalysis/TuMakerAnalysisManager.java
