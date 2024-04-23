@@ -15,11 +15,18 @@ dependencies:
   '@emotion/react':
 =======
     version: 5.3.6(react-dom@18.2.0)(react@18.2.0)
+<<<<<<< HEAD
   "@antv/g6":
     specifier: ^5.0.0-beta.33
     version: 5.0.0-beta.33(workerize-loader@2.0.2)
   "@emotion/react":
 >>>>>>> dc5d26b (chore: add traffic statistics)
+=======
+  '@antv/g6':
+    specifier: ^5.0.0-beta.34
+    version: 5.0.0-beta.34(workerize-loader@2.0.2)
+  '@emotion/react':
+>>>>>>> 4b2a312 (chore: pnpm-lock update)
     specifier: ^11.11.4
     version: 11.11.4(@types/react@18.3.1)(react@18.3.1)
   ahooks:
@@ -565,11 +572,16 @@ packages:
       tslib: 2.6.2
     dev: false
 
+<<<<<<< HEAD
   /@antv/g6@5.0.0-beta.33(workerize-loader@2.0.2):
     resolution:
       {
         integrity: sha512-APw611++23nkifhCo0aFGTqHNd7EypIuwduqOUqH3Bx9q8Q75NaL4/A0OoTip+D/XMofmLo7sfwUqM2gew0ZAQ==
       }
+=======
+  /@antv/g6@5.0.0-beta.34(workerize-loader@2.0.2):
+    resolution: {integrity: sha512-7oFcIvlgUFCW9NjQdWki9Hbv1pKiU1jAQjOT36XJlOsZKMDHPiG+y0lcypKkeA2mO1MdbbgI6olgEgfzvv8GOg==}
+>>>>>>> cdf623c (chore: pnpm-lock update)
     dependencies:
       "@antv/component": 1.0.3
       "@antv/event-emitter": 0.1.3

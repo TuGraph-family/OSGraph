@@ -86,6 +86,7 @@ export default () => {
     }
   }, [shareId, shareParams]);
   useEffect(() => {
+    console.log(location.state);
     if (location.state) {
       setState((draft) => {
         draft.locationState = location.state;
