@@ -65,10 +65,10 @@ export const graphDataTranslator = (graphData: GraphData) => {
       iconFontSize = 18;
     } else if (diffCount >= 2 && diffCount <= 4) {
       size = 36;
-      iconFontSize = 25;
+      iconFontSize = 24;
     } else if (nodeCount === sourtedCount[0]) {
       size = 56;
-      iconFontSize = 41;
+      iconFontSize = 40;
     }
 
     if (
@@ -76,12 +76,12 @@ export const graphDataTranslator = (graphData: GraphData) => {
         nodeType === NODE_TYPE_MAP.github_organization) &&
       size === 16
     ) {
-      size = 21;
-      iconFontSize = 15;
+      size = 22;
+      iconFontSize = 16;
     }
     if (nodeType === NODE_TYPE_MAP.country && size === 16) {
-      size = 26;
-      iconFontSize = 18;
+      size = 28;
+      iconFontSize = 20;
     }
 
     return {
