@@ -232,7 +232,7 @@ export default () => {
               <p className={styles["info-title"]}>开源兴趣图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              根据开发者参与项目的主题、标签、语言等信息，汇总TopN开源领域特征（关联TopN项目）。
+              挖掘个人开源兴趣：根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。
             </p>
           </div>
         </div>
