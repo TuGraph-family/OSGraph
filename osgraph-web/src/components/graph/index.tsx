@@ -97,7 +97,7 @@ export const GraphView = React.memo(
     };
 
     React.useEffect(() => {
-      if (!isEmpty(data?.nodes) && !isEmpty(data?.edges)) {
+      if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
         if (!containerRef.current) return;
         renderGraph();
         return () => {

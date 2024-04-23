@@ -117,7 +117,7 @@ export default () => {
               <p className={styles["info-title"]}>项目贡献图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              汇总项目在不同研发活动（Issue、PR、Commit、CR）下，贡献TopN的开发者。
+              发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。
             </p>
           </div>
 
@@ -145,7 +145,7 @@ export default () => {
               <p className={styles["info-title"]}>项目生态图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              根据项目间相同开发者对应的行为（Issue、PR、Commit、CR），依赖关系等，构建关联生态项目的TopN。
+              洞察项目生态伙伴：提取项目间的开发活动、组织等关联信息，构建项目核心生态关系。
             </p>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default () => {
               <p className={styles["info-title"]}>项目社区图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              根据项目的开发者的组织、地域、关注等画像信息，汇总TopN活跃开发者。
+              分析项目社区分布：根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。
             </p>
           </div>
 
@@ -189,7 +189,7 @@ export default () => {
               <p className={styles["info-title"]}>开发活动图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              汇总项目在不同研发活动（Issue、PR、Commit、CR）下，贡献TopN的开发者。
+              展示个人开源贡献：根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。
             </p>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default () => {
               <p className={styles["info-title"]}>开源伙伴图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              汇总和我开发活动强关联的TopN开发者。
+              寻找个人开源伙伴：找到开发者在开源社区中，与之协作紧密的其他开发者。
             </p>
           </div>
           <img
