@@ -87,8 +87,7 @@ export const GraphView = React.memo(
             type: "process-parallel-edges",
             distance: 20
           }
-        ],
-        autoFit: "view"
+        ]
       });
 
       graph.render();
