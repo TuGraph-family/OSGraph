@@ -68,7 +68,7 @@ export const graphDataTranslator = (graphData: GraphData) => {
       iconFontSize = 24;
     } else if (nodeCount === sourtedCount[0]) {
       size = 56;
-      iconFontSize = 40;
+      iconFontSize = 41;
     }
 
     if (
