@@ -3,6 +3,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 osgraph-service/app/**/target/
+osgraph-service/**/target/
 logs/
 *.log
 .DS_Store
