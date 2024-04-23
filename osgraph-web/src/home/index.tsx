@@ -247,7 +247,7 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open('"https://www.tugraph.org/"');
+              window.open("https://www.tugraph.org/");
             }}
           >
             <div className={styles["tuGraph-url"]} />
