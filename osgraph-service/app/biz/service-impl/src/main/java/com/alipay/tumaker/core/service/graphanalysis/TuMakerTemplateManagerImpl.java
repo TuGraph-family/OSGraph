@@ -46,7 +46,7 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager{
     @SofaReference
     private ElasticSearchClientManager elasticSearchClientManager;
 
-    @Autowired
+    @Autowired(required = false)
     private TuQueryService tuQueryService;
     @SofaReference
     private PlatformConfigManager platformConfigManager;

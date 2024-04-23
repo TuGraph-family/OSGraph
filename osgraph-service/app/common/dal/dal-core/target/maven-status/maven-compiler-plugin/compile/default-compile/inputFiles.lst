@@ -1,4 +1,4 @@
-/Users/yuanxiaohua/javaCode/tumaker/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/mapper/TumakerQueryTemplateMapper.java
-/Users/yuanxiaohua/javaCode/tumaker/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/mapper/PersonLMapper.java
-/Users/yuanxiaohua/javaCode/tumaker/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/model/PersonLDO.java
-/Users/yuanxiaohua/javaCode/tumaker/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/model/TumakerQueryTemplateDO.java
+/javaCode/OSGraph/osgraph-service/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/model/TumakerQueryTemplateDO.java
+/javaCode/OSGraph/osgraph-service/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/mapper/PersonLMapper.java
+/javaCode/OSGraph/osgraph-service/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/model/PersonLDO.java
+/javaCode/OSGraph/osgraph-service/app/common/dal/dal-core/src/main/java/com/alipay/tumaker/common/dal/mysql/mapper/TumakerQueryTemplateMapper.java

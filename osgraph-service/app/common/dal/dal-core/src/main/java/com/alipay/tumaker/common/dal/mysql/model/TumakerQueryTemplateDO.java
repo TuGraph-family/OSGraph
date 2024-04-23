@@ -11,7 +11,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author dalgen-mybatisplus
- * @since 2024-03-28
+ * @since 2024-04-17
  */
 @TableName("tumaker_query_template")
 public class TumakerQueryTemplateDO implements Serializable {

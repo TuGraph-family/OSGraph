@@ -1,5 +1,5 @@
-com/alipay/tumaker/spi/core/model/vo/SpiResult.class
 com/alipay/tumaker/spi/core/model/constants/SpiConstants.class
+com/alipay/tumaker/spi/core/model/vo/SpiResult.class
 META-INF/spring-configuration-metadata.json
 com/alipay/tumaker/spi/core/model/properties/TumakerAgentProperties.class
 com/alipay/tumaker/spi/core/model/constants/SpiResultCodeEnum.class
