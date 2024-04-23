@@ -26,7 +26,7 @@ export const ProjectSearch: React.FC<{
   getGraphLoading?: (loading: boolean) => void;
 }> = ({
   needFixed,
-  debounceTimeout = 800,
+  debounceTimeout = 300,
   defaultStyle,
   onSearch,
   templateType,
