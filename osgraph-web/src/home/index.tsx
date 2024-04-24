@@ -55,7 +55,7 @@ export default () => {
     const firstPage = document.getElementById("firstPage");
     if (firstPage && isMobile) {
       firstPage.style.height = "30vh";
-      firstPage.style.minHeight = "500px";
+      firstPage.style.minHeight = "400px";
     }
   }, []);
 
