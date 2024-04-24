@@ -54,7 +54,8 @@ export default () => {
     }
     const firstPage = document.getElementById("firstPage");
     if (firstPage && isMobile) {
-      firstPage.style.height = "40vh";
+      firstPage.style.height = "30vh";
+      firstPage.style.minHeight = "500px";
     }
   }, []);
 
@@ -105,6 +106,7 @@ export default () => {
             <div className={styles["white-strip"]} />
           </div>
         </div>
+        <div className={styles["linear"]} />
       </div>
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
