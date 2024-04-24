@@ -47,7 +47,7 @@ export default () => {
     const video = document.getElementById("video") as HTMLVideoElement;
     if (video) {
       video.src =
-        "https://mass-office.alipay.com/huamei_koqzbu/afts/file/FqCfRa9wOpwAAAAAAAAAABAADnV5AQBr";
+        "https://gw.alipayobjects.com/v/huamei_tu4rvn/afts/video/A*V9DKSIe4nKEAAAAAAAAAAAAADp_eAQ";
       video.addEventListener("play", () => {
         video.style.visibility = "visible";
       });
@@ -123,7 +123,7 @@ export default () => {
 
           <img
             className={styles["tuGraphImg-right"]}
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*zT0VQLSlJbsAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original"
             alt=""
           />
         </div>
@@ -131,7 +131,7 @@ export default () => {
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*lP8cRY59Be4AAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-left"]}
           />
@@ -166,7 +166,7 @@ export default () => {
           </div>
 
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*xc48S731jj8AAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-right"]}
           />
@@ -175,7 +175,7 @@ export default () => {
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*W5ogR4RO1ugAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-left"]}
           />
@@ -209,7 +209,7 @@ export default () => {
             </p>
           </div>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*2QAaRZlBAlYAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-right"]}
           />
@@ -218,9 +218,10 @@ export default () => {
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*iD6cRKC8RpkAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-left"]}
+            style={{ width: 400 }}
           />
 
           <div className={styles["title-right"]} style={{ marginLeft: 60 }}>

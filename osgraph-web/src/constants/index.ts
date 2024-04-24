@@ -13,7 +13,7 @@ export const NODE_COLORS = [
   "#17C76F"
 ];
 
-export const HTTP_SERVICE_URL = `${window.location.protocol}//${window.location.hostname}`;
+export const HTTP_SERVICE_URL = `http://47.108.139.230:9000`;
 
 export const EDGE_TYPE_MAP = {
   belong_to: "belong_to",
@@ -48,7 +48,7 @@ export const NODE_TYPE_COLOR_MAP: Record<
   company: "#00c9c9",
   country: "#f08f56",
   github_organization: "#00c9c9",
-  github_user: ["#1783ff", "#7863ff", "#db9d0d", "#b4c8ed"],
+  github_user: ["#db9d0d", "#17C76F", "#1783ff", "#7863ff"],
   github_repo: "#d580ff",
   topic: "#ff80ca"
 };
