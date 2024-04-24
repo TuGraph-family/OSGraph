@@ -1,6 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
 import { ProjectSearch } from "../components";
+import {
+  ANTV,
+  OSGRAPH_GITHUB,
+  TUGRAPH_TECH,
+  X_LAB_GITHUB
+} from "../constants/links";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 
@@ -87,14 +93,14 @@ export default () => {
             <div
               className={styles["tuGraph-img"]}
               onClick={() => {
-                window.open("https://www.tugraph.tech/");
+                window.open(TUGRAPH_TECH);
               }}
             />
             <div className={styles["line"]} />
             <div
               className={styles["x-lab"]}
               onClick={() => {
-                window.open("https://github.com/X-lab2017?language=shell");
+                window.open(X_LAB_GITHUB);
               }}
             />
           </div>
@@ -250,7 +256,7 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open("https://www.tugraph.org/");
+              window.open(TUGRAPH_TECH);
             }}
           >
             <div className={styles["tuGraph-url"]} />
@@ -259,7 +265,7 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open("https://github.com/TuGraph-family/OSGraph");
+              window.open(OSGRAPH_GITHUB);
             }}
           >
             <div className={styles["gitHub-url"]} />
@@ -269,7 +275,7 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open("https://antv.antgroup.com/");
+              window.open(ANTV);
             }}
           >
             <div className={styles["antv-url"]} />
