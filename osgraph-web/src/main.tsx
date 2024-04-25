@@ -4,13 +4,9 @@ import { RouterProvider } from "react-router-dom";
 import "./i18n";
 import router from "./router";
 
-// @ts-ignore
-Tracert.call("set", {
+window.Tracert.call("set", {
   spmAPos: "a4378",
-  bizType: "common",
-  autoExpo: true,
-  autoLogPv: true,
-  ifRouterNeedPv: true
+  bizType: "common"
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
