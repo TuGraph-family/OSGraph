@@ -90,9 +90,9 @@ export default () => {
     if (location.state) {
       setState((draft) => {
         draft.locationState = location.state;
-        draft.shareLink = `${
-          window.location.origin
-        }/result?shareId=${templateId}&shareParams=${paramsValue}&isShare=${true}`;
+        draft.shareLink = `${window.location.origin}/result?shareId=${
+          location.state.templateId
+        }&shareParams=${paramsValue}&isShare=${true}`;
       });
     }
   }, [location.state]);
