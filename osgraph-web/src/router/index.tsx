@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import NotFound from "../404";
 import Home from "../home";
 import Result from "../result";
-import Share from "../share";
 
 const router = createBrowserRouter([
   {
@@ -12,10 +11,6 @@ const router = createBrowserRouter([
   {
     path: "/result",
     element: <Result />
-  },
-  {
-    path: "/share",
-    element: <Share />
   },
   {
     path: "*",
