@@ -7,12 +7,20 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
 import { GraphView, ProjectSearch } from "../components";
+import { SPAPOS } from "../constants/log";
 import { OSGraph } from "../controller";
 import { getExecuteShareQueryTemplate } from "../services/result";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
+
+window.Tracert?.call?.("set", {
+  spmAPos: SPAPOS,
+  spmBPos: location.pathname,
+  pathName: "结果页"
+});
+window.Tracert?.call?.("logPv");
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
