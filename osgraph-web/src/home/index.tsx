@@ -7,8 +7,16 @@ import {
   TUGRAPH_TECH,
   X_LAB_GITHUB
 } from "../constants/links";
+import { SPAPOS } from "../constants/log";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
+
+window.Tracert?.call?.("set", {
+  spmAPos: SPAPOS,
+  spmBPos: location.pathname,
+  pathName: "首页"
+});
+window.Tracert?.call?.("logPv");
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
