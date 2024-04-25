@@ -71,7 +71,7 @@ export const GraphView = React.memo(
         },
         layout: {
           type: "force",
-          linkDistance: 260
+          linkDistance: 240
         },
         behaviors: [
           { type: "zoom-canvas", sensitivity: 0.1 },
@@ -97,7 +97,7 @@ export const GraphView = React.memo(
     };
 
     React.useEffect(() => {
-      if (!isEmpty(data?.nodes) && !isEmpty(data?.edges)) {
+      if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
         if (!containerRef.current) return;
         renderGraph();
         return () => {

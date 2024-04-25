@@ -14,7 +14,7 @@ import styles from "./index.module.less";
 export const ProjectSearch: React.FC<{
   needFixed: boolean;
   debounceTimeout?: number;
-  graphWarehouseValue?: string;
+  graphWarehouseValue?: string | null;
   graphProjectValue?: string;
   graphQuerySource?: string;
   graphSearchValue?: string;
@@ -26,7 +26,7 @@ export const ProjectSearch: React.FC<{
   getGraphLoading?: (loading: boolean) => void;
 }> = ({
   needFixed,
-  debounceTimeout = 800,
+  debounceTimeout = 300,
   defaultStyle,
   onSearch,
   templateType,
@@ -234,7 +234,8 @@ export const ProjectSearch: React.FC<{
             searchValue,
             templateId,
             paramsValue,
-            templateParameterList
+            templateParameterList,
+            warehouseValue: value
           }
         });
       } else {
@@ -242,6 +243,17 @@ export const ProjectSearch: React.FC<{
       }
     });
   };
+
+  useEffect(() => {
+    setState((draft) => {
+      draft.projectValue = graphProjectValue || "REPO_CONTRIBUTE";
+    });
+  }, [graphProjectValue]);
+  useEffect(() => {
+    setState((draft) => {
+      draft.warehouseValue = graphWarehouseValue || null;
+    });
+  }, [graphWarehouseValue]);
 
   return (
     <div className={styles["project-search"]} style={styleObj}>

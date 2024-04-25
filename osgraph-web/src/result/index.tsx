@@ -92,7 +92,7 @@ export default () => {
         draft.locationState = location.state;
         draft.shareLink = `${
           window.location.origin
-        }:9000/result?shareId=${templateId}&shareParams=${paramsValue}&isShare=${true}`;
+        }/result?shareId=${templateId}&shareParams=${paramsValue}&isShare=${true}`;
       });
     }
   }, [location.state]);
