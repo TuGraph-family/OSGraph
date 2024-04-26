@@ -130,7 +130,7 @@ export const ProjectSearch: React.FC<{
     switch (parameterName) {
       case "start_timestamp":
         return Math.floor(
-          new Date().setMonth(new Date().getMonth() - 1) / 1000
+          new Date().setMonth(new Date().getMonth() - 120) / 1000
         );
       case "end_timestamp":
         return Math.floor(new Date().getTime() / 1000);
