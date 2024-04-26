@@ -48,7 +48,6 @@ export default () => {
     querySource,
     searchValue,
     templateId,
-    paramsValue,
     templateParameterList
   } = locationState || {};
   const query = new URLSearchParams(location.search);
