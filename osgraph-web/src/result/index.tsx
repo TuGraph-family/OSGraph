@@ -68,7 +68,7 @@ export default () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = searchValue || "os graph";
+    a.download = warehouseValue || "os graph";
     a.click();
   };
   const getGraphLoading = (loading: boolean) => {
