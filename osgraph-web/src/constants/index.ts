@@ -13,8 +13,6 @@ export const NODE_COLORS = [
   "#17C76F"
 ];
 
-export const HTTP_SERVICE_URL = `${window.location.protocol}//${window.location.hostname}`;
-
 export const EDGE_TYPE_MAP = {
   belong_to: "belong_to",
   comment_issue: "comment_issue",
@@ -60,6 +58,23 @@ export const NODE_TYPE_ICON_MAP: Record<keyof typeof NODE_TYPE_MAP, string> = {
   company: "company",
   topic: "topic",
   github_user: "user"
+};
+
+export const GRAPH_TYPE_MAP = {
+  REPO_CONTRIBUTE: "REPO_CONTRIBUTE",
+  REPO_ECOLOGY: "REPO_ECOLOGY",
+  REPO_COMMUNITY: "REPO_COMMUNITY",
+  ACCT_ACTIVITY: "ACCT_ACTIVITY",
+  ACCT_PARTNER: "ACCT_PARTNER",
+  ACCT_INTEREST: "ACCT_INTEREST"
+};
+export const GRAPH_TYPE_CLUSTER = {
+  REPO_CONTRIBUTE: "REPO",
+  REPO_ECOLOGY: "REPO",
+  REPO_COMMUNITY: "REPO",
+  ACCT_ACTIVITY: "ACCT",
+  ACCT_PARTNER: "ACCT",
+  ACCT_INTEREST: "ACCT"
 };
 
 export const EDGE_DISPLAY_NAME_MAP: Record<
