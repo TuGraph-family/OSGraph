@@ -1,8 +1,9 @@
 import { ConfigProvider, Select, message, theme } from "antd";
-import { debounce, isEmpty } from "lodash";
+import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
+import { GRAPH_TYPE_CLUSTER } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
 import {
   getExecuteFullTextQuery,
@@ -44,7 +45,7 @@ export const ProjectSearch: React.FC<{
     querySource: string;
     templateParameterList: any[];
     textQuery: any[];
-    warehouseValue: string | null;
+    warehouseValue: string;
     templateId: string;
     projectValue?: string;
     placeholderValue: string;
@@ -54,12 +55,12 @@ export const ProjectSearch: React.FC<{
     querySource: "github_repo",
     templateParameterList: graphParameterList || [],
     textQuery: [],
-    warehouseValue: graphWarehouseValue || null,
     templateId: graphTemplateId || "1",
     projectValue: graphProjectValue || "REPO_CONTRIBUTE",
     placeholderValue: "请输入 GitHub 仓库名称",
     searchValue: "",
-    loadingProjects: false
+    loadingProjects: false,
+    warehouseValue: ""
   });
   const {
     querySource,
@@ -70,7 +71,6 @@ export const ProjectSearch: React.FC<{
     projectValue,
     placeholderValue,
     searchValue,
-
     loadingProjects
   } = state;
 
@@ -105,27 +105,6 @@ export const ProjectSearch: React.FC<{
     borderRadius: defaultStyle ? "6px" : "12px"
   };
 
-  useEffect(() => {
-    getListQueryTemplate().then((res) => {
-      setQueryList(res);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (graphQuerySource && graphSearchValue) {
-      getExecuteFullTextQueryList(graphQuerySource, graphSearchValue);
-    }
-  }, [graphQuerySource, graphSearchValue]);
-
-  useEffect(() => {
-    if (templateType) {
-      setState((draft) => {
-        draft.projectValue = templateType;
-        draft.placeholderValue = placeholderName(templateType);
-      });
-    }
-  }, [templateType]);
-
   const switchName = (parameterName: string, parameterValue: string) => {
     switch (parameterName) {
       case "start_timestamp":
@@ -156,15 +135,28 @@ export const ProjectSearch: React.FC<{
     );
   };
 
-  const handleProjectChange = (value: string | any, item: any) => {
+  const handleProjectChange = (value: string, item: any) => {
+    if (
+      projectValue &&
+      GRAPH_TYPE_CLUSTER[projectValue as keyof typeof GRAPH_TYPE_CLUSTER] !==
+        GRAPH_TYPE_CLUSTER[value as keyof typeof GRAPH_TYPE_CLUSTER]
+    ) {
+      setState((draft) => {
+        draft.warehouseValue = "";
+        draft.textQuery = [];
+      });
+    } else {
+      handelWarehouseChange(warehouseValue, {
+        templateId: item.data.id,
+        templateParameterList: item.data.templateParameterList
+      });
+    }
     setState((draft) => {
       draft.querySource = item.data.querySource;
       draft.templateParameterList = item.data.templateParameterList;
       draft.templateId = item.data.id;
-      draft.textQuery = [];
       draft.projectValue = value;
       draft.placeholderValue = placeholderName(value);
-      draft.warehouseValue = null;
     });
   };
 
@@ -188,21 +180,16 @@ export const ProjectSearch: React.FC<{
     return debounce(loadOptions, debounceTimeout);
   }, [textQuery, debounceTimeout, querySource]);
 
-  const handelWarehouseChange = (value: string) => {
+  const handelWarehouseChange = (
+    value: string,
+    templateInfo: { templateId: string; templateParameterList: any[] }
+  ) => {
+    const { templateId, templateParameterList } = templateInfo;
     setState((draft) => {
       draft.warehouseValue = value;
     });
 
-    const filterList = queryList?.filter(
-      (item: { templateType: string }) =>
-        item.templateType === "REPO_CONTRIBUTE"
-    );
-    const templateList = handleJson(
-      isEmpty(templateParameterList)
-        ? filterList[0]?.templateParameterList
-        : templateParameterList,
-      value
-    );
+    const templateList = handleJson(templateParameterList, value);
 
     const paramsValue = templateList
       ?.map((item: { parameterValue: string }) => {
@@ -212,7 +199,7 @@ export const ProjectSearch: React.FC<{
 
     getGraphLoading?.(true);
     getExecuteQueryTemplate({
-      templateId: templateId || filterList[0]?.id,
+      templateId: templateId,
       templateParameterList: templateList
     }).then((res) => {
       const graphData = graphDataTranslator(res.data);
@@ -251,9 +238,45 @@ export const ProjectSearch: React.FC<{
   }, [graphProjectValue]);
   useEffect(() => {
     setState((draft) => {
-      draft.warehouseValue = graphWarehouseValue || null;
+      draft.warehouseValue = graphWarehouseValue || "";
     });
   }, [graphWarehouseValue]);
+
+  useEffect(() => {
+    if (queryList.length) {
+      const contributeTemplate = queryList.find(
+        (item) => item.templateType === "REPO_CONTRIBUTE"
+      );
+      if (contributeTemplate) {
+        setState((draft) => {
+          draft.templateId = contributeTemplate.id;
+          draft.templateParameterList =
+            contributeTemplate.templateParameterList;
+        });
+      }
+    }
+  }, [queryList]);
+
+  useEffect(() => {
+    getListQueryTemplate().then((res) => {
+      setQueryList(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (graphQuerySource && graphSearchValue) {
+      getExecuteFullTextQueryList(graphQuerySource, graphSearchValue);
+    }
+  }, [graphQuerySource, graphSearchValue]);
+
+  useEffect(() => {
+    if (templateType) {
+      setState((draft) => {
+        draft.projectValue = templateType;
+        draft.placeholderValue = placeholderName(templateType);
+      });
+    }
+  }, [templateType]);
 
   return (
     <div className={styles["project-search"]} style={styleObj}>
@@ -318,7 +341,9 @@ export const ProjectSearch: React.FC<{
           optionFilterProp="children"
           variant="borderless"
           onSearch={handelWarehouseSearch}
-          onChange={handelWarehouseChange}
+          onChange={(value) =>
+            handelWarehouseChange(value, { templateId, templateParameterList })
+          }
           value={warehouseValue}
           loading={loadingProjects}
         >
