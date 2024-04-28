@@ -3,7 +3,7 @@ import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
-import { GRAPH_TYPE_CLUSTER } from "../../constants";
+import { GRAPH_TYPE_CLUSTER, PLACEHOLDER_MAP } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
 import {
   getExecuteFullTextQuery,
@@ -45,7 +45,7 @@ export const ProjectSearch: React.FC<{
     querySource: string;
     templateParameterList: any[];
     textQuery: any[];
-    warehouseValue: string;
+    warehouseValue?: string;
     templateId: string;
     projectValue?: string;
     placeholderValue: string;
@@ -59,8 +59,7 @@ export const ProjectSearch: React.FC<{
     projectValue: graphProjectValue || "REPO_CONTRIBUTE",
     placeholderValue: "请输入 GitHub 仓库名称",
     searchValue: "",
-    loadingProjects: false,
-    warehouseValue: ""
+    loadingProjects: false
   });
   const {
     querySource,
@@ -73,26 +72,6 @@ export const ProjectSearch: React.FC<{
     searchValue,
     loadingProjects
   } = state;
-
-  const placeholderName = (
-    value:
-      | "REPO_CONTRIBUTE"
-      | "REPO_ECOLOGY"
-      | "REPO_COMMUNITY"
-      | "ACCT_ACTIVITY"
-      | "ACCT_PARTNER"
-      | "ACCT_INTEREST"
-  ) => {
-    const placeholder = {
-      REPO_CONTRIBUTE: "请输入 GitHub 仓库名称",
-      REPO_ECOLOGY: "请输入 GitHub 仓库名称",
-      REPO_COMMUNITY: "请输入 GitHub 仓库名称",
-      ACCT_ACTIVITY: "请输入 GitHub 账户名称",
-      ACCT_PARTNER: "请输入 GitHub 账户名称",
-      ACCT_INTEREST: "请输入 GitHub 账户名称"
-    };
-    return placeholder[value];
-  };
 
   const styleObj: React.CSSProperties = {
     width: needFixed ? "calc(100% - 320px)" : defaultStyle ? "400px" : "650px",
@@ -142,7 +121,7 @@ export const ProjectSearch: React.FC<{
         GRAPH_TYPE_CLUSTER[value as keyof typeof GRAPH_TYPE_CLUSTER]
     ) {
       setState((draft) => {
-        draft.warehouseValue = "";
+        draft.warehouseValue = undefined;
         draft.textQuery = [];
       });
     } else {
@@ -156,7 +135,7 @@ export const ProjectSearch: React.FC<{
       draft.templateParameterList = item.data.templateParameterList;
       draft.templateId = item.data.id;
       draft.projectValue = value;
-      draft.placeholderValue = placeholderName(value);
+      draft.placeholderValue = PLACEHOLDER_MAP[value];
     });
   };
 
@@ -181,7 +160,7 @@ export const ProjectSearch: React.FC<{
   }, [textQuery, debounceTimeout, querySource]);
 
   const handelWarehouseChange = (
-    value: string,
+    value: any,
     templateInfo: { templateId: string; templateParameterList: any[] }
   ) => {
     const { templateId, templateParameterList } = templateInfo;
@@ -238,7 +217,7 @@ export const ProjectSearch: React.FC<{
   }, [graphProjectValue]);
   useEffect(() => {
     setState((draft) => {
-      draft.warehouseValue = graphWarehouseValue || "";
+      draft.warehouseValue = graphWarehouseValue || undefined;
     });
   }, [graphWarehouseValue]);
 
@@ -273,7 +252,7 @@ export const ProjectSearch: React.FC<{
     if (templateType) {
       setState((draft) => {
         draft.projectValue = templateType;
-        draft.placeholderValue = placeholderName(templateType);
+        draft.placeholderValue = PLACEHOLDER_MAP[templateType];
       });
     }
   }, [templateType]);

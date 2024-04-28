@@ -152,3 +152,12 @@ export const EDGE_DISPLAY_NAME_MAP: Record<
     hasCount: true
   }
 };
+
+export const PLACEHOLDER_MAP: Record<string, string> = {
+  REPO_CONTRIBUTE: "请输入 GitHub 仓库名称",
+  REPO_ECOLOGY: "请输入 GitHub 仓库名称",
+  REPO_COMMUNITY: "请输入 GitHub 仓库名称",
+  ACCT_ACTIVITY: "请输入 GitHub 账户名称",
+  ACCT_PARTNER: "请输入 GitHub 账户名称",
+  ACCT_INTEREST: "请输入 GitHub 账户名称"
+};
