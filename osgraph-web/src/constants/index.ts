@@ -13,8 +13,6 @@ export const NODE_COLORS = [
   "#17C76F"
 ];
 
-export const HTTP_SERVICE_URL = `${window.location.protocol}//${window.location.hostname}`;
-
 export const EDGE_TYPE_MAP = {
   belong_to: "belong_to",
   comment_issue: "comment_issue",
