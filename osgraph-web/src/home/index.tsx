@@ -10,8 +10,7 @@ import {
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 
-// eslint-disable-next-line react-refresh/only-export-components
-export default () => {
+const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);
   const [templateType, setTemplateType] = useState<string>("REPO_CONTRIBUTE");
   const isMobile = getIsMobile();
@@ -36,6 +35,10 @@ export default () => {
       return "ACCT_INTEREST";
     }
     return "REPO_CONTRIBUTE";
+  };
+
+  const toGov = () => {
+    window.open("https://beian.miit.gov.cn");
   };
   useEffect(() => {
     window.onscroll = function () {
@@ -282,7 +285,14 @@ export default () => {
             <p>AntV</p>
           </div>
         </div>
+        <div className={styles["gov"]}>
+          <div className={styles["gov-text"]} onClick={toGov}>
+            ICP备案：京ICP备15032932号-51
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
+export default HomePage;
