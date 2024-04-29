@@ -32,7 +32,7 @@ export const GraphView = React.memo(
           style: {
             size: (d) => d.size,
             labelText: (d) => d?.properties?.name,
-            color: (d) => {
+            fill: (d) => {
               return d.nodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.nodeType][d.id % 4]
                 : NODE_TYPE_COLOR_MAP[d.nodeType];
@@ -59,7 +59,7 @@ export const GraphView = React.memo(
             endArrow: (d) => EDGE_DISPLAY_NAME_MAP[d?.edgeType].hasArrow,
             labelBackgroundFill: "#fff",
             labelBackground: true,
-            color: (d) =>
+            stroke: (d) =>
               d.targetNodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
                 : NODE_TYPE_COLOR_MAP[d.targetNodeType],
