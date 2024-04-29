@@ -13,7 +13,7 @@
     z-index: 1;
     left: 24px;
     top: 16px;
-    width: 5vw;
+    width: 9%;
   }
 
   .home-header {
@@ -43,7 +43,7 @@
     .open-source {
       position: absolute;
       left: 160px;
-      top: 220px;
+      top: 23%;
       z-index: 1;
       width: 661px;
       height: 448px;
@@ -164,6 +164,19 @@
     bottom: 0;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .gov {
+      font-size: 12px;
+      padding: 10px 0;
+      color: #8b90b0;
+      &-text {
+        cursor: pointer;
+        &:hover {
+          color: #3a63f2;
+        }
+      }
+    }
     .os-graph {
       width: 100%;
     }
@@ -172,7 +185,7 @@
       height: 42px;
       display: flex;
       position: absolute;
-      bottom: 60px;
+      bottom: 96px;
       justify-content: space-between;
       align-items: center;
       .tuGraph-url {
@@ -181,27 +194,20 @@
         background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*OduJTbKJaG0AAAAAAAAAAAAADu3UAQ/original");
         background-size: 100% 100%;
       }
-      .tuGraph-url:hover {
-        background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*w-qITIZMNEgAAAAAAAAAAAAADu3UAQ/original");
-      }
+
       .gitHub-url {
         width: 40px;
         height: 40px;
         background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*gNApS7tzP5YAAAAAAAAAAAAADu3UAQ/original");
         background-size: 100% 100%;
       }
-      .gitHub-url:hover {
-        background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*I9I1S4lWlzwAAAAAAAAAAAAADu3UAQ/original");
-      }
+
       .antv-url {
         width: 40px;
         height: 40px;
         background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*zFuMTonNZkkAAAAAAAAAAAAADu3UAQ/original");
 
         background-size: 100% 100%;
-      }
-      .antv-url:hover {
-        background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*UARqT77tlJUAAAAAAAAAAAAADu3UAQ/original");
       }
     }
     .bottom-link {
@@ -215,6 +221,15 @@
     }
     .bottom-link:hover {
       color: #3a63f2;
+      .gitHub-url {
+        background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*I9I1S4lWlzwAAAAAAAAAAAAADu3UAQ/original");
+      }
+      .antv-url {
+        background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*UARqT77tlJUAAAAAAAAAAAAADu3UAQ/original");
+      }
+      .tuGraph-url {
+        background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*w-qITIZMNEgAAAAAAAAAAAAADu3UAQ/original");
+      }
     }
   }
 }
