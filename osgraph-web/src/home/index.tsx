@@ -11,12 +11,12 @@ import { SPAPOS } from "../constants/log";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 
-window.Tracert?.call?.("set", {
+window?.Tracert?.call?.("set", {
   spmAPos: SPAPOS,
   spmBPos: location.pathname,
   pathName: "首页"
 });
-window.Tracert?.call?.("logPv");
+window?.Tracert?.call?.("logPv");
 
 const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);

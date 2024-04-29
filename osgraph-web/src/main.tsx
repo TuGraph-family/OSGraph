@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import "./i18n";
 import router from "./router";
 
-window.Tracert.call("set", {
+window?.Tracert?.call("set", {
   spmAPos: "a4378",
   bizType: "common"
 });

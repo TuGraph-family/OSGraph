@@ -15,12 +15,12 @@ import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
 
-window.Tracert?.call?.("set", {
+window?.Tracert?.call?.("set", {
   spmAPos: SPAPOS,
   spmBPos: location.pathname,
   pathName: "结果页"
 });
-window.Tracert?.call?.("logPv");
+window?.Tracert?.call?.("logPv");
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
