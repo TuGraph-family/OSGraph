@@ -1,21 +1,15 @@
 // @ts-nocheck
-import React from "react";
-import { Graph } from "@antv/g6";
 import type { DataID } from "@antv/g6";
-import { isEqual, isFunction, uniq } from "lodash";
-import { NODE_COLORS } from "../../constants";
-import Org from "../../assets/org.svg";
-import User from "../../assets/user.svg";
-import Country from "../../assets/country.svg";
-import Project from "../../assets/project.svg";
-import { isEmpty } from "lodash";
-
-const ICON_MAPPING = {
-  organization: Org,
-  github_user: User,
-  country: Country,
-  github_repo: Project,
-};
+import { Graph } from "@antv/g6";
+import { isEmpty, isEqual, isFunction } from "lodash";
+import React from "react";
+import {
+  EDGE_DISPLAY_NAME_MAP,
+  NODE_TYPE_COLOR_MAP,
+  NODE_TYPE_ICON_MAP,
+  NODE_TYPE_MAP
+} from "../../constants";
+import { iconLoader } from "../icon-font";
 
 interface IProps {
   data: DataID;
@@ -26,12 +20,9 @@ export const GraphView = React.memo(
   ({ data, onReady }: IProps) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
-    const { nodes } = data;
-    const types = uniq(nodes?.map((item) => item.nodeType));
 
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
-
       const graph = new Graph({
         container: containerRef.current as HTMLDivElement,
         data,
@@ -41,43 +32,63 @@ export const GraphView = React.memo(
           style: {
             size: (d) => d.size,
             labelText: (d) => d?.properties?.name,
-            iconHeight: (d) => d.size / 2,
-            iconWidth: (d) => d.size / 2,
-            iconSrc: (d) => ICON_MAPPING[d.nodeType],
-            halo: true,
-            color: (d) => {
-              return NODE_COLORS[types.indexOf(d.nodeType)];
+            fill: (d) => {
+              return d.nodeType === NODE_TYPE_MAP.github_user
+                ? NODE_TYPE_COLOR_MAP[d.nodeType][d.id % 4]
+                : NODE_TYPE_COLOR_MAP[d.nodeType];
             },
-          },
+            iconText: (d) => {
+              return iconLoader(NODE_TYPE_ICON_MAP[d.nodeType]);
+            },
+            iconFontFamily: "os-iconfont",
+            iconFill: "#fff",
+            iconWidth: (d) => d.size,
+            iconHeight: (d) => d.size,
+            iconFontSize: (d) => d.iconFontSize
+          }
         },
         edge: {
           style: {
-            type: (item) => item.type || "line",
-            labelText: (d) => `${d?.edgeType}\n${d?.properties?.count || 0}个`,
-            endArrow: true,
+            labelText: (d) => {
+              const { displayName, hasCount } =
+                EDGE_DISPLAY_NAME_MAP[d?.edgeType];
+              return ` ${displayName}${
+                hasCount ? "：" + (d?.properties?.count || 0) + " " : ""
+              }`;
+            },
+            endArrow: (d) => EDGE_DISPLAY_NAME_MAP[d?.edgeType].hasArrow,
             labelBackgroundFill: "#fff",
             labelBackground: true,
-            stroke: "#99ADD1",
-          },
+            stroke: (d) =>
+              d.targetNodeType === NODE_TYPE_MAP.github_user
+                ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
+                : NODE_TYPE_COLOR_MAP[d.targetNodeType],
+            labelOpacity: 1,
+            lineWidth: (d) => d.lineWidth,
+            endArrowSize: (d) => d.endArrowSize,
+            labelFontSize: 10
+          }
         },
         layout: {
           type: "force",
-          linkDistance: 50,
-          maxSpeed: 100,
-          animated: true,
-          clustering: true,
-          nodeClusterBy: "cluster",
-          clusterNodeStrength: 70,
+          linkDistance: 240
         },
         behaviors: [
-          "zoom-canvas",
+          { type: "zoom-canvas", sensitivity: 0.1 },
           "drag-canvas",
           "drag-element",
           "click-selected",
+          "hover-element"
         ],
         autoResize: true,
         zoomRange: [0.1, 5],
-        autoFit: "view",
+        transforms: [
+          {
+            type: "process-parallel-edges",
+            distance: 20
+          }
+        ],
+        autoFit: "view"
       });
 
       graph.render();
@@ -86,7 +97,7 @@ export const GraphView = React.memo(
     };
 
     React.useEffect(() => {
-      if (!isEmpty(data.nodes) && !isEmpty(data.edges)) {
+      if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
         if (!containerRef.current) return;
         renderGraph();
         return () => {
@@ -95,7 +106,12 @@ export const GraphView = React.memo(
       }
     }, [containerRef.current, data]);
 
-    return <div ref={containerRef} style={{ height: "100%" }}></div>;
+    return (
+      <div
+        ref={containerRef}
+        style={{ height: "100%", background: "#fff" }}
+      ></div>
+    );
   },
   (pre: IProps, next: IProps) => {
     return isEqual(pre.data, next.data);

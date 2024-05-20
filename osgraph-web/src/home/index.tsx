@@ -1,12 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import styles from "./index.module.less";
-import { ProjectSearch } from "../components";
 import { useEffect, useState } from "react";
+import { ProjectSearch } from "../components";
+import {
+  ANTV,
+  OSGRAPH_GITHUB,
+  TUGRAPH_TECH,
+  X_LAB_GITHUB
+} from "../constants/links";
+import { getIsMobile } from "../utils/isMobile";
+import styles from "./index.module.less";
 
-// eslint-disable-next-line react-refresh/only-export-components
-export default () => {
+const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);
   const [templateType, setTemplateType] = useState<string>("REPO_CONTRIBUTE");
+  const isMobile = getIsMobile();
 
   const switchType = (value: number) => {
     if (value >= 980 && value <= 1580) {
@@ -29,6 +36,10 @@ export default () => {
     }
     return "REPO_CONTRIBUTE";
   };
+
+  const toGov = () => {
+    window.open("https://beian.miit.gov.cn");
+  };
   useEffect(() => {
     window.onscroll = function () {
       const { scrollHeight, clientHeight, scrollTop } =
@@ -42,6 +53,19 @@ export default () => {
         setNeedFixed(false);
       }
     };
+    const video = document.getElementById("video") as HTMLVideoElement;
+    if (video) {
+      video.src =
+        "https://gw.alipayobjects.com/v/huamei_tu4rvn/afts/video/A*V9DKSIe4nKEAAAAAAAAAAAAADp_eAQ";
+      video.addEventListener("play", () => {
+        video.style.visibility = "visible";
+      });
+    }
+    const firstPage = document.getElementById("firstPage");
+    if (firstPage && isMobile) {
+      firstPage.style.height = "35vh";
+      firstPage.style.minHeight = "1000px";
+    }
   }, []);
 
   return (
@@ -51,13 +75,14 @@ export default () => {
         src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*YzqCQbdW7nUAAAAAAAAAAAAADu3UAQ/original"
         alt=""
       />
-      <div className={styles["home-header"]}>
+      <div className={styles["home-header"]} id="firstPage">
         <video
-          src="https://mass-office.alipay.com/huamei_koqzbu/afts/file/FqCfRa9wOpwAAAAAAAAAABAADnV5AQBr"
           autoPlay
           loop
           muted
           className={styles["header-img"]}
+          id="video"
+          style={{ visibility: "hidden" }}
         ></video>
         <div className={styles["open-source"]}>
           <img
@@ -71,14 +96,14 @@ export default () => {
             <div
               className={styles["tuGraph-img"]}
               onClick={() => {
-                window.open("https://www.tugraph.tech/");
+                window.open(TUGRAPH_TECH);
               }}
             />
             <div className={styles["line"]} />
             <div
               className={styles["x-lab"]}
               onClick={() => {
-                window.open("https://github.com/X-lab2017?language=shell");
+                window.open(X_LAB_GITHUB);
               }}
             />
           </div>
@@ -90,6 +115,7 @@ export default () => {
             <div className={styles["white-strip"]} />
           </div>
         </div>
+        <div className={styles["linear"]} />
       </div>
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
@@ -102,13 +128,13 @@ export default () => {
               <p className={styles["info-title"]}>项目贡献图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              汇总项目在不同研发活动（Issue、PR、Commit、CR）下，贡献TopN的开发者。
+              发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。
             </p>
           </div>
 
           <img
             className={styles["tuGraphImg-right"]}
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*zT0VQLSlJbsAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original"
             alt=""
           />
         </div>
@@ -116,7 +142,7 @@ export default () => {
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*lP8cRY59Be4AAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-left"]}
           />
@@ -130,7 +156,7 @@ export default () => {
               <p className={styles["info-title"]}>项目生态图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              根据项目间相同开发者对应的行为（Issue、PR、Commit、CR），依赖关系等，构建关联生态项目的TopN。
+              洞察项目生态伙伴：提取项目间的开发活动、组织等关联信息，构建项目核心生态关系。
             </p>
           </div>
         </div>
@@ -146,12 +172,12 @@ export default () => {
               <p className={styles["info-title"]}>项目社区图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              根据项目的开发者的组织、地域、关注等画像信息，汇总TopN活跃开发者。
+              分析项目社区分布：根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。
             </p>
           </div>
 
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*xc48S731jj8AAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-right"]}
           />
@@ -160,7 +186,7 @@ export default () => {
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*W5ogR4RO1ugAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-left"]}
           />
@@ -174,7 +200,7 @@ export default () => {
               <p className={styles["info-title"]}>开发活动图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              汇总项目在不同研发活动（Issue、PR、Commit、CR）下，贡献TopN的开发者。
+              展示个人开源贡献：根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。
             </p>
           </div>
         </div>
@@ -190,11 +216,11 @@ export default () => {
               <p className={styles["info-title"]}>开源伙伴图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              汇总和我开发活动强关联的TopN开发者。
+              寻找个人开源伙伴：找到开发者在开源社区中，与之协作紧密的其他开发者。
             </p>
           </div>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*2QAaRZlBAlYAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-right"]}
           />
@@ -203,9 +229,10 @@ export default () => {
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*iD6cRKC8RpkAAAAAAAAAAAAADu3UAQ/original"
+            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original"
             alt=""
             className={styles["tuGraphImg-left"]}
+            style={{ width: 400 }}
           />
 
           <div className={styles["title-right"]} style={{ marginLeft: 60 }}>
@@ -217,7 +244,7 @@ export default () => {
               <p className={styles["info-title"]}>开源兴趣图谱</p>
             </div>
             <p className={styles["project-parse"]}>
-              根据开发者参与项目的主题、标签、语言等信息，汇总TopN开源领域特征（关联TopN项目）。
+              挖掘个人开源兴趣：根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。
             </p>
           </div>
         </div>
@@ -232,7 +259,7 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open('"https://www.tugraph.org/"');
+              window.open(TUGRAPH_TECH);
             }}
           >
             <div className={styles["tuGraph-url"]} />
@@ -241,7 +268,7 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open("https://github.com/TuGraph-family/OSGraph");
+              window.open(OSGRAPH_GITHUB);
             }}
           >
             <div className={styles["gitHub-url"]} />
@@ -251,14 +278,21 @@ export default () => {
           <div
             className={styles["bottom-link"]}
             onClick={() => {
-              window.open("https://antv.antgroup.com/");
+              window.open(ANTV);
             }}
           >
             <div className={styles["antv-url"]} />
             <p>AntV</p>
           </div>
         </div>
+        <div className={styles["gov"]}>
+          <div className={styles["gov-text"]} onClick={toGov}>
+            ICP备案：京ICP备15032932号-51
+          </div>
+        </div>
       </div>
     </div>
   );
 };
+
+export default HomePage;

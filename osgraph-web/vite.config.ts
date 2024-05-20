@@ -2,6 +2,8 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig } from "vite";
 
+const isDev = process.env.NODE_ENV === "development";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -29,7 +31,16 @@ export default defineConfig({
           return "static/[ext]/name1-[hash].[ext]";
         }
       }
+    },
+    assetsInlineLimit: 1
+  },
+  server: {
+    host: "0.0.0.0",
+    proxy: {
+      "/tumaker/api": {
+        target: isDev ? "http://47.108.139.230:9000" : "https://osgraph.com",
+        changeOrigin: isDev
+      }
     }
-    // assetsInlineLimit: 1
   }
 });

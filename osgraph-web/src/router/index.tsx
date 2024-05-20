@@ -1,26 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
+import NotFound from "../404";
 import Home from "../home";
 import Result from "../result";
-import Share from "../share";
-import NotFound from "../404";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Home />
   },
   {
     path: "/result",
-    element: <Result />,
-  },
-  {
-    path: "/share",
-    element: <Share />,
+    element: <Result />
   },
   {
     path: "*",
-    element: <NotFound />,
-  },
+    element: <NotFound />
+  }
 ]);
 
 export default router;
