@@ -55,5 +55,6 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.17.2" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.72_noneautotype" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.24" level="project" />
+    <orderEntry type="module" module-name="tumaker-common-facade" />
   </component>
 </module>

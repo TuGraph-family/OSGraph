@@ -1,13 +1,14 @@
 package com.alipay.tumaker.web.home.controller.graphanalysis;
 
 import com.alipay.sofa.runtime.api.annotation.SofaReference;
-import com.alipay.tumaker.common.facade.model.analysis.AggregatedResultVO;
+import com.alipay.tumaker.common.facade.model.vo.analysis.AggregatedResultVO;
 import com.alipay.tumaker.common.util.Result;
 import com.alipay.tumaker.core.model.tumaker.graphquerytemplate.FullTextQueryGithubRepoVO;
 import com.alipay.tumaker.core.model.tumaker.graphquerytemplate.QueryTemplateVO;
 import com.alipay.tumaker.core.model.tumaker.graphquerytemplate.TuMakerExecuteTemplateRequest;
 import com.alipay.tumaker.core.service.graphanalysis.TuMakerTemplateManager;
 import com.alipay.tumaker.core.service.querytemplate.TuMakerQueryTemplateDataManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +45,6 @@ public class TuMakerTemplateController {
 
     /**
      * 执行分享查询模版
-     * @param request
-     * @param response
      * @return
      */
     @ResponseBody

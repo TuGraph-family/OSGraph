@@ -35,7 +35,7 @@
 
         <dependency>
             <groupId>com.alipay.tumaker</groupId>
-            <artifactId>tumaker-serviceplugin-devops</artifactId>
+            <artifactId>tumakertugraphdb-core</artifactId>
         </dependency>
 
         <dependency>

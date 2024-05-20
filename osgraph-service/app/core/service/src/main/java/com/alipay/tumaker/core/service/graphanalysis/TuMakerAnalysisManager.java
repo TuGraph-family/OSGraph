@@ -1,9 +1,9 @@
 package com.alipay.tumaker.core.service.graphanalysis;
 
-import com.alipay.tumaker.common.facade.model.common.Enum.GraphLanguageTypeEnum;
-import com.alipay.tumaker.common.facade.model.analysis.AggregatedResultVO;
+import com.alipay.tumaker.common.facade.model.vo.common.Enum.GraphLanguageTypeEnum;
+import com.alipay.tumaker.common.facade.model.vo.analysis.AggregatedResultVO;
 import com.alipay.tumaker.common.util.Result;
-import com.alipay.tumaker.core.model.tumaker.graphquerytemplate.ExecuteEngineEnum;
+import com.alipay.tumaker.common.facade.model.ExecuteEngineEnum;
 
 public interface TuMakerAnalysisManager {
     /**

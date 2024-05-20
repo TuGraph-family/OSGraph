@@ -1,6 +1,6 @@
 package com.alipay.tumaker.core.service.graphanalysis;
 
-import com.alipay.tumaker.common.facade.model.analysis.AggregatedResultVO;
+import com.alipay.tumaker.common.facade.model.vo.analysis.AggregatedResultVO;
 import com.alipay.tumaker.common.util.Result;
 import com.alipay.tumaker.core.model.tumaker.graphquerytemplate.FullTextQueryGithubRepoVO;
 import com.alipay.tumaker.core.model.tumaker.graphquerytemplate.TuMakerExecuteTemplateRequest;

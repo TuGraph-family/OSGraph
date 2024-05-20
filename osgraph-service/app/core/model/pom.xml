@@ -25,6 +25,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alipay.tumaker</groupId>
+            <artifactId>tumaker-common-facade</artifactId>
+            <version>${tumaker.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

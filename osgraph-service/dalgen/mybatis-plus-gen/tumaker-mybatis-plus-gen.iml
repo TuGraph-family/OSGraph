@@ -27,8 +27,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.26" level="project" />
     <orderEntry type="library" name="Maven: com.baomidou:mybatis-plus-generator:3.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.5.9" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.21" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.11.0" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.40" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-freemarker:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.7.10" level="project" />

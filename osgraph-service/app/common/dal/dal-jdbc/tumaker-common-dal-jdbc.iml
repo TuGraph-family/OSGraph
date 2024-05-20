@@ -27,8 +27,7 @@
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.5.9" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.21" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.11.0" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.40" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid-spring-boot-starter:1.1.9" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid:1.1.9" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />

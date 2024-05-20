@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon May 20 15:48:04 CST 2024
+tumaker-serviceplugin-core-1.0.1.jar>=
+tumaker-serviceplugin-core-1.0.1-sources.jar>=
+tumaker-serviceplugin-core-1.0.1.jar>central_prod=
+tumaker-serviceplugin-core-1.0.1.pom>=

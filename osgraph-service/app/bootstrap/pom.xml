@@ -92,50 +92,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.8.0</version>
-                <executions>
-                    <execution>
-                        <id>install node and yarn</id>
-                        <goals>
-                            <goal>install-node-and-yarn</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
-                    <execution>
-                        <id>yarn install</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>yarn build</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <arguments>build</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <workingDirectory>../../../geaflow-web</workingDirectory>
-                    <nodeVersion>${build.node.version}</nodeVersion>
-                    <npmVersion>${build.npm.version}</npmVersion>
-                    <yarnVersion>${build.yarn.version}</yarnVersion>
-                    <nodeDownloadRoot>https://npm.taobao.org/mirrors/node/</nodeDownloadRoot>
-                    <npmDownloadRoot>https://registry.npmmirror.com/npm/-/</npmDownloadRoot>
-                    <yarnDownloadRoot>https://repo.huaweicloud.com/yarn/</yarnDownloadRoot>
-                    <npmRegistryURL>https://registry.npmmirror.com</npmRegistryURL>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>

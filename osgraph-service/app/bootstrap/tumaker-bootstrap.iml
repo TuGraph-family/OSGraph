@@ -13,81 +13,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="tumaker-web-home" />
     <orderEntry type="module" module-name="tumaker-core-service" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-boot-alipay-api:3.19.1" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.drm:drm-client:4.8.1" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.common:tracer:1.0.39" level="project" />
-    <orderEntry type="library" name="Maven: com.alibaba.toolkit.common:toolkit-common-lang:1.1.5" level="project" />
-    <orderEntry type="library" name="Maven: com.taobao.remoting:network.core:1.2.13.shade_mina" level="project" />
-    <orderEntry type="library" name="Maven: cglib:cglib-nodep:2.1_3" level="project" />
-    <orderEntry type="library" name="Maven: com.taobao.configserver:config-client:4.5.0" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.lookout:lookout-api:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.taobao.common.monitor:common-monitor:1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.taobao.remoting:network.service:1.1.2.alipay" level="project" />
-    <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
-    <orderEntry type="library" name="Maven: com.taobao.logstat:logstat-client:1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.taobao.logstat:logstat-common:1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.configserver:config-common:4.2.10.alipay" level="project" />
-    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.7.0" level="project" />
-    <orderEntry type="library" name="Maven: com.alibaba.toolkit.common:toolkit-common-logging:1.10" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa:bolt:1.5.10" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-haproxy:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-http2:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-memcache:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-mqtt:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-redis:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-smtp:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-stomp:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-xml:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler-ssl-ocsp:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-rxtx:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-sctp:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-udt:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-classes-epoll:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport-classes-kqueue:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns-classes-macos:4.1.90.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.90.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-transport-native-epoll:linux-aarch_64:4.1.90.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-transport-native-kqueue:osx-x86_64:4.1.90.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-transport-native-kqueue:osx-aarch_64:4.1.90.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-resolver-dns-native-macos:osx-x86_64:4.1.90.Final" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-resolver-dns-native-macos:osx-aarch_64:4.1.90.Final" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa.lookout:lookout-api:1.5.2" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa.cloud:sdk-core:0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-security-util:1.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.security:pki-intranet-signature-verify:1.0.8" level="project" />
-    <orderEntry type="library" name="Maven: io.mosn.layotto:layotto-sdk-core:1.1.0" level="project" />
-    <orderEntry type="library" name="Maven: io.mosn.layotto:runtime-sdk:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-netty-shaded:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-core:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.android:annotations:4.1.1.4" level="project" />
-    <orderEntry type="library" name="Maven: io.perfmark:perfmark-api:0.19.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-protobuf:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-api:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-context:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.18" level="project" />
-    <orderEntry type="library" name="Maven: com.google.api.grpc:proto-google-common-protos:1.17.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-protobuf-lite:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-stub:1.28.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java-util:3.17.2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.9.1" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa:naming-client:1.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />
-    <orderEntry type="library" name="Maven: io.grpc:grpc-services:1.39.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-common-specs:1.4.1" level="project" />
     <orderEntry type="module" module-name="tumaker-common-util" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.4" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.0.1" level="project" />
@@ -115,6 +40,7 @@
     <orderEntry type="library" name="Maven: org.springframework.ws:spring-xml:3.1.5" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.24" level="project" />
     <orderEntry type="module" module-name="tumaker-common-facade" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />
     <orderEntry type="module" module-name="tumaker-biz-service-impl" />
     <orderEntry type="module" module-name="tumaker-core-model" />
     <orderEntry type="module" module-name="tumaker-common-dal-core" />
@@ -128,8 +54,7 @@
     <orderEntry type="library" name="Maven: com.baomidou:mybatis-plus-spring-boot-autoconfigure:3.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.5.9" level="project" />
     <orderEntry type="module" module-name="tumaker-common-dal-jdbc" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.21" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.11.0" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.40" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid-spring-boot-starter:1.1.9" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid:1.1.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-jdbc:2.7.10" level="project" />
@@ -152,7 +77,9 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.12.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.12.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.12.3" level="project" />
-    <orderEntry type="library" name="Maven: com.alipay.tumaker:tumaker-serviceplugin-devops:1.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.alipay.tumaker:tumakertugraphdb-core:1.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="tumaker-serviceplugin-core" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: org.neo4j.driver:neo4j-java-driver:4.4.11" level="project" />
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
@@ -173,7 +100,6 @@
     <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-ark-exception:1.1.5" level="project" />
     <orderEntry type="library" name="Maven: com.alipay.sofa:healthcheck-sofa-boot-starter:3.19.1" level="project" />
     <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-boot-autoconfigure:3.19.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.7.10" level="project" />
     <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-boot-actuator-autoconfigure:3.19.1" level="project" />
     <orderEntry type="library" name="Maven: com.alipay.sofa:sofa-boot-actuator:3.19.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-actuator:2.7.10" level="project" />

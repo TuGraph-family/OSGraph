@@ -16,7 +16,7 @@
     <properties>
         <java.version>1.8</java.version>
         <tumaker.version>1.0.1</tumaker.version>
-        <tumaker.plugin.version>1.0.2</tumaker.plugin.version>
+        <tumakertugraphdb.core.version>1.0.1-SNAPSHOT</tumakertugraphdb.core.version>
         <sofa.boot.version>3.19.1</sofa.boot.version>
         <springboot.version>2.7.10</springboot.version>
         <druid-spring.version>1.1.9</druid-spring.version>
@@ -95,7 +95,12 @@
             <dependency>
                 <groupId>com.alipay.tumaker</groupId>
                 <artifactId>tumaker-serviceplugin-devops</artifactId>
-                <version>${tumaker.plugin.version}</version>
+                <version>{tumaker.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.tumaker</groupId>
+                <artifactId>tumaker-serviceplugin-core</artifactId>
+                <version>${tumaker.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alipay.tumaker</groupId>
@@ -116,6 +121,11 @@
                 <groupId>com.alipay.tumaker</groupId>
                 <artifactId>tumaker-common-facade</artifactId>
                 <version>${tumaker.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.tumaker</groupId>
+                <artifactId>tumakertugraphdb-core</artifactId>
+                <version>${tumakertugraphdb.core.version}</version>
             </dependency>
             <!--<dependency>
                 <groupId>com.alipay.sofa</groupId>
