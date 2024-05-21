@@ -12,7 +12,6 @@ cp -r osgraph-service/libs/tumakertugraphdb-parent ~/.m2/repository/com/alipay/t
 cp -r osgraph-service/libs/tumakertugraphdb-core ~/.m2/repository/com/alipay/tumaker/
 cd osgraph-service
 mvn clean install -Dmaven.test.skip=true
-cd ../
 cp -r target /home/admin/release/run/
 mkdir -p /home/admin/release/run/target/boot/tumaker-bootstrap-1.0.1-executable
 rm -rf /home/admin/release/run/target/boot/tumaker-bootstrap-1.0.1-executable/*

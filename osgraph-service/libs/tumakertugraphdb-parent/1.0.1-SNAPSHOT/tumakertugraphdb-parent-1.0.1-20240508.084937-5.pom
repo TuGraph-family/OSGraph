@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.alipay.tumaker</groupId>
     <artifactId>tumakertugraphdb-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>tumakertugraphdb</name>
     <modules>
         <module>tumakertugraphdb-core</module>
@@ -25,6 +25,7 @@
         <spring.version>5.3.21</spring.version>
         <junit.version>5.8.2</junit.version>
         <neo4j.version>4.4.14</neo4j.version>
+        <tumaker.snapshot.version>1.0.1-SNAPSHOT</tumaker.snapshot.version>
         <tumaker.version>1.0.1</tumaker.version>
     </properties>
 
@@ -34,6 +35,11 @@
             <dependency>
                 <groupId>com.alipay.tumaker</groupId>
                 <artifactId>tumaker-common-facade</artifactId>
+                <version>${tumaker.snapshot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.tumaker</groupId>
+                <artifactId>tumaker-serviceplugin-core</artifactId>
                 <version>${tumaker.version}</version>
             </dependency>
             <!-- spring -->
