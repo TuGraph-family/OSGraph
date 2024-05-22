@@ -13,6 +13,7 @@ cp -r osgraph-service/libs/tumakertugraphdb-parent ~/.m2/repository/com/alipay/t
 cd osgraph-service
 mvn install:install-file -DgroupId=com.alipay.tumaker -DartifactId=tumaker-serviceplugin-devops -Dversion=1.0.2 -Dpackaging=jar -Dfile=./libs/tumaker-serviceplugin-devops/1.0.2/tumaker-serviceplugin-devops-1.0.2.jar
 mvn install:install-file -DgroupId=com.alipay.tumaker -DartifactId=tumaker-serviceplugin-core -Dversion=1.0.1 -Dpackaging=jar -Dfile=./libs/tumaker-serviceplugin-core/1.0.1/tumaker-serviceplugin-core-1.0.1.jar
+mvn install:install-file -DgroupId=com.alipay.tumaker -DartifactId=tumakertugraphdb-core -Dversion=1.0.1-SNAPSHOT -Dpackaging=jar -Dfile=./libs/tumakertugraphdb-core/1.0.1-SNAPSHOT/tumakertugraphdb-core-1.0.1-SNAPSHOT.jar
 mvn clean install -Dmaven.test.skip=true
 cp -r target /home/admin/release/run/
 mkdir -p /home/admin/release/run/target/boot/tumaker-bootstrap-1.0.1-executable
