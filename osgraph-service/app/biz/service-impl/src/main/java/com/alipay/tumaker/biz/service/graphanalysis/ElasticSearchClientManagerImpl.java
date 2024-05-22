@@ -52,7 +52,7 @@ public class ElasticSearchClientManagerImpl implements ElasticSearchClientManage
         String serverUrl = platformConfigManager.getEsServerUrl();
         String esServerUsername = platformConfigManager.getEsServerUsername();
         String esServerPassword = platformConfigManager.getEsServerPassword();
-        log.info("yayatest, serverUrl={}", serverUrl);
+        log.info("serverUrl={}", serverUrl);
 
         // es 8.9 初始化链接
         /*RestClient restClient = RestClient

@@ -191,7 +191,6 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
         Map<String, String> keyWordMap = new HashMap<>();
         keyWordMap.put(ElasticSearchClientManagerImpl.esIndexBodyNameTag, keyword);
         FullTextIndexNameEnum indexNameEnum = FullTextIndexNameEnum.convertToFullTextIndexNameEnum(indexName);
-        log.info("yayatest");
         try {
             log.error("start search 1=");
             return  elasticSearchClientManager.search(indexNameEnum, keyWordMap);
