@@ -59,12 +59,14 @@ export const GraphView = React.memo(
     };
 
     const getTooltipContent = (record: Record<string, any>) => {
+      const properties = record[0]?.properties;
       const tooltip = document.getElementsByClassName("tooltip")[0];
       tooltip.style = "border-radius:16px !important";
-      const properties = record[0]?.properties;
+      tooltip.style = `opacity:${isEmpty(properties) ? 0 : 1} !important`;
       const nodeId = record[0]?.id;
       const isNode = Boolean(record[0]?.nodeType);
       const outDiv = document.createElement("div");
+
       outDiv.style.padding = "12px";
       const container = ReactDOM.createRoot(outDiv);
       container.render(
@@ -90,7 +92,7 @@ export const GraphView = React.memo(
           style: {
             size: (d) => d.size,
             labelText: (d) => d?.properties?.name,
-            fill: (d) => {
+            color: (d) => {
               return d.nodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.nodeType][d.id % 4]
                 : NODE_TYPE_COLOR_MAP[d.nodeType];
@@ -117,7 +119,7 @@ export const GraphView = React.memo(
             endArrow: (d) => EDGE_DISPLAY_NAME_MAP[d?.edgeType].hasArrow,
             labelBackgroundFill: "#fff",
             labelBackground: true,
-            stroke: (d) =>
+            color: (d) =>
               d.targetNodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
                 : NODE_TYPE_COLOR_MAP[d.targetNodeType],
