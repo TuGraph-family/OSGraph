@@ -29,7 +29,7 @@ export default () => {
     locationState: location || {},
     isOpen: false,
     shareLink: "",
-    isLoading: false
+    isLoading: false,
   });
   const { locationState, isOpen, isLoading, shareLink } = state;
 
@@ -40,7 +40,7 @@ export default () => {
     querySource,
     searchValue,
     templateId,
-    templateParameterList
+    templateParameterList,
   } = locationState || {};
   const query = new URLSearchParams(location.search);
   const shareId = query.get("shareId");
@@ -169,23 +169,26 @@ export default () => {
           style={{
             background: "#f6f6f6",
             borderRadius: 8,
+            padding: "0 8px",
             width: 432,
             height: 40,
             lineHeight: "40px",
             display: "flex",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <p
+          <div
             style={{
+              marginRight: 8,
               width: "calc(100% - 65px)",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              whiteSpace: "nowrap"
+              whiteSpace: "nowrap",
             }}
           >
             {shareLink}
-          </p>
+          </div>
           <CopyToClipboard
             text={shareLink}
             onCopy={(_, result) => {
