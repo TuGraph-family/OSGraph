@@ -8,7 +8,7 @@ import { graphDataTranslator } from "../../result/translator";
 import {
   getExecuteFullTextQuery,
   getExecuteQueryTemplate,
-  getListQueryTemplate
+  getListQueryTemplate,
 } from "../../services/homePage";
 import styles from "./index.module.less";
 
@@ -37,7 +37,7 @@ export const ProjectSearch: React.FC<{
   graphSearchValue,
   graphTemplateId,
   graphParameterList,
-  getGraphLoading
+  getGraphLoading,
 }) => {
   const navigate = useNavigate();
   const [queryList, setQueryList] = useState<any[]>([]);
@@ -59,7 +59,7 @@ export const ProjectSearch: React.FC<{
     projectValue: graphProjectValue || "REPO_CONTRIBUTE",
     placeholderValue: "请输入 GitHub 仓库名称",
     searchValue: "",
-    loadingProjects: false
+    loadingProjects: false,
   });
   const {
     querySource,
@@ -70,7 +70,7 @@ export const ProjectSearch: React.FC<{
     projectValue,
     placeholderValue,
     searchValue,
-    loadingProjects
+    loadingProjects,
   } = state;
 
   const styleObj: React.CSSProperties = {
@@ -81,7 +81,7 @@ export const ProjectSearch: React.FC<{
     marginLeft: defaultStyle ? 16 : 0,
     border: defaultStyle ? "1px solid #f2f2f2" : "1px solid #ffffff",
     background: defaultStyle ? "#ffffff" : "",
-    borderRadius: defaultStyle ? "6px" : "12px"
+    borderRadius: defaultStyle ? "6px" : "12px",
   };
 
   const switchName = (parameterName: string, parameterValue: string) => {
@@ -108,7 +108,7 @@ export const ProjectSearch: React.FC<{
         return {
           parameterName: parameterName,
           parameterValue: switchName(parameterName, parameterValue || value),
-          valueType: valueType
+          valueType: valueType,
         };
       }
     );
@@ -127,7 +127,7 @@ export const ProjectSearch: React.FC<{
     } else {
       handelWarehouseChange(warehouseValue, {
         templateId: item.data.id,
-        templateParameterList: item.data.templateParameterList
+        templateParameterList: item.data.templateParameterList,
       });
     }
     setState((draft) => {
@@ -179,7 +179,7 @@ export const ProjectSearch: React.FC<{
     getGraphLoading?.(true);
     getExecuteQueryTemplate({
       templateId: templateId,
-      templateParameterList: templateList
+      templateParameterList: templateList,
     }).then((res) => {
       const graphData = graphDataTranslator(res.data);
       getGraphLoading?.(false);
@@ -188,7 +188,7 @@ export const ProjectSearch: React.FC<{
           onSearch?.({
             searchData: graphData,
             graphTemplateId: templateId,
-            graphParamsValue: paramsValue
+            graphParamsValue: paramsValue,
           });
           return;
         }
@@ -201,8 +201,8 @@ export const ProjectSearch: React.FC<{
             templateId,
             paramsValue,
             templateParameterList,
-            warehouseValue: value
-          }
+            warehouseValue: value,
+          },
         });
       } else {
         message.error(res.message);
@@ -261,7 +261,9 @@ export const ProjectSearch: React.FC<{
     <div className={styles["project-search"]} style={styleObj}>
       <ConfigProvider
         theme={{
-          algorithm: defaultStyle ? theme.defaultAlgorithm : theme.darkAlgorithm
+          algorithm: defaultStyle
+            ? theme.defaultAlgorithm
+            : theme.darkAlgorithm,
         }}
       >
         <Select
@@ -314,7 +316,8 @@ export const ProjectSearch: React.FC<{
               ? "calc(100% - 320px)"
               : defaultStyle
               ? "400px"
-              : "650px"
+              : "650px",
+            lineHeight: 32,
           }}
           placeholder={placeholderValue}
           optionFilterProp="children"
@@ -329,7 +332,7 @@ export const ProjectSearch: React.FC<{
           {textQuery?.map((item) => {
             return (
               <Select.Option value={item.id} key={item.id}>
-                {item.name}
+                <div style={{ lineHeight: "32px" }}>{item.name}</div>
               </Select.Option>
             );
           })}
