@@ -1,6 +1,0 @@
-/home/admin/app/OSGraph/osgraph-service/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/TuMakerAnalysisManagerImpl.java
-/home/admin/app/OSGraph/osgraph-service/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/TuMakerTemplateManagerImpl.java
-/home/admin/app/OSGraph/osgraph-service/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/querytemplate/TuMakerQueryTemplateDataManagerImpl.java
-/home/admin/app/OSGraph/osgraph-service/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/ElasticSearchClientManagerImpl.java
-/home/admin/app/OSGraph/osgraph-service/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/app/ApplicationTestManagerImpl.java
-/home/admin/app/OSGraph/osgraph-service/app/biz/service-impl/src/main/java/com/alipay/tumaker/biz/service/graphanalysis/util/CovertUtils.java
