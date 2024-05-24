@@ -49,5 +49,6 @@
     cd OSGraph/
     bash bin/start-osgraph.sh
 ## 7.浏览器验证
+
      http://127.0.0.1
 
