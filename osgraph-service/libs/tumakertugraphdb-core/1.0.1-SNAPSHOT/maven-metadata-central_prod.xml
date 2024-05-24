@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metadata>
+  <groupId>com.alipay.tumaker</groupId>
+  <artifactId>tumakertugraphdb-core</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <buildNumber>1</buildNumber>
+      <timestamp>20240508.084941</timestamp>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.0.1-20240508.084941-1</value>
+        <updated>20240508084941</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>1.0.1-20240508.084941-1</value>
+        <updated>20240508084941</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0.1-20240508.084941-1</value>
+        <updated>20240508084941</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+    <lastUpdated>20240508084941</lastUpdated>
+  </versioning>
+</metadata>
