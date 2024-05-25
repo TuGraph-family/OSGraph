@@ -11,6 +11,7 @@
 ## 5.Compiled code
     cd OSGraph/
     bash bin/build-osgraph.sh
+    exit
 ## 5.Configuration parameter
 
 ### 5.1 Pull  database image
@@ -21,6 +22,8 @@
     #get the IP address of a MySQL container
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql 
 ### 5.2 Configure dependent environment variables
+
+    docker exec -it build bash
     #obtain the addresses of the pre-prepared Elasticsearch cluster and Tugraph-DB cluster
     #configure environment variables
     cd OSGraph/
