@@ -1,15 +1,19 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
 import { Graph } from "@antv/g6";
+import { Button, Space, message } from "antd";
 import { isEmpty, isEqual, isFunction } from "lodash";
 import React from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import ReactDOM from "react-dom/client";
+import { useTranslation } from "react-i18next";
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
   NODE_TYPE_ICON_MAP,
   NODE_TYPE_MAP
 } from "../../constants";
-import { iconLoader } from "../icon-font";
+import { IconFont, iconLoader } from "../icon-font";
 
 interface IProps {
   data: DataID;
@@ -20,6 +24,63 @@ export const GraphView = React.memo(
   ({ data, onReady }: IProps) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
+
+    const { t } = useTranslation();
+
+    const renderTooltipItem = (label: string, text: string) => {
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <div style={{ fontSize: 14, marginRight: 8 }}>
+            <span>{label}</span>：<span>{text}</span>
+          </div>
+          <CopyToClipboard
+            text={text}
+            onCopy={(_, result) => {
+              if (result) {
+                message.success(t`copy success`);
+              } else {
+                message.error("复制失败，请稍后再试");
+              }
+            }}
+          >
+            <Button
+              size="small"
+              icon={<IconFont type="os-icon-fuzhi" />}
+              type="text"
+            />
+          </CopyToClipboard>
+        </div>
+      );
+    };
+
+    const getTooltipContent = (record: Record<string, any>) => {
+      const properties = record[0]?.properties;
+      const tooltip = document.getElementsByClassName("tooltip")[0];
+      tooltip.style = "border-radius:16px !important";
+      tooltip.style = `opacity:${isEmpty(properties) ? 0 : 1} !important`;
+      const nodeId = record[0]?.id;
+      const isNode = Boolean(record[0]?.nodeType);
+      const outDiv = document.createElement("div");
+
+      outDiv.style.padding = "12px";
+      const container = ReactDOM.createRoot(outDiv);
+      container.render(
+        <Space direction="vertical">
+          {isNode && renderTooltipItem("ID", nodeId)}
+          {Object.keys(properties).map((item) =>
+            renderTooltipItem(item, properties[item])
+          )}
+        </Space>
+      );
+
+      return outDiv;
+    };
 
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
@@ -32,7 +93,7 @@ export const GraphView = React.memo(
           style: {
             size: (d) => d.size,
             labelText: (d) => d?.properties?.name,
-            fill: (d) => {
+            color: (d) => {
               return d.nodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.nodeType][d.id % 4]
                 : NODE_TYPE_COLOR_MAP[d.nodeType];
@@ -59,7 +120,7 @@ export const GraphView = React.memo(
             endArrow: (d) => EDGE_DISPLAY_NAME_MAP[d?.edgeType].hasArrow,
             labelBackgroundFill: "#fff",
             labelBackground: true,
-            stroke: (d) =>
+            color: (d) =>
               d.targetNodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
                 : NODE_TYPE_COLOR_MAP[d.targetNodeType],
@@ -74,6 +135,7 @@ export const GraphView = React.memo(
           linkDistance: 240
         },
         behaviors: [
+          { type: "click-element", multiple: false },
           { type: "zoom-canvas", sensitivity: 0.1 },
           "drag-canvas",
           "drag-element",
@@ -88,14 +150,24 @@ export const GraphView = React.memo(
             distance: 20
           }
         ],
-        autoFit: "view"
+        autoFit: "view",
+        plugins: [
+          {
+            type: "tooltip",
+            key: "tooltip",
+            trigger: "click",
+            enable: true,
+            enterable: true,
+            getContent: (_, record: Record<string, any>) =>
+              getTooltipContent(record)
+          }
+        ]
       });
 
       graph.render();
       graphRef.current = graph;
       if (isFunction(onReady)) onReady(graph);
     };
-
     React.useEffect(() => {
       if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
         if (!containerRef.current) return;
