@@ -1,19 +1,19 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
 import { Graph } from "@antv/g6";
+import { Button, Space, message } from "antd";
 import { isEmpty, isEqual, isFunction } from "lodash";
 import React from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import ReactDOM from "react-dom/client";
+import { useTranslation } from "react-i18next";
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
   NODE_TYPE_ICON_MAP,
-  NODE_TYPE_MAP,
+  NODE_TYPE_MAP
 } from "../../constants";
-import { iconLoader, IconFont } from "../icon-font";
-import ReactDOM from "react-dom/client";
-import { Button, message, Space } from "antd";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useTranslation } from "react-i18next";
+import { IconFont, iconLoader } from "../icon-font";
 
 interface IProps {
   data: DataID;
@@ -24,11 +24,7 @@ export const GraphView = React.memo(
   ({ data, onReady }: IProps) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 620df77 (feat: add graph element properties tooltip  (#40))
+
     const { t } = useTranslation();
 
     const renderTooltipItem = (label: string, text: string) => {
@@ -37,7 +33,7 @@ export const GraphView = React.memo(
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <div style={{ fontSize: 14, marginRight: 8 }}>
@@ -64,7 +60,6 @@ export const GraphView = React.memo(
     };
 
     const getTooltipContent = (record: Record<string, any>) => {
-<<<<<<< HEAD
       const properties = record[0]?.properties;
       const tooltip = document.getElementsByClassName("tooltip")[0];
       tooltip.style = "border-radius:16px !important";
@@ -73,14 +68,6 @@ export const GraphView = React.memo(
       const isNode = Boolean(record[0]?.nodeType);
       const outDiv = document.createElement("div");
 
-=======
-      const tooltip = document.getElementsByClassName("tooltip")[0];
-      tooltip.style = "border-radius:16px !important";
-      const properties = record[0]?.properties;
-      const nodeId = record[0]?.id;
-      const isNode = Boolean(record[0]?.nodeType);
-      const outDiv = document.createElement("div");
->>>>>>> 620df77 (feat: add graph element properties tooltip  (#40))
       outDiv.style.padding = "12px";
       const container = ReactDOM.createRoot(outDiv);
       container.render(
@@ -94,10 +81,6 @@ export const GraphView = React.memo(
 
       return outDiv;
     };
-<<<<<<< HEAD
->>>>>>> bcfe747 (fix: modify the explicit logic of the properties tooltip (#44))
-=======
->>>>>>> 620df77 (feat: add graph element properties tooltip  (#40))
 
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
@@ -122,8 +105,8 @@ export const GraphView = React.memo(
             iconFill: "#fff",
             iconWidth: (d) => d.size,
             iconHeight: (d) => d.size,
-            iconFontSize: (d) => d.iconFontSize,
-          },
+            iconFontSize: (d) => d.iconFontSize
+          }
         },
         edge: {
           style: {
@@ -144,12 +127,12 @@ export const GraphView = React.memo(
             labelOpacity: 1,
             lineWidth: (d) => d.lineWidth,
             endArrowSize: (d) => d.endArrowSize,
-            labelFontSize: 10,
-          },
+            labelFontSize: 10
+          }
         },
         layout: {
           type: "force",
-          linkDistance: 240,
+          linkDistance: 240
         },
         behaviors: [
           { type: "click-element", multiple: false },
@@ -157,15 +140,15 @@ export const GraphView = React.memo(
           "drag-canvas",
           "drag-element",
           "click-selected",
-          "hover-element",
+          "hover-element"
         ],
         autoResize: true,
         zoomRange: [0.1, 5],
         transforms: [
           {
             type: "process-parallel-edges",
-            distance: 20,
-          },
+            distance: 20
+          }
         ],
         autoFit: "view",
         plugins: [
@@ -176,9 +159,9 @@ export const GraphView = React.memo(
             enable: true,
             enterable: true,
             getContent: (_, record: Record<string, any>) =>
-              getTooltipContent(record),
-          },
-        ],
+              getTooltipContent(record)
+          }
+        ]
       });
 
       graph.render();
