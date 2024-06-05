@@ -21,13 +21,13 @@
 
     #get the IP address of a MySQL container
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql 
-### 5.2 Configure dependent environment variables
+### 5.3 Configure dependent environment variables
 
     docker exec -it build bash
     #obtain the addresses of the pre-prepared Elasticsearch cluster and Tugraph-DB cluster
     #configure environment variables
     cd OSGraph/
-    vim bin/tumaker-env
+    vi bin/tumaker-env
 
     export LANG=zh_CN.UTF-8
     #configure mysql
@@ -51,7 +51,7 @@
     source bin/tumaker-env
 ## 6.Start service verification
     cd OSGraph/
-    bash bin/start-osgraph.sh
+    bash bin/startup-osgraph.sh
 ## 7.Browser verification
     http://127.0.0.1
 

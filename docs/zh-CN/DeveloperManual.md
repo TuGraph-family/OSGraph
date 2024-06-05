@@ -20,13 +20,13 @@
 
     #获取mysql 容器的ip
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql 
-### 5.2 配置依赖的环境变量
+### 5.3 配置依赖的环境变量
  
     docker exec -it build bash
     #将提前准备的es集群，tugraph-db集群的地址 获取到
     #配置环境变量
     cd OSGraph/
-    vim bin/tumaker-env
+    vi bin/tumaker-env
 
     export LANG=zh_CN.UTF-8
     #mysql配置
@@ -50,7 +50,7 @@
     source bin/tumaker-env
 ## 6.启动服务验证
     cd OSGraph/
-    bash bin/start-osgraph.sh
+    bash bin/startup-osgraph.sh
 ## 7.浏览器验证
 
      http://127.0.0.1
