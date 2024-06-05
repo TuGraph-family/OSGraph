@@ -47,6 +47,7 @@
     export TUGRAPHDB_NAME=default #TuGraph-DB 图数据库表名
 
 ### 5.3 环境变量生效
+    # 保证tumaker-env文件里的注释清理掉，没有空格
     source bin/tumaker-env
 ## 6.启动服务验证
     cd OSGraph/

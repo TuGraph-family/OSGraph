@@ -48,6 +48,7 @@
     export TUGRAPHDB_NAME=default #TuGraph-DB Graph Database Table Name
 
 ### 5.3 Environment variables take effect
+    Ensure that the tumaker-env file has comments removed and there are no trailing spaces.
     source bin/tumaker-env
 ## 6.Start service verification
     cd OSGraph/
