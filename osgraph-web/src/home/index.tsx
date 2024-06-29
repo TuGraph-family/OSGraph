@@ -8,6 +8,7 @@ import {
   X_LAB_GITHUB
 } from "../constants/links";
 import { SPAPOS } from "../constants/log";
+import { resetClientWidth } from "../utils/adjust-width";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 
@@ -49,6 +50,7 @@ const HomePage: React.FC = () => {
     window.open("https://beian.miit.gov.cn");
   };
   useEffect(() => {
+    resetClientWidth();
     window.onscroll = function () {
       const { scrollHeight, clientHeight, scrollTop } =
         document.documentElement;
