@@ -88,6 +88,7 @@ const HomePage: React.FC = () => {
           autoPlay
           loop
           muted
+          playsInline
           className={styles["header-img"]}
           id="video"
           style={{ visibility: "hidden" }}
