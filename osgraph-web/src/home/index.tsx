@@ -61,14 +61,7 @@ const HomePage: React.FC = () => {
         setNeedFixed(false);
       }
     };
-    const video = document.getElementById("video") as HTMLVideoElement;
-    if (video) {
-      video.src =
-        "https://gw.alipayobjects.com/v/huamei_tu4rvn/afts/video/A*V9DKSIe4nKEAAAAAAAAAAAAADp_eAQ";
-      video.addEventListener("play", () => {
-        video.style.visibility = "visible";
-      });
-    }
+
     const firstPage = document.getElementById("firstPage");
     if (firstPage && isMobile) {
       firstPage.style.height = "35vh";
@@ -91,7 +84,7 @@ const HomePage: React.FC = () => {
           playsInline
           className={styles["header-img"]}
           id="video"
-          style={{ visibility: "hidden" }}
+          src="https://gw.alipayobjects.com/v/huamei_tu4rvn/afts/video/A*V9DKSIe4nKEAAAAAAAAAAAAADp_eAQ"
         ></video>
         <div className={styles["open-source"]}>
           <img
