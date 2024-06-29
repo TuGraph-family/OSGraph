@@ -2,7 +2,7 @@ import { isIOS } from "./isMobile";
 
 export const adjustWidth = () => {
   if (isIOS()) {
-    const innerWidth = window.innerWidth;
+    const innerWidth = window.screen.width;
     const dpr = window.devicePixelRatio;
     const root = document.getElementById("root");
     if (root) {
