@@ -1,6 +1,6 @@
-url: jdbc:mysql://rm-uf604u128m9h6l864yo.mysql.rds.aliyuncs.com/tumaker?useUnicode=true&amp;characterEncoding=gbk
-username: geamaker_offline
-password: -7bc9ee0a3590d616
+url: jdbc:mysql://127.0.0.1:3306/tumaker?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=true&serverTimezone=UTC
+username: mysql
+password: mysql
 
 tableList:
   #- person_l
