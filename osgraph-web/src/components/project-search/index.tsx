@@ -52,7 +52,7 @@ export const ProjectSearch: React.FC<{
     searchValue: string;
     loadingProjects: boolean;
   }>({
-    querySource: "github_repo",
+    querySource: graphQuerySource || "github_repo",
     templateParameterList: graphParameterList || [],
     textQuery: [],
     templateId: graphTemplateId || "1",
@@ -142,6 +142,7 @@ export const ProjectSearch: React.FC<{
   const getExecuteFullTextQueryList = (indexName: string, keyword: string) => {
     setState((draft) => {
       draft.loadingProjects = true;
+      draft.querySource = indexName;
     });
     getExecuteFullTextQuery({ indexName, keyword }).then((res) => {
       setState((draft) => {
@@ -180,34 +181,41 @@ export const ProjectSearch: React.FC<{
     getExecuteQueryTemplate({
       templateId: templateId,
       templateParameterList: templateList,
-    }).then((res) => {
-      const graphData = graphDataTranslator(res.data);
-      getGraphLoading?.(false);
-      if (res?.success) {
-        if (defaultStyle) {
-          onSearch?.({
-            searchData: graphData,
-            graphTemplateId: templateId,
-            graphParamsValue: paramsValue,
-          });
-          return;
+    })
+      .then((res) => {
+        if (!res.data) {
+          message.error(res.message);
         }
-        navigate("/result", {
-          state: {
-            data: graphData,
-            projectValue,
-            querySource,
-            searchValue,
-            templateId,
-            paramsValue,
-            templateParameterList,
-            warehouseValue: value,
-          },
-        });
-      } else {
-        message.error(res.message);
-      }
-    });
+        const graphData = graphDataTranslator(res.data);
+        getGraphLoading?.(false);
+        if (res?.success) {
+          if (defaultStyle) {
+            onSearch?.({
+              searchData: graphData,
+              graphTemplateId: templateId,
+              graphParamsValue: paramsValue,
+            });
+            return;
+          }
+          navigate("/result", {
+            state: {
+              data: graphData,
+              projectValue,
+              querySource,
+              searchValue,
+              templateId,
+              paramsValue,
+              templateParameterList,
+              warehouseValue: value,
+            },
+          });
+        } else {
+          message.error(res.message);
+        }
+      })
+      .finally(() => {
+        getGraphLoading?.(false);
+      });
   };
 
   useEffect(() => {
@@ -224,7 +232,7 @@ export const ProjectSearch: React.FC<{
   useEffect(() => {
     if (queryList.length) {
       const contributeTemplate = queryList.find(
-        (item) => item.templateType === "REPO_CONTRIBUTE"
+        (item) => item.templateType === graphProjectValue
       );
       if (contributeTemplate) {
         setState((draft) => {
