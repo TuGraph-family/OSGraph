@@ -336,6 +336,7 @@ export const ProjectSearch: React.FC<{
           }
           value={warehouseValue}
           loading={loadingProjects}
+          filterOption={false}
         >
           {textQuery?.map((item) => {
             return (
