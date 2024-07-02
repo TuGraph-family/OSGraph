@@ -164,11 +164,11 @@ export const ProjectSearch: React.FC<{
     value: any,
     templateInfo: { templateId: string; templateParameterList: any[] }
   ) => {
+    if (!value) return;
     const { templateId, templateParameterList } = templateInfo;
     setState((draft) => {
       draft.warehouseValue = value;
     });
-
     const templateList = handleJson(templateParameterList, value);
 
     const paramsValue = templateList
