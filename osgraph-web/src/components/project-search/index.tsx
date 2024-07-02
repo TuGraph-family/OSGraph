@@ -232,7 +232,7 @@ export const ProjectSearch: React.FC<{
   useEffect(() => {
     if (queryList.length) {
       const contributeTemplate = queryList.find(
-        (item) => item.templateType === graphProjectValue
+        (item) => item.templateType === projectValue
       );
       if (contributeTemplate) {
         setState((draft) => {
