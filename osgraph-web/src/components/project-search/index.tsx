@@ -242,7 +242,7 @@ export const ProjectSearch: React.FC<{
         });
       }
     }
-  }, [queryList]);
+  }, [queryList, projectValue]);
 
   useEffect(() => {
     getListQueryTemplate().then((res) => {
@@ -260,7 +260,10 @@ export const ProjectSearch: React.FC<{
     if (templateType) {
       setState((draft) => {
         draft.projectValue = templateType;
+        draft.querySource =
+          GRAPH_TYPE_CLUSTER[templateType as keyof typeof GRAPH_TYPE_CLUSTER];
         draft.placeholderValue = PLACEHOLDER_MAP[templateType];
+        draft.textQuery = [];
       });
     }
   }, [templateType]);
