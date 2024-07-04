@@ -164,11 +164,11 @@ export const ProjectSearch: React.FC<{
     value: any,
     templateInfo: { templateId: string; templateParameterList: any[] }
   ) => {
+    if (!value) return;
     const { templateId, templateParameterList } = templateInfo;
     setState((draft) => {
       draft.warehouseValue = value;
     });
-
     const templateList = handleJson(templateParameterList, value);
 
     const paramsValue = templateList
@@ -232,7 +232,7 @@ export const ProjectSearch: React.FC<{
   useEffect(() => {
     if (queryList.length) {
       const contributeTemplate = queryList.find(
-        (item) => item.templateType === graphProjectValue
+        (item) => item.templateType === projectValue
       );
       if (contributeTemplate) {
         setState((draft) => {
@@ -242,7 +242,7 @@ export const ProjectSearch: React.FC<{
         });
       }
     }
-  }, [queryList]);
+  }, [queryList, projectValue]);
 
   useEffect(() => {
     getListQueryTemplate().then((res) => {
@@ -260,7 +260,10 @@ export const ProjectSearch: React.FC<{
     if (templateType) {
       setState((draft) => {
         draft.projectValue = templateType;
+        draft.querySource =
+          GRAPH_TYPE_CLUSTER[templateType as keyof typeof GRAPH_TYPE_CLUSTER];
         draft.placeholderValue = PLACEHOLDER_MAP[templateType];
+        draft.textQuery = [];
       });
     }
   }, [templateType]);
