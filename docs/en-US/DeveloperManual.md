@@ -1,99 +1,114 @@
-## 1.Environment setup
-### 1.1TuGraph-DB Environment setup
-Currently, a customized version of TuGraph-DB has been developed specifically for OSGraph. Please pull the corresponding image to obtain this version, which includes内置 sample data. In the future, full integration with OSGraph will be achieved based on the standard version.
+## OSGraph Deployment Process
 
-    #Pull the TuGraph-DB image for OSGraph.
-    docker pull tugraph/tugraph-db-osgraph:4.3.0
-    #Start the database image service.
-    docker run -dt --privileged -p 7070:7070 -p 7687:7687 --name osgraph_db_server tugraph/tugraph-db-osgraph:4.3.0 lgraph_server
-    #Authenticate and verify the normal startup of the TuGraph-DB service.
-    http://127.0.0.1:7070
+### 1. Pull the Docker Images
 
-### 1.2Prepare the Elasticsearch (ES) environment.
-Currently, OSGraph requires Elasticsearch (ES) for repository and user search functionalities, with the specified version being 8.9.0. Plans are underway to support MySQL full-text indexing in the future, aimed at reducing the resource overhead for development environments.
-Below is an example of deploying the official Elasticsearch (ES) image and importing sample data：
+Pull the required images from Docker Hub
 
-    #Pull the official Elasticsearch (ES) image with the version requirement of 8.9.0.
-    docker pull elasticsearch:8.9.0
-    #Start the Elasticsearch (ES) image.
-    docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:8.9.0
-    #Enter into the container.
-    docker exec -it elasticsearch /bin/bash
-    #Execute the data generation script.
-    echo '{"index":{"_index":"github_repo","_id":"528766495"}}
-    {"id":528766495,"name":"TuGraph-family/tugraph-db","star":1026}
-    {"index":{"_index":"github_repo","_id":"81810486"}}
-    {"id":81810486,"name":"antvis/G6","star":10748}
-    {"index":{"_index":"github_user","_id":"827205"}}
-    {"id":827205,"name":"DanielRuf"}
-    {"index":{"_index":"github_user","_id":"2311313"}}
-    {"id":2311313,"name":"fanzhidongyzby"}
-    {"index":{"_index":"github_user","_id":"1132769"}}
-    {"id":1132769,"name":"hjk41"}' > /usr/share/elasticsearch/data/data.json
-    #Execute the command to import data into Elasticsearch (ES).
-    curl -H "Content-Type: application/json" -XPOST "localhost:9200/_bulk" --data-binary @/usr/share/elasticsearch/data/data.json
-    #Note: When executing the curl command to import data, it may be necessary to set xpack.security.enabled to false. If xpack.security is set to true, commands requiring authentication may need to be executed. For detailed instructions on data import operations, please refer to the official Elasticsearch (ES) documentation.
+```bash
+# This image includes the components: MySQL, Elasticsearch, and TuGraph-DB
+docker pull tugraph/tugraph-db-osgraph:4.4.0
 
+# System build image
+docker pull registry.cn-chengdu.aliyuncs.com/nextgraph/webbuild:202405.2
+```
 
-    #Remark: The initial password for ES will be printed in the startup logs. If you forget to record it, you can execute the following command to reset the password.
-    docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto -b
-    #Log in and verify that the ES service has started normally.
-    http://127.0.0.1:9200/
-## 2.Pull the prepared compilation container
-    docker pull registry.cn-chengdu.aliyuncs.com/nextgraph/webbuild:202405.2
-## 3.Starter container
-    docker run --name=build -p 80:80 -itd registry.cn-chengdu.aliyuncs.com/nextgraph/webbuild:202405.2
-## 4.Get the OSGraph code
-    docker exec -it build bash
-    cd /home/admin/app
-    git clone https://github.com/TuGraph-family/OSGraph.git
-## 5.Development code
+### 2. Start the Containers
 
-## 6.Compiled code
-    cd OSGraph/
-    bash bin/build-osgraph.sh
-    exit
-## 7.Configuration parameter
+Start two containers: one for OSGraph's dependencies and one for building and running OSGraph.
 
-### 7.1 Pull  database image
-    docker pull mariadb:latest
-### 7.2 Start database mirroring
-    docker run --name=mysql -p 3306:3306  -e MARIADB_USER=mysql -e MARIADB_PASSWORD='tuMaker0520@' -e MARIADB_ROOT_PASSWORD='tuMaker0520@' -itd mariadb:latest
+```bash
+# Start the container for OSGraph dependencies
+docker run -d --privileged --net host --name tugraph tugraph/tugraph-db-osgraph:4.4.0
 
-    #get the IP address of a MySQL container
-    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql 
-### 7.3 Configure dependent environment variables
+# Start the container for building and running OSGraph
+docker run --name build -p 80:80 -itd registry.cn-chengdu.aliyuncs.com/nextgraph/webbuild:202405.2
+```
 
-    docker exec -it build bash
-    #obtain the addresses of the pre-prepared Elasticsearch cluster and Tugraph-DB cluster
-    #configure environment variables
-    cd OSGraph/
-    vi bin/tumaker-env
+### 3. Compile and Start OSGraph inside the 'build' Container
 
-    export LANG=zh_CN.UTF-8
-    #configure mysql
-    export TUMAKER_DB_HOST=172.17.0.1 #Database IP obtained after executing the query in version 5.2
-    export TUMAKER_DB_PORT=3306
-    export TUMAKER_DB_USER=root
-    export TUMAKER_DB_PASSWORD=tuMaker0520@
-    #configure es
-    export ES_HOST=1.1.1.1 #pre-prepared Elasticsearch cluster
-    export ES_PORT=9200
-    export ES_USERNAME=elastic 
-    export ES_PASSWORD=elastic 
-    #configure TuGraph-DB
-    export TUGRAPHDB_HOST=1.1.1.1 #pre-prepared TuGraph-DB address
-    export TUGRAPHDB_PORT=7687 #pre-prepared TuGraph-DB BOLT port
-    export TUGRAPHDB_USER=tugraph 
-    export TUGRAPHDB_PASSWORD=tuGraph 
-    export TUGRAPHDB_NAME=default #TuGraph-DB Graph Database Table Name
+#### 3.1 Pull the OSGraph Code and Compile it inside the 'build' Container
 
-### 7.4 Environment variables take effect
-    Ensure that the tumaker-env file has comments removed and there are no trailing spaces.
-    source bin/tumaker-env
-## 8.Start service verification
-    cd OSGraph/
-    bash bin/startup-osgraph.sh
-## 9.Browser verification
-    http://127.0.0.1
+Enter the `build` container:
 
+```bash
+docker exec -it build bash
+```
+
+Inside the container, execute the following commands to pull the code and compile it:
+
+```bash
+cd /home/admin/app
+git clone https://github.com/TuGraph-family/OSGraph.git
+cd OSGraph/
+bash bin/build-osgraph.sh
+```
+
+#### 3.2 Modify Configurations and Start OSGraph inside the 'build' Container
+
+Edit the configuration file and replace the respective values:
+
+```bash
+vi bin/osgraph-env
+```
+
+Fill in the following content in the file:
+
+```bash
+# Modify TUMAKER_DB_HOST, ES_HOST, and TUGRAPHDB_HOST to the server's IP address
+# Change TUGRAPHDB_USER to 'admin' and TUGRAPHDB_PASSWORD to '73@TuGraph'
+# Other configuration items do not need to be modified
+export LANG=zh_CN.UTF-8
+export TUMAKER_DB_HOST=127.0.0.1
+export TUMAKER_DB_PORT=3306
+export TUMAKER_DB_USER=root
+export TUMAKER_DB_PASSWORD=tuMaker0520@
+export ES_HOST=127.0.0.1
+export ES_PORT=9200
+export ES_USERNAME=elastic
+export ES_PASSWORD=es
+export TUGRAPHDB_HOST=127.0.0.1
+export TUGRAPHDB_PORT=7687
+export TUGRAPHDB_USER=admin
+export TUGRAPHDB_PASSWORD=73@TuGraph
+export TUGRAPHDB_NAME=default
+```
+
+Save and exit the text editor, then load the environment variables:
+
+```bash
+source bin/osgraph-env
+```
+
+Ensure you are in the correct directory and start the system:
+
+```bash
+# Make sure you are in the /home/admin/app/OSGraph directory
+bash bin/startup-osgraph.sh
+```
+
+### 4. Access via Browser
+
+Open your browser and navigate to `http://<server-ip>`.
+
+For example, if the server IP is `192.168.1.100`, you can access it in your browser by navigating to:
+
+```bash
+http://192.168.1.100
+```
+
+### Note: Embedded ES Test Data
+
+You can use the following embedded test data for testing purposes, for example, you can search by name:
+
+```json
+{"index":{"_index":"github_repo","_id":"528766495"}}
+{"id":528766495,"name":"TuGraph-family/tugraph-db","star":1026}
+{"index":{"_index":"github_repo","_id":"81810486"}}
+{"id":81810486,"name":"antvis/G6","star":10748}
+{"index":{"_index":"github_user","_id":"827205"}}
+{"id":827205,"name":"DanielRuf"}
+{"index":{"_index":"github_user","_id":"2311313"}}
+{"id":2311313,"name":"fanzhidongyzby"}
+{"index":{"_index":"github_user","_id":"1132769"}}
+{"id":1132769,"name":"hjk41"}
+```
