@@ -69,12 +69,26 @@ export const GraphView = React.memo(
 
       outDiv.style.padding = "12px";
       const container = ReactDOM.createRoot(outDiv);
+
+      /** result 页与分享页需要做区分展示 */
+      const isShareRouter = window.location.href.includes('shareId');
+
       container.render(
         <Space direction="vertical">
           {isNode && renderTooltipItem("ID", nodeId)}
           {Object.keys(properties).map((item) =>
             renderTooltipItem(item, properties[item])
           )}
+          {
+            !isShareRouter
+              && properties?.name
+              && <a
+                  href={`https://github.com/${properties?.name}`}
+                  target="_blank"
+                >
+                  前往 Github 查看
+                </a>
+          }
         </Space>
       );
 
@@ -181,7 +195,7 @@ export const GraphView = React.memo(
       <div
         ref={containerRef}
         style={{ height: "100%", background: "#fff" }}
-      ></div>
+      />
     );
   },
   (pre: IProps, next: IProps) => {
