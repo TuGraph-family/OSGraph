@@ -1,8 +1,8 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
-import { Graph } from "@antv/g6";
+import { Graph, GraphEvent } from "@antv/g6";
 import { isEmpty, isEqual, isFunction } from "lodash";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
@@ -163,7 +163,7 @@ export const GraphView = React.memo(
             distance: 20,
           },
         ],
-        autoFit: "view",
+        autoFit: 'center',
         plugins: [
           {
             type: "tooltip",
@@ -176,9 +176,18 @@ export const GraphView = React.memo(
           },
         ],
       });
-
       graph.render();
       graphRef.current = graph;
+
+      /** 布局前需要时刻调整布局位置处于视图中心 */
+      graph.on(GraphEvent.BEFORE_LAYOUT, () => {
+        /** 这里需要先执行一次 fitCenter 函数，可以解决首次闪烁的问题 */
+        graph.fitCenter();
+        requestAnimationFrame(() => {
+          graph.fitCenter();
+        })
+      });
+
       if (isFunction(onReady)) onReady(graph);
     };
     React.useEffect(() => {
