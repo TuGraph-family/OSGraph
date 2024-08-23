@@ -1,19 +1,20 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
 import { Graph, GraphEvent } from "@antv/g6";
+import { Button, message, Space } from "antd";
 import { isEmpty, isEqual, isFunction } from "lodash";
-import React, { useEffect } from "react";
+import React from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import ReactDOM from "react-dom/client";
+import { useTranslation } from "react-i18next";
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
   NODE_TYPE_ICON_MAP,
   NODE_TYPE_MAP,
+  NODE_TYPE_SHOW_GITHUB_LINK_MAP
 } from "../../constants";
-import { iconLoader, IconFont } from "../icon-font";
-import ReactDOM from "react-dom/client";
-import { Button, message, Space } from "antd";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useTranslation } from "react-i18next";
+import { IconFont, iconLoader } from "../icon-font";
 
 interface IProps {
   data: DataID;
@@ -32,7 +33,7 @@ export const GraphView = React.memo(
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <div style={{ fontSize: 14, marginRight: 8 }}>
@@ -59,6 +60,9 @@ export const GraphView = React.memo(
     };
 
     const getTooltipContent = (record: Record<string, any>) => {
+      const elementInfo = record[0];
+      const { nodeType } = elementInfo;
+      const showGitHubLink = NODE_TYPE_SHOW_GITHUB_LINK_MAP[nodeType];
       const properties = record[0]?.properties;
       const tooltip = document.getElementsByClassName("tooltip")[0];
       tooltip.style = "border-radius:16px !important";
@@ -71,7 +75,7 @@ export const GraphView = React.memo(
       const container = ReactDOM.createRoot(outDiv);
 
       /** result 页与分享页需要做区分展示 */
-      const isShareRouter = window.location.href.includes('shareId');
+      const isShareRouter = window.location.href.includes("shareId");
 
       container.render(
         <>
@@ -81,17 +85,15 @@ export const GraphView = React.memo(
               renderTooltipItem(item, properties[item])
             )}
           </Space>
-          {
-            !isShareRouter
-              && properties?.name
-              && <a
-                  href={`https://github.com/${properties?.name}`}
-                  target="_blank"
-                  style={{ padding: '10px 10px 4px 0', display: 'block' }}
-                >
-                  前往 Github 查看
-                </a>
-          }
+          {!isShareRouter && properties?.name && showGitHubLink && (
+            <a
+              href={`https://github.com/${properties?.name}`}
+              target="_blank"
+              style={{ padding: "10px 10px 4px 0", display: "block" }}
+            >
+              前往 Github 查看
+            </a>
+          )}
         </>
       );
 
@@ -101,7 +103,7 @@ export const GraphView = React.memo(
     /** 自适应窗口 - 抽取出来定义，方便卸载 */
     const handleAfterLayout = () => {
       graphRef?.current?.fitView();
-    }
+    };
 
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
@@ -126,8 +128,8 @@ export const GraphView = React.memo(
             iconFill: "#fff",
             iconWidth: (d) => d.size,
             iconHeight: (d) => d.size,
-            iconFontSize: (d) => d.iconFontSize,
-          },
+            iconFontSize: (d) => d.iconFontSize
+          }
         },
         edge: {
           style: {
@@ -148,12 +150,12 @@ export const GraphView = React.memo(
             labelOpacity: 1,
             lineWidth: (d) => d.lineWidth,
             endArrowSize: (d) => d.endArrowSize,
-            labelFontSize: 10,
-          },
+            labelFontSize: 10
+          }
         },
         layout: {
           type: "force",
-          linkDistance: 240,
+          linkDistance: 240
         },
         behaviors: [
           { type: "click-element", multiple: false },
@@ -161,17 +163,17 @@ export const GraphView = React.memo(
           "drag-canvas",
           "drag-element",
           "click-selected",
-          "hover-element",
+          "hover-element"
         ],
         autoResize: true,
         zoomRange: [0.1, 5],
         transforms: [
           {
             type: "process-parallel-edges",
-            distance: 20,
-          },
+            distance: 20
+          }
         ],
-        autoFit: 'center',
+        autoFit: "center",
         plugins: [
           {
             type: "tooltip",
@@ -180,9 +182,9 @@ export const GraphView = React.memo(
             enable: true,
             enterable: true,
             getContent: (_, record: Record<string, any>) =>
-              getTooltipContent(record),
-          },
-        ],
+              getTooltipContent(record)
+          }
+        ]
       });
       graph.render();
       graphRef.current = graph;
@@ -199,16 +201,13 @@ export const GraphView = React.memo(
           if (graphRef.current) {
             graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
             graphRef.current.destroy();
-          };
+          }
         };
       }
     }, [containerRef.current, data]);
 
     return (
-      <div
-        ref={containerRef}
-        style={{ height: "100%", background: "#fff" }}
-      />
+      <div ref={containerRef} style={{ height: "100%", background: "#fff" }} />
     );
   },
   (pre: IProps, next: IProps) => {

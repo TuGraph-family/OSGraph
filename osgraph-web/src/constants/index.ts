@@ -10,7 +10,7 @@ export const NODE_COLORS = [
   "#60C42D",
   "#FF80CA",
   "#2491B3",
-  "#17C76F",
+  "#17C76F"
 ];
 
 export const EDGE_TYPE_MAP = {
@@ -27,7 +27,7 @@ export const EDGE_TYPE_MAP = {
   push: "push",
   repo: "repo",
   Star: "Star",
-  code_review: "code_review",
+  code_review: "code_review"
 };
 
 export const NODE_TYPE_MAP = {
@@ -36,7 +36,15 @@ export const NODE_TYPE_MAP = {
   company: "company",
   github_user: "github_user",
   topic: "topic",
-  country: "country",
+  country: "country"
+};
+export const NODE_TYPE_SHOW_GITHUB_LINK_MAP = {
+  github_repo: true,
+  github_organization: true,
+  company: false,
+  github_user: true,
+  topic: false,
+  country: false
 };
 
 export const NODE_TYPE_COLOR_MAP: Record<
@@ -48,7 +56,7 @@ export const NODE_TYPE_COLOR_MAP: Record<
   github_organization: "#00c9c9",
   github_user: ["#db9d0d", "#17C76F", "#1783ff", "#7863ff"],
   github_repo: "#d580ff",
-  topic: "#ff80ca",
+  topic: "#ff80ca"
 };
 
 export const NODE_TYPE_ICON_MAP: Record<keyof typeof NODE_TYPE_MAP, string> = {
@@ -57,7 +65,7 @@ export const NODE_TYPE_ICON_MAP: Record<keyof typeof NODE_TYPE_MAP, string> = {
   github_repo: "github_repo",
   company: "company",
   topic: "topic",
-  github_user: "user",
+  github_user: "user"
 };
 
 export const GRAPH_TYPE_MAP = {
@@ -66,7 +74,7 @@ export const GRAPH_TYPE_MAP = {
   REPO_COMMUNITY: "REPO_COMMUNITY",
   ACCT_ACTIVITY: "ACCT_ACTIVITY",
   ACCT_PARTNER: "ACCT_PARTNER",
-  ACCT_INTEREST: "ACCT_INTEREST",
+  ACCT_INTEREST: "ACCT_INTEREST"
 };
 
 export const GRAPH_TYPE_CLUSTER = {
@@ -75,7 +83,7 @@ export const GRAPH_TYPE_CLUSTER = {
   REPO_COMMUNITY: "github_repo",
   ACCT_ACTIVITY: "github_user",
   ACCT_PARTNER: "github_user",
-  ACCT_INTEREST: "github_user",
+  ACCT_INTEREST: "github_user"
 };
 
 export const EDGE_DISPLAY_NAME_MAP: Record<
@@ -85,73 +93,73 @@ export const EDGE_DISPLAY_NAME_MAP: Record<
   belong_to: {
     displayName: "属于",
     hasArrow: true,
-    hasCount: false,
+    hasCount: false
   },
   comment_issue: {
     displayName: "评论 Issue",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   code_review: {
     displayName: "CR",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   common_developer: {
     displayName: "共建",
     hasArrow: false,
-    hasCount: true,
+    hasCount: true
   },
   common_issue: {
     displayName: "合作 Issue",
     hasArrow: false,
-    hasCount: true,
+    hasCount: true
   },
   common_pr: {
     displayName: "合作 PR",
     hasArrow: false,
-    hasCount: true,
+    hasCount: true
   },
   common_repo: {
     displayName: "合作项目",
     hasArrow: false,
-    hasCount: true,
+    hasCount: true
   },
   common_star: {
     displayName: "共同关注",
     hasArrow: false,
-    hasCount: true,
+    hasCount: true
   },
   open_issue: {
     displayName: "创建 Issue",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   open_pr: {
     displayName: "创建 PR",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   PR: {
     displayName: "PR",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   push: {
     displayName: "提交",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   repo: {
     displayName: "参与项目",
     hasArrow: true,
-    hasCount: true,
+    hasCount: true
   },
   Star: {
     displayName: "Star",
     hasArrow: true,
-    hasCount: true,
-  },
+    hasCount: true
+  }
 };
 
 export const PLACEHOLDER_MAP: Record<string, string> = {
@@ -160,5 +168,5 @@ export const PLACEHOLDER_MAP: Record<string, string> = {
   REPO_COMMUNITY: "请输入 GitHub 仓库名称",
   ACCT_ACTIVITY: "请输入 GitHub 账户名称",
   ACCT_PARTNER: "请输入 GitHub 账户名称",
-  ACCT_INTEREST: "请输入 GitHub 账户名称",
+  ACCT_INTEREST: "请输入 GitHub 账户名称"
 };
