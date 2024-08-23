@@ -1,8 +1,8 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
-import { Graph } from "@antv/g6";
+import { Graph, GraphEvent } from "@antv/g6";
 import { isEmpty, isEqual, isFunction } from "lodash";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
@@ -69,12 +69,26 @@ export const GraphView = React.memo(
 
       outDiv.style.padding = "12px";
       const container = ReactDOM.createRoot(outDiv);
+
+      /** result 页与分享页需要做区分展示 */
+      const isShareRouter = window.location.href.includes('shareId');
+
       container.render(
         <Space direction="vertical">
           {isNode && renderTooltipItem("ID", nodeId)}
           {Object.keys(properties).map((item) =>
             renderTooltipItem(item, properties[item])
           )}
+          {
+            !isShareRouter
+              && properties?.name
+              && <a
+                  href={`https://github.com/${properties?.name}`}
+                  target="_blank"
+                >
+                  前往 Github 查看
+                </a>
+          }
         </Space>
       );
 
@@ -149,7 +163,7 @@ export const GraphView = React.memo(
             distance: 20,
           },
         ],
-        autoFit: "view",
+        autoFit: 'center',
         plugins: [
           {
             type: "tooltip",
@@ -162,9 +176,13 @@ export const GraphView = React.memo(
           },
         ],
       });
-
       graph.render();
       graphRef.current = graph;
+
+      graph.on(GraphEvent.AFTER_LAYOUT, () => {
+        graph.fitView();
+      });
+
       if (isFunction(onReady)) onReady(graph);
     };
     React.useEffect(() => {
@@ -181,7 +199,7 @@ export const GraphView = React.memo(
       <div
         ref={containerRef}
         style={{ height: "100%", background: "#fff" }}
-      ></div>
+      />
     );
   },
   (pre: IProps, next: IProps) => {
