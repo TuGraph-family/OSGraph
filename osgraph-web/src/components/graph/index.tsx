@@ -179,22 +179,7 @@ export const GraphView = React.memo(
       graph.render();
       graphRef.current = graph;
 
-      let animationFrameId;
-
-      /** 布局前需要时刻调整布局位置处于视图中心 */
-      graph.on(GraphEvent.BEFORE_LAYOUT, () => {
-        /** 这里需要先执行一次 fitCenter 函数，可以解决首次闪烁的问题 */
-        graph.fitView();
-        animationFrameId = requestAnimationFrame(() => {
-          graph.fitView();
-        })
-      });
-
-      /** 布局完成之后卸载 requestAnimationFrame 的轮询操作 */
       graph.on(GraphEvent.AFTER_LAYOUT, () => {
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
         graph.fitView();
       });
 
