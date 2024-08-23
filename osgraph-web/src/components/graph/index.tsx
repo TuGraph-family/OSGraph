@@ -95,6 +95,11 @@ export const GraphView = React.memo(
       return outDiv;
     };
 
+    /** 自适应窗口 - 抽取出来定义，方便卸载 */
+    const handleAfterLayout = () => {
+      graphRef?.current?.fitView();
+    }
+
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
       const graph = new Graph({
@@ -179,9 +184,7 @@ export const GraphView = React.memo(
       graph.render();
       graphRef.current = graph;
 
-      graph.on(GraphEvent.AFTER_LAYOUT, () => {
-        graph.fitView();
-      });
+      graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
 
       if (isFunction(onReady)) onReady(graph);
     };
@@ -190,7 +193,10 @@ export const GraphView = React.memo(
         if (!containerRef.current) return;
         renderGraph();
         return () => {
-          if (graphRef.current) graphRef.current.destroy();
+          if (graphRef.current) {
+            graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+            graphRef.current.destroy();
+          };
         };
       }
     }, [containerRef.current, data]);
