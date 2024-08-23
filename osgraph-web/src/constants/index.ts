@@ -38,6 +38,14 @@ export const NODE_TYPE_MAP = {
   topic: "topic",
   country: "country"
 };
+export const NODE_TYPE_SHOW_GITHUB_LINK_MAP = {
+  github_repo: true,
+  github_organization: true,
+  company: false,
+  github_user: true,
+  topic: false,
+  country: false
+};
 
 export const NODE_TYPE_COLOR_MAP: Record<
   keyof typeof NODE_TYPE_MAP,
@@ -69,12 +77,12 @@ export const GRAPH_TYPE_MAP = {
   ACCT_INTEREST: "ACCT_INTEREST"
 };
 export const GRAPH_TYPE_CLUSTER = {
-  REPO_CONTRIBUTE: "REPO",
-  REPO_ECOLOGY: "REPO",
-  REPO_COMMUNITY: "REPO",
-  ACCT_ACTIVITY: "ACCT",
-  ACCT_PARTNER: "ACCT",
-  ACCT_INTEREST: "ACCT"
+  REPO_CONTRIBUTE: "github_repo",
+  REPO_ECOLOGY: "github_repo",
+  REPO_COMMUNITY: "github_repo",
+  ACCT_ACTIVITY: "github_user",
+  ACCT_PARTNER: "github_user",
+  ACCT_INTEREST: "github_user"
 };
 
 export const EDGE_DISPLAY_NAME_MAP: Record<
