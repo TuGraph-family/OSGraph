@@ -67,33 +67,41 @@ export const GraphView = React.memo(
       const isNode = Boolean(record[0]?.nodeType);
       const outDiv = document.createElement("div");
 
-      outDiv.style.padding = "12px";
+      outDiv.style.padding = "6px";
       const container = ReactDOM.createRoot(outDiv);
 
       /** result 页与分享页需要做区分展示 */
       const isShareRouter = window.location.href.includes('shareId');
 
       container.render(
-        <Space direction="vertical">
-          {isNode && renderTooltipItem("ID", nodeId)}
-          {Object.keys(properties).map((item) =>
-            renderTooltipItem(item, properties[item])
-          )}
+        <>
+          <Space direction="vertical">
+            {isNode && renderTooltipItem("ID", nodeId)}
+            {Object.keys(properties).map((item) =>
+              renderTooltipItem(item, properties[item])
+            )}
+          </Space>
           {
             !isShareRouter
               && properties?.name
               && <a
                   href={`https://github.com/${properties?.name}`}
                   target="_blank"
+                  style={{ padding: '10px 10px 4px 0', display: 'block' }}
                 >
                   前往 Github 查看
                 </a>
           }
-        </Space>
+        </>
       );
 
       return outDiv;
     };
+
+    /** 自适应窗口 - 抽取出来定义，方便卸载 */
+    const handleAfterLayout = () => {
+      graphRef?.current?.fitView();
+    }
 
     const renderGraph = () => {
       const { clientHeight: height, clientWidth: width } = containerRef.current;
@@ -179,9 +187,7 @@ export const GraphView = React.memo(
       graph.render();
       graphRef.current = graph;
 
-      graph.on(GraphEvent.AFTER_LAYOUT, () => {
-        graph.fitView();
-      });
+      graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
 
       if (isFunction(onReady)) onReady(graph);
     };
@@ -190,7 +196,10 @@ export const GraphView = React.memo(
         if (!containerRef.current) return;
         renderGraph();
         return () => {
-          if (graphRef.current) graphRef.current.destroy();
+          if (graphRef.current) {
+            graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+            graphRef.current.destroy();
+          };
         };
       }
     }, [containerRef.current, data]);
