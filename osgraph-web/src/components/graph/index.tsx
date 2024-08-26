@@ -81,9 +81,15 @@ export const GraphView = React.memo(
         <>
           <Space direction="vertical">
             {isNode && renderTooltipItem("ID", nodeId)}
-            {Object.keys(properties).map((item) =>
-              renderTooltipItem(item, properties[item])
-            )}
+            {
+              Object.keys(properties)
+                // 过滤没有信息的属性
+                .filter(item => properties[item] !== undefined && properties[item] !== null)
+                .map((item) =>
+                  renderTooltipItem(item, properties[item]
+                )
+              )
+            }
           </Space>
           {!isShareRouter && properties?.name && showGitHubLink && (
             <a
