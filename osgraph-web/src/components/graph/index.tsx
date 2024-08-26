@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
-import { Graph } from "@antv/g6";
-import { Button, Space, message } from "antd";
+import { Graph, GraphEvent } from "@antv/g6";
+import { Button, message, Space } from "antd";
 import { isEmpty, isEqual, isFunction } from "lodash";
 import React from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -11,7 +11,8 @@ import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
   NODE_TYPE_ICON_MAP,
-  NODE_TYPE_MAP
+  NODE_TYPE_MAP,
+  NODE_TYPE_SHOW_GITHUB_LINK_MAP
 } from "../../constants";
 import { IconFont, iconLoader } from "../icon-font";
 
@@ -24,7 +25,6 @@ export const GraphView = React.memo(
   ({ data, onReady }: IProps) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
-
     const { t } = useTranslation();
 
     const renderTooltipItem = (label: string, text: string) => {
@@ -60,6 +60,9 @@ export const GraphView = React.memo(
     };
 
     const getTooltipContent = (record: Record<string, any>) => {
+      const elementInfo = record[0];
+      const { nodeType } = elementInfo;
+      const showGitHubLink = NODE_TYPE_SHOW_GITHUB_LINK_MAP[nodeType];
       const properties = record[0]?.properties;
       const tooltip = document.getElementsByClassName("tooltip")[0];
       tooltip.style = "border-radius:16px !important";
@@ -68,8 +71,12 @@ export const GraphView = React.memo(
       const isNode = Boolean(record[0]?.nodeType);
       const outDiv = document.createElement("div");
 
-      outDiv.style.padding = "12px";
+      outDiv.style.padding = "6px";
       const container = ReactDOM.createRoot(outDiv);
+
+      /** result 页与分享页需要做区分展示 */
+      const isShareRouter = window.location.href.includes("shareId");
+
       container.render(
         <>
           <Space direction="vertical">
@@ -97,6 +104,11 @@ export const GraphView = React.memo(
       );
 
       return outDiv;
+    };
+
+    /** 自适应窗口 - 抽取出来定义，方便卸载 */
+    const handleAfterLayout = () => {
+      graphRef?.current?.fitView();
     };
 
     const renderGraph = () => {
@@ -167,7 +179,7 @@ export const GraphView = React.memo(
             distance: 20
           }
         ],
-        autoFit: "view",
+        autoFit: "center",
         plugins: [
           {
             type: "tooltip",
@@ -180,9 +192,11 @@ export const GraphView = React.memo(
           }
         ]
       });
-
       graph.render();
       graphRef.current = graph;
+
+      graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+
       if (isFunction(onReady)) onReady(graph);
     };
     React.useEffect(() => {
@@ -190,16 +204,16 @@ export const GraphView = React.memo(
         if (!containerRef.current) return;
         renderGraph();
         return () => {
-          if (graphRef.current) graphRef.current.destroy();
+          if (graphRef.current) {
+            graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+            graphRef.current.destroy();
+          }
         };
       }
     }, [containerRef.current, data]);
 
     return (
-      <div
-        ref={containerRef}
-        style={{ height: "100%", background: "#fff" }}
-      ></div>
+      <div ref={containerRef} style={{ height: "100%", background: "#fff" }} />
     );
   },
   (pre: IProps, next: IProps) => {
