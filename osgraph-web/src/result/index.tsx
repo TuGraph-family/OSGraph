@@ -147,7 +147,8 @@ export default () => {
           </div>
         )}
         <Spin spinning={isLoading}>
-          <div className="graph">
+          {/* 分享页没有搜索栏，画布高度需要区分 */}
+          <div className={`${isShare ? 'graph-share' : 'graph'}`}>
             <GraphView
               data={data}
               onReady={(graph) => (graphRef.current = graph)}

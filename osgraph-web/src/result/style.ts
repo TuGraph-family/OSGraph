@@ -35,4 +35,8 @@ export const GRAPH_STYLE = css`
   .graph {
     height: calc(100vh - var(--search-height));
   }
+
+  .graph-share {
+    height: 100vh;
+  }
 `;
