@@ -305,6 +305,8 @@ export const GraphView = React.memo(
           Object.assign(sprite.position, middlePos);
         });
 
+        graphRef.current = graph;
+
         const updateHighlight = () => {
           if (graph) {
             graph
@@ -366,16 +368,16 @@ export const GraphView = React.memo(
           hoverNode = node || null;
           updateHighlight();
         })
-        .onLinkHover((link: any) => {
-          highlightNodes.clear();
-          highlightLinks.clear();
-          if (link) {
-            highlightLinks.add(link);
-            highlightNodes.add(link.source);
-            highlightNodes.add(link.target);
-          }
-          updateHighlight();
-        })
+        // .onLinkHover((link: any) => {
+        //   highlightNodes.clear();
+        //   highlightLinks.clear();
+        //   if (link) {
+        //     highlightLinks.add(link);
+        //     highlightNodes.add(link.source);
+        //     highlightNodes.add(link.target);
+        //   }
+        //   updateHighlight();
+        // })
         .nodeThreeObject((node) => {
           const group = new THREE.Group();
           /** 创建一个球体节点 */
@@ -402,8 +404,9 @@ export const GraphView = React.memo(
         render3DGraph();
         return () => {
           if (graphRef.current) {
-            graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
-            graphRef.current.destroy();
+            // graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+            // graphRef.current.destroy();
+            graphRef.current(null);
           }
         };
       }
