@@ -170,3 +170,40 @@ export const PLACEHOLDER_MAP: Record<string, string> = {
   ACCT_PARTNER: "请输入 GitHub 账户名称",
   ACCT_INTEREST: "请输入 GitHub 账户名称"
 };
+
+export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
+  REPO_CONTRIBUTE: "repo_contribute",
+  REPO_ECOLOGY: "repo_ecology",
+  REPO_COMMUNITY: "repo_community",
+  ACCT_ACTIVITY: "acct_activity",
+  ACCT_PARTNER: "acct_partner",
+  ACCT_INTEREST: "acct_interest"
+};
+
+/** ensure unique key, use type + params */
+export const GRAPH_EXTEND_PARAMS_MAP = {
+  /** REPO_CONTRIBUTE */
+  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'start']: 'start_timestamp',
+  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'end']: 'end_timestamp',
+  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'contrib-limit']: 'top_n',
+
+  /** REPO_ECOLOGY */
+  [GRAPH_SHARE_LINK_MAP.REPO_ECOLOGY + 'contrib-limit']: 'top_n',
+
+  /** REPO_COMMUNITY */
+  [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'country-limit']: 'country_topn',
+  [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'org-limit']: 'company_topn',
+  [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'contrib-limit']: 'developer_topn',
+
+  /** ACCT_ACTIVITY */
+  [GRAPH_SHARE_LINK_MAP.ACCT_ACTIVITY + 'repo-limit']: 'top_n',
+
+  /** ACCT_PARTNER */
+  [GRAPH_SHARE_LINK_MAP.ACCT_PARTNER + 'friend-limit']: 'top_n',
+
+  /** ACCT_INTEREST */
+  [GRAPH_SHARE_LINK_MAP.ACCT_INTEREST + 'repo-limit']: 'repo_topn',
+  [GRAPH_SHARE_LINK_MAP.ACCT_INTEREST + 'topic-limit']: 'topic_topn',
+
+
+}

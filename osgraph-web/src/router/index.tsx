@@ -13,6 +13,10 @@ const router = createBrowserRouter([
     element: <Result />
   },
   {
+    path: "/graphs/*",
+    element: <Result />
+  },
+  {
     path: "*",
     element: <NotFound />
   }

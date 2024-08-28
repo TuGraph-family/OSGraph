@@ -13,6 +13,7 @@ import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
+import { GRAPH_SHARE_LINK_MAP, GRAPH_TYPE_MAP } from '../constants/index';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -76,7 +77,60 @@ export default () => {
       draft.isLoading = loading;
     });
   };
+
+  const generateShareLink = (shareInfo: Record<string, any>) => {
+    
+    setState((draft) => {
+
+      draft.locationState = shareInfo;
+      const { projectValue, warehouseName } = shareInfo;
+      const projectValueFormat = GRAPH_SHARE_LINK_MAP[projectValue];
+
+      /** repo contribute */
+      if (projectValue === GRAPH_TYPE_MAP.REPO_CONTRIBUTE) {
+        const { start_timestamp, end_timestamp, top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?start=${start_timestamp}&end=${end_timestamp}&contribute-limit=${top_n}`;
+      }
+
+      /** repo ecology */
+      else if (projectValue === GRAPH_TYPE_MAP.REPO_ECOLOGY) {
+        const { top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?&repo-limit=${top_n}`;
+      }
+
+      /** repo community */
+      else if (projectValue === GRAPH_TYPE_MAP.REPO_COMMUNITY) {
+        const { country_topn, company_topn, developer_topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
+      }
+
+      /** acct activity */
+      else if (projectValue === GRAPH_TYPE_MAP.ACCT_ACTIVITY) {
+        const { top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?repo-limit=${top_n}`;
+      }
+
+      /** acct partner */
+      else if (projectValue === GRAPH_TYPE_MAP.ACCT_PARTNER) {
+        const { top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?friend-limit=${top_n}`;
+      }
+
+      /** acct interest */
+      else if (projectValue === GRAPH_TYPE_MAP.ACCT_INTEREST) {
+        const { repo_topn, topic_topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
+      }
+    });
+  };
+
+  /**
+   * share logic
+   * Need to adapt the share links for both the new and old versions.
+  */
   useEffect(() => {
+
+    /** 1. old version */
     if (shareId && shareParams) {
       getExecuteShareQueryTemplate(shareId, shareParams).then((res) => {
         setState((draft) => {
@@ -84,15 +138,14 @@ export default () => {
         });
       });
     }
+
+    /** 2. new version */
   }, [shareId, shareParams]);
+
+  /** 主页跳转注入 State 的查询逻辑 */
   useEffect(() => {
     if (location.state) {
-      setState((draft) => {
-        draft.locationState = location.state;
-        draft.shareLink = `${window.location.origin}/result?shareId=${
-          location.state.templateId
-        }&shareParams=${location.state.paramsValue}&isShare=${true}`;
-      });
+      generateShareLink(location.state);
     }
   }, [location.state]);
 
@@ -121,16 +174,7 @@ export default () => {
                 graphSearchValue={searchValue}
                 graphTemplateId={templateId}
                 graphParameterList={templateParameterList}
-                onSearch={(data: any) => {
-                  const { graphTemplateId, graphParamsValue, searchData } =
-                    data;
-                  setState((draft) => {
-                    draft.locationState.data = searchData;
-                    draft.shareLink = `${
-                      window.location.origin
-                    }/result?shareId=${graphTemplateId}&shareParams=${graphParamsValue}&isShare=${true}`;
-                  });
-                }}
+                onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
               />
             </div>
