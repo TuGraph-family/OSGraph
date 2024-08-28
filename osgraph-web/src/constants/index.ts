@@ -171,6 +171,7 @@ export const PLACEHOLDER_MAP: Record<string, string> = {
   ACCT_INTEREST: "请输入 GitHub 账户名称"
 };
 
+<<<<<<< HEAD
 export enum GRAPH_TEMPLATE_ENUM {
   REPO_CONTRIBUTE = 1,
   REPO_ECOLOGY,
@@ -193,11 +194,21 @@ export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
   'acct_activity': 'dev-activity',
   'acct_partner': 'dev-partner',
   'acct_interest': 'dev-interest',
+=======
+export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
+  REPO_CONTRIBUTE: "repo_contribute",
+  REPO_ECOLOGY: "repo_ecology",
+  REPO_COMMUNITY: "repo_community",
+  ACCT_ACTIVITY: "acct_activity",
+  ACCT_PARTNER: "acct_partner",
+  ACCT_INTEREST: "acct_interest"
+>>>>>>> d1baf2c (feat: upgrade share link of osgraph)
 };
 
 /** ensure unique key, use type + params */
 export const GRAPH_EXTEND_PARAMS_MAP = {
   /** REPO_CONTRIBUTE */
+<<<<<<< HEAD
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'start']: 'start_timestamp',
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'end']: 'end_timestamp',
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'contrib-limit']: 'top_n',
@@ -240,3 +251,29 @@ export const GRAPH_DOCUMENT_TITLE_MAP = {
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: 'OSGraph - Open-source Partner Graph',
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: 'OSGraph - Open-source Interest Graph',
 }
+=======
+  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'start']: 'start_timestamp',
+  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'end']: 'end_timestamp',
+  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'contrib-limit']: 'top_n',
+
+  /** REPO_ECOLOGY */
+  [GRAPH_SHARE_LINK_MAP.REPO_ECOLOGY + 'contrib-limit']: 'top_n',
+
+  /** REPO_COMMUNITY */
+  [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'country-limit']: 'country_topn',
+  [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'org-limit']: 'company_topn',
+  [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'contrib-limit']: 'developer_topn',
+
+  /** ACCT_ACTIVITY */
+  [GRAPH_SHARE_LINK_MAP.ACCT_ACTIVITY + 'repo-limit']: 'top_n',
+
+  /** ACCT_PARTNER */
+  [GRAPH_SHARE_LINK_MAP.ACCT_PARTNER + 'friend-limit']: 'top_n',
+
+  /** ACCT_INTEREST */
+  [GRAPH_SHARE_LINK_MAP.ACCT_INTEREST + 'repo-limit']: 'repo_topn',
+  [GRAPH_SHARE_LINK_MAP.ACCT_INTEREST + 'topic-limit']: 'topic_topn',
+
+
+}
+>>>>>>> d1baf2c (feat: upgrade share link of osgraph)
