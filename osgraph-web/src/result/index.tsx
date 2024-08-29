@@ -8,12 +8,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
 import { GraphView, ProjectSearch } from "../components";
 import { OSGraph } from "../controller";
-import { getExecuteShareQueryTemplate } from "../services/result";
+import { getExecuteShareQueryTemplate, getExecuteShareLinkQuery } from "../services/result";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
+import { graphTranslator } from './translator/graph';
 import { GRAPH_SHARE_LINK_MAP, GRAPH_TYPE_MAP } from '../constants/index';
+import { timestampToDate } from '../utils/date';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -46,7 +48,7 @@ export default () => {
   const query = new URLSearchParams(location.search);
   const shareId = query.get("shareId");
   const shareParams = query.get("shareParams");
-  const isShare = query.get("shareParams");
+  const isShare = query.get("shareParams") || location.pathname.includes('/graphs') && location.pathname.includes('/github');
   const { t } = useTranslation();
   const graphRef = React.useRef<Graph>();
 
@@ -88,14 +90,16 @@ export default () => {
 
       /** repo contribute */
       if (projectValue === GRAPH_TYPE_MAP.REPO_CONTRIBUTE) {
-        const { start_timestamp, end_timestamp, top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?start=${start_timestamp}&end=${end_timestamp}&contribute-limit=${top_n}`;
+        const { top_n } = shareInfo;
+        const start_timestamp = timestampToDate(shareInfo?.start_timestamp);
+        const end_timestamp = timestampToDate(shareInfo?.end_timestamp);
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?start=${start_timestamp}&end=${end_timestamp}&contrib-limit=${top_n}`;
       }
 
       /** repo ecology */
       else if (projectValue === GRAPH_TYPE_MAP.REPO_ECOLOGY) {
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?&repo-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?repo-limit=${top_n}`;
       }
 
       /** repo community */
@@ -140,6 +144,14 @@ export default () => {
     }
 
     /** 2. new version */
+    if (location.pathname.includes('/graphs') && location.pathname.includes('/github')) {
+      getExecuteShareLinkQuery(graphTranslator())
+        .then((res) => {
+          setState((draft) => {
+            draft.locationState.data = graphDataTranslator(res);
+          });
+        });
+    }
   }, [shareId, shareParams]);
 
   /** 主页跳转注入 State 的查询逻辑 */
