@@ -257,7 +257,7 @@ export const GRAPH_DOCUMENT_TITLE_MAP = {
   [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'contrib-limit']: 'top_n',
 
   /** REPO_ECOLOGY */
-  [GRAPH_SHARE_LINK_MAP.REPO_ECOLOGY + 'contrib-limit']: 'top_n',
+  [GRAPH_SHARE_LINK_MAP.REPO_ECOLOGY + 'repo-limit']: 'top_n',
 
   /** REPO_COMMUNITY */
   [GRAPH_SHARE_LINK_MAP.REPO_COMMUNITY + 'country-limit']: 'country_topn',
