@@ -31,7 +31,8 @@ export const getExecuteShareLinkQuery = async(query: {
   );
 
   if (!response?.success) {
-    return [];
+    return Promise.reject(response?.message || '参数错误');
+  
   }
   return response?.data;
 };

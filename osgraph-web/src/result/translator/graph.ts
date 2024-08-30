@@ -3,7 +3,7 @@
  * author: Allen
 */
 
-import { GRAPH_EXTEND_PARAMS_MAP } from '../../constants/index';
+import { GRAPH_EXTEND_PARAMS_MAP, GRAPH_TEMPLATE_TYPE_MAP, GRAPH_SHARE_LINK_MAP, GRAPH_TEMPLATE_ENUM } from '../../constants/index';
 import { dateToTimestamp } from '../../utils/date';
 
 const graphTranslator = () => {
@@ -14,7 +14,7 @@ const graphTranslator = () => {
     const match = url.match(pattern);
 
     if (match) {
-      return { templateType: match[1], path: match[2] };
+      return { templateType: GRAPH_TEMPLATE_TYPE_MAP[match[1]], path: match[2] };
     }
     else {
       return { templateType: '', path: '' };
@@ -58,7 +58,7 @@ const graphTranslator = () => {
   return {
     templateType: urlValues.templateType,
     path: urlValues.path,
-    extendsStr: transUrlSearchParams(location.search, urlValues.templateType),
+    extendsStr: transUrlSearchParams(location.search, GRAPH_SHARE_LINK_MAP[urlValues.templateType]),
   }
 };
 
