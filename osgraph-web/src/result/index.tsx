@@ -186,14 +186,12 @@ export default () => {
   useEffect(() => {
 
     const resizePowerBy = () => {
-      if (powerByRef.current) {}
+      if (powerByRef.current) {
+        powerByRef.current.style.transform = `scale(${Math.min(Math.max(window.innerWidth / 1000, 0.5), 1)})`;
+        powerByRef.current.style.transformOrigin = '100% 100%';
+      }
     };
-
-    window.addEventListener('resize', resizePowerBy);
-
-    return () => {
-      window.removeEventListener('resize', resizePowerBy);
-    };
+    resizePowerBy();
 
   }, [powerByRef.current]);
 
