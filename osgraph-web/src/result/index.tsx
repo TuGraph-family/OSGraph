@@ -1,18 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
 import { Button, Modal, Spin, message } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
 import { GraphView, ProjectSearch } from "../components";
+import PageNotFound from '../404';
 import { OSGraph } from "../controller";
-import { getExecuteShareQueryTemplate } from "../services/result";
+import { getExecuteShareQueryTemplate, getExecuteShareLinkQuery } from "../services/result";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
+import { graphTranslator } from './translator/graph';
+import { GRAPH_SHARE_LINK_MAP, GRAPH_TEMPLATE_ENUM, GRAPH_DOCUMENT_TITLE_MAP } from '../constants/index';
+import { timestampToDate } from '../utils/date';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -20,16 +24,20 @@ export default () => {
   const isMobile = getIsMobile();
   const navigate = useNavigate();
 
+  const powerByRef = useRef<HTMLDivElement>(null);
+
   const [state, setState] = useImmer<{
     locationState: Record<string, any>;
     isOpen: boolean;
     shareLink: string;
     isLoading: boolean;
+    isErrorShareParams: boolean;
   }>({
     locationState: location || {},
     isOpen: false,
     shareLink: "",
     isLoading: false,
+    isErrorShareParams: false,
   });
   const { locationState, isOpen, isLoading, shareLink } = state;
 
@@ -45,7 +53,7 @@ export default () => {
   const query = new URLSearchParams(location.search);
   const shareId = query.get("shareId");
   const shareParams = query.get("shareParams");
-  const isShare = query.get("shareParams");
+  const isShare = query.get("shareParams") || location.pathname.includes('/graphs') && location.pathname.includes('/github');
   const { t } = useTranslation();
   const graphRef = React.useRef<Graph>();
 
@@ -76,7 +84,62 @@ export default () => {
       draft.isLoading = loading;
     });
   };
+
+  const generateShareLink = (shareInfo: Record<string, any>) => {
+    
+    setState((draft) => {
+
+      draft.locationState = shareInfo;
+      const { templateId, warehouseName } = shareInfo;
+      const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
+
+      /** repo contribute */
+      if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
+        const { top_n } = shareInfo;
+        const start_timestamp = timestampToDate(shareInfo?.start_timestamp);
+        const end_timestamp = timestampToDate(shareInfo?.end_timestamp);
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?start=${start_timestamp}&end=${end_timestamp}&contrib-limit=${top_n}`;
+      }
+
+      /** repo ecology */
+      else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
+        const { top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?repo-limit=${top_n}`;
+      }
+
+      /** repo community */
+      else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
+        const { country_topn, company_topn, developer_topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
+      }
+
+      /** acct activity */
+      else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
+        const { top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?repo-limit=${top_n}`;
+      }
+
+      /** acct partner */
+      else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
+        const { top_n } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?friend-limit=${top_n}`;
+      }
+
+      /** acct interest */
+      else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
+        const { repo_topn, topic_topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
+      }
+    });
+  };
+
+  /**
+   * share logic
+   * Need to adapt the share links for both the new and old versions.
+  */
   useEffect(() => {
+
+    /** 1. old version */
     if (shareId && shareParams) {
       getExecuteShareQueryTemplate(shareId, shareParams).then((res) => {
         setState((draft) => {
@@ -84,23 +147,64 @@ export default () => {
         });
       });
     }
+
+    /** 2. new version */
+    if (location.pathname.includes('/graphs') && location.pathname.includes('/github')) {
+      getExecuteShareLinkQuery(graphTranslator())
+        .then((res) => {
+          console.log('res:', res);
+          setState((draft) => {
+            draft.locationState.data = graphDataTranslator(res);
+          });
+        })
+        .catch(() => {
+          setState((draft) => {
+            draft.isErrorShareParams = true;
+          });
+        });
+    }
   }, [shareId, shareParams]);
+
+  /** 主页跳转注入 State 的查询逻辑 */
   useEffect(() => {
     if (location.state) {
-      setState((draft) => {
-        draft.locationState = location.state;
-        draft.shareLink = `${window.location.origin}/result?shareId=${
-          location.state.templateId
-        }&shareParams=${location.state.paramsValue}&isShare=${true}`;
-      });
+      generateShareLink(location.state);
     }
   }, [location.state]);
+
+  /** according to diff router to set document.title */
+  useEffect(() => {
+    const pattern = /^\/graphs\/([^\/]+)\/github\/(\S+)/;
+    const match = location.pathname.match(pattern);
+
+    if (match && match[0]) {
+      document.title = GRAPH_DOCUMENT_TITLE_MAP[match[1]] || 'OSGraph';
+    }
+
+  }, [location.pathname]);
+
+  useEffect(() => {
+
+    const resizePowerBy = () => {
+      if (powerByRef.current) {
+        powerByRef.current.style.transform = `scale(${Math.min(Math.max(window.innerWidth / 1000, 0.5), 1)})`;
+        powerByRef.current.style.transformOrigin = '100% 100%';
+      }
+    };
+    resizePowerBy();
+
+  }, [powerByRef.current]);
+
+  if (state.isErrorShareParams) {
+    return <PageNotFound source='error' />
+  }
 
   return (
     <OSGraph>
       <div
         className={isMobile ? styles["mobile-result"] : "graph-container"}
         css={GRAPH_STYLE}
+        style={{}}
       >
         {!isShare && (
           <div className="header">
@@ -121,16 +225,7 @@ export default () => {
                 graphSearchValue={searchValue}
                 graphTemplateId={templateId}
                 graphParameterList={templateParameterList}
-                onSearch={(data: any) => {
-                  const { graphTemplateId, graphParamsValue, searchData } =
-                    data;
-                  setState((draft) => {
-                    draft.locationState.data = searchData;
-                    draft.shareLink = `${
-                      window.location.origin
-                    }/result?shareId=${graphTemplateId}&shareParams=${graphParamsValue}&isShare=${true}`;
-                  });
-                }}
+                onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
               />
             </div>
@@ -155,7 +250,17 @@ export default () => {
             />
           </div>
         </Spin>
+         {/* 水印 */}
+        <div className={styles['graph-waterfall']} ref={powerByRef}>
+          <div className={styles['os-graph']} onClick={() => window.open('/')} />
+          <div className={styles['power-by']}>
+            <div className={styles['tugraph']} onClick={() => window.open('https://www.tugraph.tech/')} />
+            <div className={styles['antv']} onClick={() => window.open('https://antv.antgroup.com/')} />
+            <div className={styles['xlab']} onClick={() => window.open('https://github.com/X-lab2017?language=shell')} />
+          </div>
+        </div>
       </div>
+
       <Modal
         title={t`share`}
         open={isOpen}
