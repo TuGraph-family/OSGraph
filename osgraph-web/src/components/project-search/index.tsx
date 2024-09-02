@@ -73,6 +73,18 @@ export const ProjectSearch: React.FC<{
     loadingProjects,
   } = state;
 
+  /** handle the map relationship of query */
+  const textQueryMap = useMemo(() => {
+    if (textQuery.length > 0) {
+      const queryMap: Record<number, string> = {};
+      textQuery.forEach(item => {
+        queryMap[item.id] = item.name;
+      });
+      return queryMap;
+    }
+    return {};
+  }, [textQuery]);
+
   const styleObj: React.CSSProperties = {
     width: needFixed ? "calc(100% - 320px)" : defaultStyle ? "400px" : "650px",
     position: needFixed ? "fixed" : "relative",
@@ -153,6 +165,21 @@ export const ProjectSearch: React.FC<{
     });
   };
 
+  /** get template properties object */
+  const getTempPropsObj = (templateList: any[]) => {
+
+    if (!Array.isArray(templateList)) {
+      throw new TypeError('type error, please check params');
+    }
+
+    const properties: Record<string, string | number> = {};
+    templateList.forEach(item => {
+      properties[item.parameterName] = item.parameterValue;
+    });
+
+    return properties;
+  };
+
   const handelWarehouseSearch = useMemo(() => {
     const loadOptions = (value: string) => {
       getExecuteFullTextQueryList(querySource, value);
@@ -188,25 +215,33 @@ export const ProjectSearch: React.FC<{
         }
         const graphData = graphDataTranslator(res.data);
         getGraphLoading?.(false);
+
+        const basicParams = {
+          data: graphData,
+          projectValue,
+          querySource,
+          searchValue,
+          templateId,
+          paramsValue,
+          templateParameterList,
+          warehouseValue: value,
+          warehouseName: textQueryMap[value],
+          ...getTempPropsObj(templateList)
+        }
+
         if (res?.success) {
           if (defaultStyle) {
             onSearch?.({
+              ...basicParams,
               searchData: graphData,
               graphTemplateId: templateId,
               graphParamsValue: paramsValue,
             });
             return;
           }
-          navigate("/result", {
+          navigate("/graphs", {
             state: {
-              data: graphData,
-              projectValue,
-              querySource,
-              searchValue,
-              templateId,
-              paramsValue,
-              templateParameterList,
-              warehouseValue: value,
+              ...basicParams,
             },
           });
         } else {
