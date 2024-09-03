@@ -171,10 +171,6 @@ export const PLACEHOLDER_MAP: Record<string, string> = {
   ACCT_INTEREST: "请输入 GitHub 账户名称"
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> db0536c (feat: power by waterfall)
 export enum GRAPH_TEMPLATE_ENUM {
   REPO_CONTRIBUTE = 1,
   REPO_ECOLOGY,
@@ -184,7 +180,6 @@ export enum GRAPH_TEMPLATE_ENUM {
   ACCT_INTEREST
 }
 
-<<<<<<< HEAD
 export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
   [GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]: "repo-contrib",
   [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]: "repo-eco",
@@ -198,37 +193,11 @@ export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
   'acct_activity': 'dev-activity',
   'acct_partner': 'dev-partner',
   'acct_interest': 'dev-interest',
-=======
-export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
-  REPO_CONTRIBUTE: "repo_contribute",
-  REPO_ECOLOGY: "repo_ecology",
-  REPO_COMMUNITY: "repo_community",
-  ACCT_ACTIVITY: "acct_activity",
-  ACCT_PARTNER: "acct_partner",
-  ACCT_INTEREST: "acct_interest"
->>>>>>> d1baf2c (feat: upgrade share link of osgraph)
-=======
-export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
-  [GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]: "repo-contrib",
-  [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]: "repo-eco",
-  [GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]: "repo-community",
-  [GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]: "dev-activity",
-  [GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]: "dev-partner",
-  [GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]: "dev-interest",
-  'repo_contribute': 'repo-contrib',
-  'repo_ecology': 'repo-eco',
-  'repo_community': 'repo-community',
-  'acct_activity': 'dev-activity',
-  'acct_partner': 'dev-partner',
-  'acct_interest': 'dev-interest',
->>>>>>> db0536c (feat: power by waterfall)
 };
 
 /** ensure unique key, use type + params */
 export const GRAPH_EXTEND_PARAMS_MAP = {
   /** REPO_CONTRIBUTE */
-<<<<<<< HEAD
-<<<<<<< HEAD
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'start']: 'start_timestamp',
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'end']: 'end_timestamp',
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'contrib-limit']: 'top_n',
@@ -271,55 +240,3 @@ export const GRAPH_DOCUMENT_TITLE_MAP = {
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: 'OSGraph - Open-source Partner Graph',
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: 'OSGraph - Open-source Interest Graph',
 }
-=======
-  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'start']: 'start_timestamp',
-  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'end']: 'end_timestamp',
-  [GRAPH_SHARE_LINK_MAP.REPO_CONTRIBUTE + 'contrib-limit']: 'top_n',
-=======
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'start']: 'start_timestamp',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'end']: 'end_timestamp',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + 'contrib-limit']: 'top_n',
->>>>>>> db0536c (feat: power by waterfall)
-
-  /** REPO_ECOLOGY */
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY] + 'repo-limit']: 'top_n',
-
-  /** REPO_COMMUNITY */
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY] + 'country-limit']: 'country_topn',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY] + 'org-limit']: 'company_topn',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY] + 'contrib-limit']: 'developer_topn',
-
-  /** ACCT_ACTIVITY */
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY] + 'repo-limit']: 'top_n',
-
-  /** ACCT_PARTNER */
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER] + 'friend-limit']: 'top_n',
-
-  /** ACCT_INTEREST */
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST] + 'repo-limit']: 'repo_topn',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST] + 'topic-limit']: 'topic_topn',
-}
-<<<<<<< HEAD
->>>>>>> d1baf2c (feat: upgrade share link of osgraph)
-=======
-
-/** map path params */
-export const GRAPH_TEMPLATE_TYPE_MAP = {
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]]: 'repo_contribute',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]]: 'repo_ecology',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]]: 'repo_community',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]]: 'acct_activity',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: 'acct_partner',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: 'acct_interest',
-}
-
-/** map template type document.title */
-export const GRAPH_DOCUMENT_TITLE_MAP = {
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]]: 'OSGraph - Project Contribution Graph',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]]: 'OSGraph - Project Ecosystem Graph',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]]: 'OSGraph - Project Community Graph',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]]: 'OSGraph - Developer Activity Graph',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: 'OSGraph - Open-source Partner Graph',
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: 'OSGraph - Open-source Interest Graph',
-}
->>>>>>> db0536c (feat: power by waterfall)
