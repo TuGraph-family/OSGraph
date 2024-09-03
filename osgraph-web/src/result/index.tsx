@@ -122,7 +122,7 @@ export default () => {
       /** acct partner */
       else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?friend-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?partner-limit=${top_n}`;
       }
 
       /** acct interest */
@@ -152,7 +152,6 @@ export default () => {
     if (location.pathname.includes('/graphs') && location.pathname.includes('/github')) {
       getExecuteShareLinkQuery(graphTranslator())
         .then((res) => {
-          console.log('res:', res);
           setState((draft) => {
             draft.locationState.data = graphDataTranslator(res);
           });
