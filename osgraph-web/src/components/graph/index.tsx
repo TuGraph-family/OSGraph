@@ -114,7 +114,7 @@ export const GraphView = React.memo(
     /** 过滤孤立节点，和不存在节点的边 */
     const filterGraphData = (data: GraphData): GraphData => {
 
-      if (!data || Array.isArray(data?.nodes) || Array.isArray(data?.edges)) {
+      if (!data || !Array.isArray(data?.nodes) || !Array.isArray(data?.edges)) {
         return {nodes: [], edge: []};
       }
 
