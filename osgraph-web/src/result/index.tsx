@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
-import { Button, Modal, Spin, message } from "antd";
+import { Button, Modal, Spin, message, Divider } from "antd";
 import React, { useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
@@ -253,6 +253,12 @@ export default () => {
          {/* 水印 */}
         <div className={styles['graph-waterfall']} ref={powerByRef}>
           <div className={styles['os-graph']} onClick={() => window.open('/')} />
+          <Divider
+            plain
+            className={styles['power-by-divide']}
+          >
+            Power By
+          </Divider>
           <div className={styles['power-by']}>
             <div className={styles['tugraph']} onClick={() => window.open('https://www.tugraph.tech/')} />
             <div className={styles['antv']} onClick={() => window.open('https://antv.antgroup.com/')} />
