@@ -3,7 +3,7 @@
  * author: Allen
 */
 
-import { GRAPH_EXTEND_PARAMS_MAP, GRAPH_TEMPLATE_TYPE_MAP, GRAPH_SHARE_LINK_MAP, GRAPH_TEMPLATE_ENUM } from '../../constants/index';
+import { GRAPH_EXTEND_PARAMS_MAP, GRAPH_TEMPLATE_TYPE_MAP, GRAPH_SHARE_LINK_MAP } from '../../constants/index';
 import { dateToTimestamp } from '../../utils/date';
 
 const graphTranslator = () => {
