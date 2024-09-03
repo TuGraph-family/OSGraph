@@ -10,6 +10,7 @@ import ForceGraph3D from '3d-force-graph';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
 import { useTranslation } from "react-i18next";
+import { throttle } from 'lodash';
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
@@ -264,11 +265,15 @@ export const GraphView = React.memo(
       });
       const highlightNodes = new Set();
       const highlightLinks = new Set();
+      let nodeMaterials = new Map();
       let hoverNode: any = null;
+
+      // 当前已高亮的节点和链接缓存
+      let currentHighlightLink = null;
+      let currentHighlightNodes = new Set();
 
       const graph = ForceGraph3D({controlType: 'trackball'})(containerRef.current)
         .cameraPosition({ x: 0, y: 0, z: 177 })
-        .nodeAutoColorBy('nodeType')
         .nodeOpacity(0.6)
         .linkThreeObjectExtend(true)
         .linkCurvature('curvature')
@@ -307,12 +312,13 @@ export const GraphView = React.memo(
 
         graphRef.current = graph;
 
+        /** 高亮 node 和 link */
         const updateHighlight = () => {
           if (graph) {
             graph
               .nodeColor(graph.nodeColor())
               .linkWidth(graph.linkWidth())
-              .linkDirectionalParticles(graph.linkDirectionalParticles());
+              .linkDirectionalParticles(graph.linkDirectionalParticles())
           }
         };
 
@@ -366,30 +372,69 @@ export const GraphView = React.memo(
           }
 
           hoverNode = node || null;
+          nodeMaterials.forEach((material, node) => {
+            highlightNodes.has(node)
+              ? material.color.set('yellow')
+              : material.color.set('green');
+          });
           updateHighlight();
         })
-        // .onLinkHover((link: any) => {
-        //   highlightNodes.clear();
-        //   highlightLinks.clear();
-        //   if (link) {
-        //     highlightLinks.add(link);
-        //     highlightNodes.add(link.source);
-        //     highlightNodes.add(link.target);
-        //   }
-        //   updateHighlight();
-        // })
+        .onNodeClick(node => {
+          // Aim at node from outside it
+
+          const distance = 40;
+          const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
+
+          const newPos = node.x || node.y || node.z
+            ? { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }
+            : { x: 0, y: 0, z: distance }; // special case if node is in (0,0,0)
+
+          graph.cameraPosition(
+            newPos, // new position
+            node, // lookAt ({ x, y, z })
+            3000  // ms transition duration
+          );
+        })
+        .onNodeDragEnd(node => {
+          node.fx = node.x;
+          node.fy = node.y;
+          node.fz = node.z;
+        })
+        .onLinkHover((link: any) => {
+
+          if (link === currentHighlightLink) return;
+
+          // 更新当前高亮缓存
+          currentHighlightLink = link;
+
+          highlightNodes.clear();
+          highlightLinks.clear();
+          if (link) {
+            highlightLinks.add(link);
+            highlightNodes.add(link.source);
+            highlightNodes.add(link.target);
+          }
+          updateHighlight();
+        })
+
         .nodeThreeObject((node) => {
           const group = new THREE.Group();
+
           /** 创建一个球体节点 */
-          const sphereGeometry = new THREE.SphereGeometry( 5, 16, 8 );
+          const sphereGeometry = new THREE.SphereGeometry( 5, 64, 64 );
           const sphereMaterial = new THREE.MeshBasicMaterial( { color: 'green', opacity: 0.5, transparent: true } );
           const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+
+          /** map 缓存每个 nodeThreeObject, 用户后续颜色高亮设置， nodeColor 不能用于设置 nodeThreeObject 节点 */
+          nodeMaterials.set(node, sphereMaterial);
           group.add( sphere );
+
           /** 创建一个节点的文本标签 */
           const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
             map: new THREE.CanvasTexture(createTextTexture(node?.properties?.name)),
             depthTest: false
           }));
+
           sprite.scale.set(10, 10, 1);
           group.add(sprite);
           return group;
