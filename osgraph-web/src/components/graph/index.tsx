@@ -268,10 +268,6 @@ export const GraphView = React.memo(
       let nodeMaterials = new Map();
       let hoverNode: any = null;
 
-      // 当前已高亮的节点和链接缓存
-      let currentHighlightLink = null;
-      let currentHighlightNodes = new Set();
-
       const graph = ForceGraph3D({controlType: 'trackball'})(containerRef.current)
         .cameraPosition({ x: 0, y: 0, z: 177 })
         .nodeOpacity(0.6)
@@ -402,10 +398,7 @@ export const GraphView = React.memo(
         })
         .onLinkHover((link: any) => {
 
-          if (link === currentHighlightLink) return;
-
-          // 更新当前高亮缓存
-          currentHighlightLink = link;
+          if (highlightLinks.has(link)) return;
 
           highlightNodes.clear();
           highlightLinks.clear();
