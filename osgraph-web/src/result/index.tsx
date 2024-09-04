@@ -16,7 +16,6 @@ import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
 import { graphTranslator } from './translator/graph';
 import { GRAPH_SHARE_LINK_MAP, GRAPH_TEMPLATE_ENUM, GRAPH_DOCUMENT_TITLE_MAP } from '../constants/index';
-import { timestampToDate } from '../utils/date';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -96,9 +95,7 @@ export default () => {
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
         const { top_n } = shareInfo;
-        const start_timestamp = timestampToDate(shareInfo?.start_timestamp);
-        const end_timestamp = timestampToDate(shareInfo?.end_timestamp);
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?start=${start_timestamp}&end=${end_timestamp}&contrib-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?contrib-limit=${top_n}`;
       }
 
       /** repo ecology */
@@ -122,7 +119,7 @@ export default () => {
       /** acct partner */
       else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?friend-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}?partner-limit=${top_n}`;
       }
 
       /** acct interest */
