@@ -10,6 +10,10 @@
 
 [https://osgraph.com](https://osgraph.com)
 
+## Getting Started
+
+Startup and test on local machine：[OSGraph Development Document](docs/en-US/DeveloperManual.md)
+
 ## Features
 
 The current product defaults to offering 6 open-source graphs for everyone to experience, which include 3 project-type graphs (Contributions, Ecosystem, Community) and 3 developer-type graphs (Activities, Partners, Interests).
@@ -90,7 +94,7 @@ We welcome everyone to submit Issues for active discussions, offering product su
 
 ## Contribution
 
-The product's open-source code is actively being organized and will be available soon...
+You can directly submit GitHub Issues/PRs to provide feedback and suggest improvements for OSGraph, or you can join the TuGraph community group and communicate with us directly through the contact information provided below.
 
 ## Contacts
 

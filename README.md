@@ -14,6 +14,10 @@
 **[https://osgraph.com](https://osgraph.com)**
 
 
+## 快速开始
+
+本地启动测试请参考：[OSGraph部署文档](docs/zh-CN/DeveloperManual.md)
+
 
 ## 功能介绍
 
@@ -113,8 +117,7 @@
 
 ##  参与贡献
 
-产品开源代码正在积极整理中，敬请期待……
-
+您可以直接提交GitHub Issue/PR对OSGraph反馈建议与功能改进，也可以通过下面的联系方式加入TuGraph社区群与我们直接沟通交流。
 
 
 ## 联系我们

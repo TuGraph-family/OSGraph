@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.alipay.tumaker</groupId>
+        <artifactId>tumaker-parent</artifactId>
+        <version>1.0.1</version>
+        <relativePath>../../../pom.xml</relativePath>
+    </parent>
+    <artifactId>tumaker-biz-shared</artifactId>
+    <version>1.0.1</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alipay.tumaker</groupId>
+            <artifactId>tumaker-core-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.tumaker</groupId>
+            <artifactId>tumaker-common-dal-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.tumaker</groupId>
+            <artifactId>tumaker-common-dal-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.tumaker</groupId>
+            <artifactId>tumaker-core-service</artifactId>
+        </dependency>
+        <dependency>
+            <artifactId>runtime-sofa-boot</artifactId>
+            <groupId>com.alipay.sofa</groupId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

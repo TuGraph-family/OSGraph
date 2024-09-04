@@ -1,0 +1,7 @@
+url: jdbc:mysql://127.0.0.1:3306/tumaker?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=true&serverTimezone=UTC
+username: mysql
+password: mysql
+
+tableList:
+  #- person_l
+  - tumaker_query_template

@@ -1,0 +1,7 @@
+/home/admin/logs/tumaker/*.log {
+    create 0640 admin admin
+    daily
+    rotate 3
+    missingok
+    notifempty
+}

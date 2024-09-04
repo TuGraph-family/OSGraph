@@ -8,7 +8,7 @@ import { graphDataTranslator } from "../../result/translator";
 import {
   getExecuteFullTextQuery,
   getExecuteQueryTemplate,
-  getListQueryTemplate
+  getListQueryTemplate,
 } from "../../services/homePage";
 import styles from "./index.module.less";
 
@@ -37,7 +37,7 @@ export const ProjectSearch: React.FC<{
   graphSearchValue,
   graphTemplateId,
   graphParameterList,
-  getGraphLoading
+  getGraphLoading,
 }) => {
   const navigate = useNavigate();
   const [queryList, setQueryList] = useState<any[]>([]);
@@ -52,14 +52,14 @@ export const ProjectSearch: React.FC<{
     searchValue: string;
     loadingProjects: boolean;
   }>({
-    querySource: "github_repo",
+    querySource: graphQuerySource || "github_repo",
     templateParameterList: graphParameterList || [],
     textQuery: [],
     templateId: graphTemplateId || "1",
     projectValue: graphProjectValue || "REPO_CONTRIBUTE",
     placeholderValue: "请输入 GitHub 仓库名称",
     searchValue: "",
-    loadingProjects: false
+    loadingProjects: false,
   });
   const {
     querySource,
@@ -70,8 +70,20 @@ export const ProjectSearch: React.FC<{
     projectValue,
     placeholderValue,
     searchValue,
-    loadingProjects
+    loadingProjects,
   } = state;
+
+  /** handle the map relationship of query */
+  const textQueryMap = useMemo(() => {
+    if (textQuery.length > 0) {
+      const queryMap: Record<number, string> = {};
+      textQuery.forEach(item => {
+        queryMap[item.id] = item.name;
+      });
+      return queryMap;
+    }
+    return {};
+  }, [textQuery]);
 
   const styleObj: React.CSSProperties = {
     width: needFixed ? "calc(100% - 320px)" : defaultStyle ? "400px" : "650px",
@@ -81,7 +93,7 @@ export const ProjectSearch: React.FC<{
     marginLeft: defaultStyle ? 16 : 0,
     border: defaultStyle ? "1px solid #f2f2f2" : "1px solid #ffffff",
     background: defaultStyle ? "#ffffff" : "",
-    borderRadius: defaultStyle ? "6px" : "12px"
+    borderRadius: defaultStyle ? "6px" : "12px",
   };
 
   const switchName = (parameterName: string, parameterValue: string) => {
@@ -108,7 +120,7 @@ export const ProjectSearch: React.FC<{
         return {
           parameterName: parameterName,
           parameterValue: switchName(parameterName, parameterValue || value),
-          valueType: valueType
+          valueType: valueType,
         };
       }
     );
@@ -127,7 +139,7 @@ export const ProjectSearch: React.FC<{
     } else {
       handelWarehouseChange(warehouseValue, {
         templateId: item.data.id,
-        templateParameterList: item.data.templateParameterList
+        templateParameterList: item.data.templateParameterList,
       });
     }
     setState((draft) => {
@@ -142,6 +154,7 @@ export const ProjectSearch: React.FC<{
   const getExecuteFullTextQueryList = (indexName: string, keyword: string) => {
     setState((draft) => {
       draft.loadingProjects = true;
+      draft.querySource = indexName;
     });
     getExecuteFullTextQuery({ indexName, keyword }).then((res) => {
       setState((draft) => {
@@ -150,6 +163,21 @@ export const ProjectSearch: React.FC<{
         draft.loadingProjects = false;
       });
     });
+  };
+
+  /** get template properties object */
+  const getTempPropsObj = (templateList: any[]) => {
+
+    if (!Array.isArray(templateList)) {
+      throw new TypeError('type error, please check params');
+    }
+
+    const properties: Record<string, string | number> = {};
+    templateList.forEach(item => {
+      properties[item.parameterName] = item.parameterValue;
+    });
+
+    return properties;
   };
 
   const handelWarehouseSearch = useMemo(() => {
@@ -163,11 +191,11 @@ export const ProjectSearch: React.FC<{
     value: any,
     templateInfo: { templateId: string; templateParameterList: any[] }
   ) => {
+    if (!value) return;
     const { templateId, templateParameterList } = templateInfo;
     setState((draft) => {
       draft.warehouseValue = value;
     });
-
     const templateList = handleJson(templateParameterList, value);
 
     const paramsValue = templateList
@@ -179,35 +207,50 @@ export const ProjectSearch: React.FC<{
     getGraphLoading?.(true);
     getExecuteQueryTemplate({
       templateId: templateId,
-      templateParameterList: templateList
-    }).then((res) => {
-      const graphData = graphDataTranslator(res.data);
-      getGraphLoading?.(false);
-      if (res?.success) {
-        if (defaultStyle) {
-          onSearch?.({
-            searchData: graphData,
-            graphTemplateId: templateId,
-            graphParamsValue: paramsValue
-          });
-          return;
+      templateParameterList: templateList,
+    })
+      .then((res) => {
+        if (!res.data) {
+          message.error(res.message);
         }
-        navigate("/result", {
-          state: {
-            data: graphData,
-            projectValue,
-            querySource,
-            searchValue,
-            templateId,
-            paramsValue,
-            templateParameterList,
-            warehouseValue: value
+        const graphData = graphDataTranslator(res.data);
+        getGraphLoading?.(false);
+
+        const basicParams = {
+          data: graphData,
+          projectValue,
+          querySource,
+          searchValue,
+          templateId,
+          paramsValue,
+          templateParameterList,
+          warehouseValue: value,
+          warehouseName: textQueryMap[value],
+          ...getTempPropsObj(templateList)
+        }
+
+        if (res?.success) {
+          if (defaultStyle) {
+            onSearch?.({
+              ...basicParams,
+              searchData: graphData,
+              graphTemplateId: templateId,
+              graphParamsValue: paramsValue,
+            });
+            return;
           }
-        });
-      } else {
-        message.error(res.message);
-      }
-    });
+          navigate("/graphs", {
+            state: {
+              ...basicParams,
+            },
+          });
+        } else {
+          message.error(res.message);
+        }
+      })
+      .finally(() => {
+        getGraphLoading?.(false);
+      });
   };
 
   useEffect(() => {
@@ -224,7 +267,7 @@ export const ProjectSearch: React.FC<{
   useEffect(() => {
     if (queryList.length) {
       const contributeTemplate = queryList.find(
-        (item) => item.templateType === "REPO_CONTRIBUTE"
+        (item) => item.templateType === projectValue
       );
       if (contributeTemplate) {
         setState((draft) => {
@@ -234,7 +277,7 @@ export const ProjectSearch: React.FC<{
         });
       }
     }
-  }, [queryList]);
+  }, [queryList, projectValue]);
 
   useEffect(() => {
     getListQueryTemplate().then((res) => {
@@ -252,7 +295,10 @@ export const ProjectSearch: React.FC<{
     if (templateType) {
       setState((draft) => {
         draft.projectValue = templateType;
+        draft.querySource =
+          GRAPH_TYPE_CLUSTER[templateType as keyof typeof GRAPH_TYPE_CLUSTER];
         draft.placeholderValue = PLACEHOLDER_MAP[templateType];
+        draft.textQuery = [];
       });
     }
   }, [templateType]);
@@ -261,7 +307,9 @@ export const ProjectSearch: React.FC<{
     <div className={styles["project-search"]} style={styleObj}>
       <ConfigProvider
         theme={{
-          algorithm: defaultStyle ? theme.defaultAlgorithm : theme.darkAlgorithm
+          algorithm: defaultStyle
+            ? theme.defaultAlgorithm
+            : theme.darkAlgorithm,
         }}
       >
         <Select
@@ -314,7 +362,8 @@ export const ProjectSearch: React.FC<{
               ? "calc(100% - 320px)"
               : defaultStyle
               ? "400px"
-              : "650px"
+              : "650px",
+            lineHeight: 32,
           }}
           placeholder={placeholderValue}
           optionFilterProp="children"
@@ -325,11 +374,12 @@ export const ProjectSearch: React.FC<{
           }
           value={warehouseValue}
           loading={loadingProjects}
+          filterOption={false}
         >
           {textQuery?.map((item) => {
             return (
               <Select.Option value={item.id} key={item.id}>
-                {item.name}
+                <div style={{ lineHeight: "32px" }}>{item.name}</div>
               </Select.Option>
             );
           })}
