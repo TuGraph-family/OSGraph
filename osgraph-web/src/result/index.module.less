@@ -8,3 +8,64 @@
     }
   }
 }
+
+.graph-waterfall {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 152px;
+  
+  .os-graph {
+    background-image: url('https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*IosYSI19QekAAAAAAAAAAAAADp_eAQ/original');
+    width: 152px;
+    height: 42px;
+    background-size: contain;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .power-by-divide {
+    margin: 0 0 4px 0;
+    color: #a4a5a9;
+
+    :global {
+      .ant-divider-inner-text {
+        padding: 0 4px;
+      }
+    }
+  }
+
+  .power-by {
+    display: flex;
+    width: 100%;
+    height: 22px;
+
+    .antv,
+    .tugraph,
+    .xlab {
+      cursor: pointer;
+      background-size: contain;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .tugraph {
+      width: 58px;
+      background-image: url('https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*-h8-RItw_4YAAAAAAAAAAAAADp_eAQ/original');
+    }
+
+    .antv {
+      width: 46px;
+      background-image: url('https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*FjeWQ6YZGFkAAAAAAAAAAAAADp_eAQ/original');
+    }
+
+    .xlab {
+      width: 48px;
+      background-image: url('https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*mg3aSp-aLkEAAAAAAAAAAAAADp_eAQ/original');
+    }
+  }
+}

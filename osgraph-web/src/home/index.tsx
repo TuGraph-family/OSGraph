@@ -63,7 +63,14 @@ const HomePage: React.FC = () => {
         setNeedFixed(false);
       }
     };
-
+    const video = document.getElementById("video") as HTMLVideoElement;
+    if (video) {
+      video.src =
+        "https://gw.alipayobjects.com/v/huamei_tu4rvn/afts/video/A*V9DKSIe4nKEAAAAAAAAAAAAADp_eAQ";
+      video.addEventListener("play", () => {
+        video.style.visibility = "visible";
+      });
+    }
     const firstPage = document.getElementById("firstPage");
     if (firstPage && isMobile) {
       firstPage.style.height = "35vh";

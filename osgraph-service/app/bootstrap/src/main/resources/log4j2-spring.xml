@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+
+<Configuration>
+    <!--变量配置-->
+    <Properties>
+        <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
+        <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
+        <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+        <!-- 定义日志存储的路径 -->
+        <property name="FILE_PATH" value="/home/admin/logs"/>
+        <property name="APP_NAME" value="tumaker"/>
+        <property name="LOG_LEVEL" value="INFO"/>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT-APPENDER" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%X{SOFA-TraceId},%X{SOFA-SpanId}] %d %-5p %c{2}:%line - %m%n" charset="UTF-8"/>
+            <!--            <Policies>-->
+            <!--                <SizeBasedTriggeringPolicy size="1 MB"/>-->
+            <!--            </Policies>-->
+        </Console>
+        <Console name="STDERR-APPENDER" target="SYSTEM_ERR">
+            <PatternLayout pattern="[%X{SOFA-TraceId},%X{SOFA-SpanId}] %d %-5p %c{2}:%line - %m%n" charset="UTF-8"/>
+        </Console>
+        <!-- ctx: 开头的含义为从 sofa-config.properties 里面获取属性进行替换 -->
+        <!-- filePattern 的含义为日志 Rolling 后的名称是什么 -->
+        <RollingFile name="DEFAULT-APPENDER" fileName="${FILE_PATH}/${APP_NAME}/common-default.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/common-default.log.%d{yyyy-MM-dd}-%i"
+                     append="true">
+            <PatternLayout
+                    pattern="%d [%X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1024MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+
+        <RollingFile name="SOFA-DEFAULT-APPENDER" fileName="${FILE_PATH}/${APP_NAME}/sofa-default.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/sofa-default.log.%d{yyyy-MM-dd}"
+                     append="true">
+            <PatternLayout
+                    pattern="%d [%X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+
+        <RollingFile name="ERROR-APPENDER" fileName="${FILE_PATH}/${APP_NAME}/common-error.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/common-error.log.%d{yyyy-MM-dd}-%i"
+                     append="true">
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout
+                    pattern="%d [%X{SOFA-TraceId},%X{SOFA-SpanId}] [%X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1024MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+        <RollingFile name="APP-DEFAULT-APPENDER" fileName="${FILE_PATH}/${APP_NAME}/app-default.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/app-default.log.%d{yyyy-MM-dd}-%i"
+                     append="true">
+            <PatternLayout
+                    pattern="%d [%X{SOFA-TraceId},%X{SOFA-SpanId}] [%X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1024MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+        <RollingFile name="SOFA-D+" fileName="${FILE_PATH}/${APP_NAME}/sofa-default.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/sofa-default.log.%d{yyyy-MM-dd}"
+                     append="true">
+            <PatternLayout
+                    pattern="%d [%X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+
+        <!-- [ALIPAY-COMMON-SECURITY] 日志配置 -->
+        <RollingFile name="ALIPAY-COMMON-SECURITY-APPENDER"
+                     fileName="${FILE_PATH}/${APP_NAME}/security-info.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/security-info.log.%d{yyyy-MM-dd}"
+                     append="true">
+            <PatternLayout
+                    pattern="%d [%X{SOFA-TraceId} %X{rpcId} - %X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+
+        <RollingFile name="BASEMENT-FILESYNC-CLIENT-APPENDER"
+                     fileName="${FILE_PATH}/${APP_NAME}/basement-filesync-client.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/basement-filesync-client.log.%d{yyyy-MM-dd}"
+                     append="true">
+            <PatternLayout
+                    pattern="%d [%X{loginUserEmail}/%X{loginUserID}/%X{remoteAddr}/%X{clientId} - %X{requestURIWithQueryString}] %-5p %c{2} - %m%n"
+                    charset="UTF-8"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+
+        <!-- access filter log-->
+        <RollingFile name="ACCESS_FILTER-LOG-APPENDER" fileName="${FILE_PATH}/${APP_NAME}/tumaker-access.log"
+                     filePattern="${FILE_PATH}/${APP_NAME}/tumaker-access.log.%d{yyyy-MM-dd}" append="true">
+            <PatternLayout pattern="%d [%X{SOFA-TraceId} - %t] %-5p %c{2} - %m%n" charset="UTF-8"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy/>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <AsyncLogger name="STDOUT" additivity="false" level="info">
+            <AppenderRef ref="STDOUT-APPENDER"/>
+        </AsyncLogger>
+        <AsyncLogger name="STDERR" additivity="false" level="${LOG_LEVEL}">
+            <AppenderRef ref="STDERR-APPENDER"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.alipay.sofa" additivity="false" level="${LOG_LEVEL}">
+            <AppenderRef ref="SOFA-DEFAULT-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.alipay.test" additivity="false" level="${LOG_LEVEL}">
+            <AppenderRef ref="APP-DEFAULT-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.alipay.tumaker" additivity="true" level="${LOG_LEVEL}">
+            <AppenderRef ref="APP-DEFAULT-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+            <AppenderRef ref="STDOUT-APPENDER"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.alipay.common.security" additivity="false" level="${LOG_LEVEL}">
+            <AppenderRef ref="ALIPAY-COMMON-SECURITY-APPENDER"/>
+        </AsyncLogger>
+        <AsyncLogger name="BASEMENT-FILESYNC-CLIENT" additivity="false" level="INFO">
+            <AppenderRef ref="STDOUT-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+            <AppenderRef ref="BASEMENT-FILESYNC-CLIENT-APPENDER"/>
+        </AsyncLogger>
+        <!-- access filter log-->
+        <AsyncLogger name="ACCESS_FILTER-LOG" additivity="false" level="info">
+            <AppenderRef ref="STDOUT-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+            <AppenderRef ref="ACCESS_FILTER-LOG-APPENDER"/>
+        </AsyncLogger>
+        <AsyncRoot level="${LOG_LEVEL}">
+            <AppenderRef ref="DEFAULT-APPENDER"/>
+            <AppenderRef ref="ERROR-APPENDER"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

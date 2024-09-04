@@ -15,6 +15,7 @@ import {
   NODE_TYPE_SHOW_GITHUB_LINK_MAP
 } from "../../constants";
 import { IconFont, iconLoader } from "../icon-font";
+import { filterGraphDataTranslator } from './translator/filterGraphData';
 
 interface IProps {
   data: DataID;
@@ -115,7 +116,7 @@ export const GraphView = React.memo(
       const { clientHeight: height, clientWidth: width } = containerRef.current;
       const graph = new Graph({
         container: containerRef.current as HTMLDivElement,
-        data,
+        data: filterGraphDataTranslator(data),
         width,
         height,
         node: {
