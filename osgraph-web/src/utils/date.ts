@@ -15,7 +15,27 @@ const dateToTimestamp = (dateString: string): number => {
   return Math.floor(date.getTime() / 1000);
 }
 
+const getLast10YearsTimestampsInSeconds = () => {
+  const now = new Date();
+  
+  // 最近10年的结束时间戳为当前时间的时间戳（以秒为单位）
+  const endTimestamp = Math.floor(now.getTime() / 1000);
+
+  // 获取准确的10年前的同一时间的日期对象
+  const tenYearsAgo = new Date();
+  tenYearsAgo.setFullYear(now.getFullYear() - 10);
+
+  // 10年前的时间戳（以秒为单位）
+  const startTimestamp = Math.floor(tenYearsAgo.getTime() / 1000);
+
+  return {
+    startTimestamp,
+    endTimestamp
+  };
+}
+
 export {
   timestampToDate,
   dateToTimestamp,
+  getLast10YearsTimestampsInSeconds,
 };
