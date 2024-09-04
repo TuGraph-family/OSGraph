@@ -149,7 +149,6 @@ export default () => {
     if (location.pathname.includes('/graphs') && location.pathname.includes('/github')) {
       getExecuteShareLinkQuery(graphTranslator())
         .then((res) => {
-          console.log('res:', res);
           setState((draft) => {
             draft.locationState.data = graphDataTranslator(res);
           });

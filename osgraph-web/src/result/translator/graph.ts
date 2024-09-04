@@ -67,16 +67,19 @@ const graphTranslator = () => {
     for (const [key, value] of params) {
       if (GRAPH_EXTEND_PARAMS_MAP[templateType + key]) {
         searchObj[GRAPH_EXTEND_PARAMS_MAP[templateType + key]] = limitExtendsParams(templateType + key, value);
-        if (templateType === GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]) {
-          const { startTimestamp, endTimestamp } = getLast10YearsTimestampsInSeconds();
-          searchObj['start_timestamp'] = startTimestamp;
-          searchObj['end_timestamp'] = endTimestamp;
-        }
       }
       else {
         searchObj[key] = value;
       }
     }
+
+    /** 单独处理 contrib-repo，添加预处理参数 */
+    if (templateType === GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]) {
+      const { startTimestamp, endTimestamp } = getLast10YearsTimestampsInSeconds();
+      searchObj['start_timestamp'] = startTimestamp;
+      searchObj['end_timestamp'] = endTimestamp;
+    }
+
     return objectToSearchParams(searchObj);
   }
 
