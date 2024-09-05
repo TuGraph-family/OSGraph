@@ -253,7 +253,7 @@ export default () => {
             plain
             className={styles['power-by-divide']}
           >
-            Power By
+            Powered by
           </Divider>
           <div className={styles['power-by']}>
             <div className={styles['tugraph']} onClick={() => window.open('https://www.tugraph.tech/')} />
