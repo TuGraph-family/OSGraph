@@ -18,16 +18,18 @@ import {
   NODE_TYPE_MAP,
   NODE_TYPE_SHOW_GITHUB_LINK_MAP
 } from "../../constants";
+import { GRAPH_RENDER_MODEL } from '../../constants/graph';
 import { IconFont, iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from './translator/filterGraphData';
 
 interface IProps {
   data: DataID;
   onReady?: (graph: Graph) => void;
+  renderMode?: GRAPH_RENDER_MODEL['2D'] | GRAPH_RENDER_MODEL['3D'];
 }
 
 export const GraphView = React.memo(
-  ({ data, onReady }: IProps) => {
+  ({ data, renderMode, onReady }: IProps) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
     const { t } = useTranslation();
@@ -439,23 +441,27 @@ export const GraphView = React.memo(
     React.useEffect(() => {
       if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
         if (!containerRef.current) return;
-        // renderGraph();
-        render3DGraph();
+        renderMode === GRAPH_RENDER_MODEL['2D']
+          ? renderGraph()
+          : render3DGraph();
+        
         return () => {
           if (graphRef.current) {
-            // graphRef.current.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
-            // graphRef.current.destroy();
-            graphRef.current(null);
+            if (typeof graphRef.current?.off === 'function') {
+              graphRef.current?.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+              graphRef.current?.destroy();
+            }
+            graphRef.current = null;
           }
         };
       }
-    }, [containerRef.current, data]);
+    }, [containerRef.current, data, renderMode]);
 
     return (
       <div ref={containerRef} style={{ height: "100%", background: "#fff" }} />
     );
   },
   (pre: IProps, next: IProps) => {
-    return isEqual(pre.data, next.data);
+    return isEqual(pre.data, next.data) && isEqual(pre?.renderMode, next?.renderMode);
   }
 );
