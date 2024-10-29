@@ -28,6 +28,12 @@ interface IProps {
   renderMode?: GRAPH_RENDER_MODEL['2D'] | GRAPH_RENDER_MODEL['3D'];
 }
 
+/** 检测 tooltip status */
+let showToolTipObj = {
+  isHoverToolTip: false,
+  isHoverNode: false
+}
+
 export const GraphView = React.memo(
   ({ data, renderMode, onReady }: IProps) => {
     const containerRef = React.useRef(null);
@@ -73,8 +79,12 @@ export const GraphView = React.memo(
       const showGitHubLink = NODE_TYPE_SHOW_GITHUB_LINK_MAP[nodeType];
       const properties = record[0]?.properties;
       const tooltip = document.getElementsByClassName("tooltip")[0];
-      tooltip.style = "border-radius:16px !important";
-      tooltip.style = `opacity:${isEmpty(properties) ? 0 : 1} !important`;
+
+      if (tooltip) {
+        tooltip.style = "border-radius:16px !important";
+        tooltip.style = `opacity:${isEmpty(properties) ? 0 : 1} !important`;
+      }
+
       const nodeId = record[0]?.id;
       const isNode = Boolean(record[0]?.nodeType);
       const outDiv = document.createElement("div");
@@ -246,7 +256,7 @@ export const GraphView = React.memo(
       graph3DData.links = graph3DData.links.map(link => {
         return {
           ...link,
-          curvature: recordLinks[link.source.id + link.target.id].length > 1 ? 0.8 : 0.1
+          curvature: recordLinks[link.source.id + link.target.id].length > 1 ? 2 : 0.1
         }
       });
 
@@ -281,7 +291,7 @@ export const GraphView = React.memo(
         .linkDirectionalParticleSpeed(0.01)
         .linkCurvature(0.1)
         .linkDirectionalArrowLength(1.5)
-        .linkDirectionalArrowRelPos(0.99)
+        .linkDirectionalArrowRelPos(0.9)
         .linkDirectionalParticleWidth(1)
         .linkDirectionalArrowColor(link => link.source.color)
         .nodeThreeObjectExtend(true)
@@ -321,14 +331,31 @@ export const GraphView = React.memo(
           }
         };
 
-        const createTextTexture = (text) => {
+        const createTextTexture = ({text, iconText, nodeSize}) => {
+
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
-          canvas.width = 200;
-          canvas.height = 200;
+          const canvasSize = Math.min(250, nodeSize * 10);
+          canvas.width = canvasSize;
+          canvas.height = canvasSize;
 
-          let fontSize = 40;
-          context.font = `${fontSize}px Arial`;
+          // 图标部分
+          const iconSize = canvasSize / 2;
+          context.font = `${iconSize}px os-iconfont`;
+          context.textAlign = 'center';
+          context.textBaseline = 'middle';
+          context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+
+          // 绘制图标
+          const iconX = canvas.width / 2;
+          const iconY = canvas.height / 3;
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.fillText(iconText, iconX, iconY);
+
+
+          // 文本部分
+          let fontSize = nodeSize * 3;
+          context.font = `${fontSize}px os-iconfont`;
           context.fillStyle = 'rgba(255, 255, 255, 0.8)';
           context.textAlign = 'center';
           context.textBaseline = 'middle';
@@ -340,16 +367,32 @@ export const GraphView = React.memo(
           /** 渲染文字并调整字体大小 */
           while (context.measureText(text).width > maxWidth || fontSize > canvas.height) {
             fontSize -= 2;
-            context.font = `${fontSize}px Arial`;
+            context.font = `${fontSize}px os-iconfont`;
           }
 
+          const spacing = 20;
           const x = canvas.width / 2;
-          const y = canvas.height / 2;
-          context.clearRect(0, 0, canvas.width, canvas.height);
+          const y = iconY + iconSize / 4 + iconSize / 2;
           context.fillText(text, x, y);
 
           return canvas;
         };
+
+        const getRandomColor = (nodeType: string) => {
+
+          return nodeType === 'github_user'
+            ? NODE_TYPE_COLOR_MAP[nodeType][Math.floor(Math.random() * 4)]
+            : NODE_TYPE_COLOR_MAP[nodeType];
+        };
+
+        const getAdjustDistance = () => {
+          const nodes = graph.graphData().nodes;
+          const maxDistance = Math.max(
+            ...nodes.map(n => Math.hypot(n.x, n.y, n.z))
+          );
+          const distance = maxDistance * 1.5;
+          return distance;
+        }
 
         graph
         .graphData(graph3DData)
@@ -374,24 +417,55 @@ export const GraphView = React.memo(
           nodeMaterials.forEach((material, node) => {
             highlightNodes.has(node)
               ? material.color.set('yellow')
-              : material.color.set('green');
+              : material.color.set(material.nodeColor);
           });
           updateHighlight();
+
+          if (node) {
+            
+            const { x, y, z } = node;
+            // 获取相机、渲染器和控制
+            const camera = graph.camera();
+            const renderer = graph.renderer();
+            const controls = graph.controls();
+            // 创建向量并将其转换为屏幕坐标
+            const vec = new THREE.Vector3(x, y, z);
+            vec.project(camera);
+            const widthHalf = renderer.domElement.clientWidth / 2;
+            const heightHalf = renderer.domElement.clientHeight / 2;
+            const screenCoords = {
+              x: (vec.x * widthHalf) + widthHalf,
+              y: -(vec.y * heightHalf) + heightHalf
+            };
+            tooltip.style.top = `${screenCoords.y}px`;
+            tooltip.style.left = `${screenCoords.x + 30}px`;
+            const tooltipContent = getTooltipContent([node]);
+            tooltip.innerHTML = '';
+            tooltip.appendChild(tooltipContent);
+            tooltip.style.display = 'block';
+            showToolTipObj.isHoverNode = true;
+          } else {
+            setTimeout(() => {
+              if (!showToolTipObj.isHoverToolTip) {
+                tooltip.style.display = 'none';
+              }
+            }, 100);
+            showToolTipObj.isHoverNode = false;
+          }
         })
         .onNodeClick(node => {
-          // Aim at node from outside it
-
-          const distance = 40;
+          // 确定相机距离以覆盖所有节点
+          const distance = getAdjustDistance();
           const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
 
           const newPos = node.x || node.y || node.z
             ? { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }
-            : { x: 0, y: 0, z: distance }; // special case if node is in (0,0,0)
+            : { x: 0, y: 0, z: distance };
 
           graph.cameraPosition(
-            newPos, // new position
-            node, // lookAt ({ x, y, z })
-            3000  // ms transition duration
+            newPos,
+            node,
+            1000
           );
         })
         .onNodeDragEnd(node => {
@@ -413,29 +487,57 @@ export const GraphView = React.memo(
           updateHighlight();
         })
 
-        .nodeThreeObject((node) => {
-          const group = new THREE.Group();
+        const isFontLoaded = async (fontName) => {
+          if ('fonts' in document) {
+            try {
+              await document.fonts.load(`16px ${fontName}`);
+              return document.fonts.check(`16px ${fontName}`);
+            } catch (error) {
+              console.error('Error loading font:', error);
+              return false;
+            }
+          }
+          return false;
+        };
+        
+        /** 等图标加载完毕后，再构建 nodeThree 自定义节点 */
+        isFontLoaded('os-iconfont').then(isLoaded => {
+          if (isLoaded) {
+            graph.nodeThreeObject((node) => {
 
-          /** 创建一个球体节点 */
-          const sphereGeometry = new THREE.SphereGeometry( 5, 64, 64 );
-          const sphereMaterial = new THREE.MeshBasicMaterial( { color: 'green', opacity: 0.5, transparent: true } );
-          const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-
-          /** map 缓存每个 nodeThreeObject, 用户后续颜色高亮设置， nodeColor 不能用于设置 nodeThreeObject 节点 */
-          nodeMaterials.set(node, sphereMaterial);
-          group.add( sphere );
-
-          /** 创建一个节点的文本标签 */
-          const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-            map: new THREE.CanvasTexture(createTextTexture(node?.properties?.name)),
-            depthTest: false
-          }));
-
-          sprite.scale.set(10, 10, 1);
-          group.add(sprite);
-          return group;
-        })
-        graph.d3Force('charge').strength(-160);
+              const group = new THREE.Group();
+              const nodeColor = getRandomColor(node.nodeType);
+    
+              /** 创建一个球体节点 */
+              const sphereGeometry = new THREE.SphereGeometry( node.size / 3, 128, 128 );
+              const sphereMaterial = new THREE.MeshBasicMaterial( { color: nodeColor, opacity: 0.75, transparent: true } );
+              const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    
+              /** map 缓存每个 nodeThreeObject, 用户后续颜色高亮设置， nodeColor 不能用于设置 nodeThreeObject 节点 */
+              nodeMaterials.set(node, {...sphereMaterial, nodeColor });
+              group.add( sphere );
+    
+              /** 创建一个节点的文本标签 */
+              const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+                map: new THREE.CanvasTexture(createTextTexture({
+                  text: node?.properties?.name,
+                  iconText: iconLoader(NODE_TYPE_ICON_MAP[node.nodeType]),
+                  nodeSize: node?.size,
+                  iconFontSize: node?.iconFontSize
+                })),
+                depthTest: false
+              }));
+    
+              const scaleRadio = node?.size > 30 ? 20 : 10;
+              sprite.scale.set(scaleRadio, scaleRadio, 1);
+              group.add(sprite);
+              return group;
+            });
+            graph.d3Force('charge').strength(-160);
+          } else {
+            console.log('Font is not loaded');
+          }
+        });
     };
 
     React.useEffect(() => {
@@ -444,8 +546,26 @@ export const GraphView = React.memo(
         renderMode === GRAPH_RENDER_MODEL['2D']
           ? renderGraph()
           : render3DGraph();
+
+        const handleMouseEnter = () => {
+          tooltip.style.display = 'block';
+          showToolTipObj.isHoverToolTip = true;
+        };
+        const handleMouseLeave = () => {
+          if (!showToolTipObj.isHoverNode) {
+            tooltip.style.display = 'none';
+          }
+          showToolTipObj.isHoverToolTip = false;
+        };
+
+        tooltip?.addEventListener('mouseenter', handleMouseEnter);
+        tooltip?.addEventListener('mouseleave', handleMouseLeave);
         
         return () => {
+
+          tooltip?.removeEventListener('mouseenter', handleMouseEnter);
+          tooltip?.removeEventListener('mouseleave', handleMouseLeave);
+
           if (graphRef.current) {
             if (typeof graphRef.current?.off === 'function') {
               graphRef.current?.off(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
@@ -457,8 +577,22 @@ export const GraphView = React.memo(
       }
     }, [containerRef.current, data, renderMode]);
 
+    const tooltipStyle: React.CSSProperties = {
+      position: 'absolute',
+      backgroundColor: 'rgba(255, 255, 255, 0.85)',
+      color: '#000',
+      padding: '5px',
+      borderRadius: '5px',
+      display: 'none',
+      pointerEvents: 'auto',
+      zIndex: 99
+    };
+
     return (
-      <div ref={containerRef} style={{ height: "100%", background: "#fff" }} />
+      <>
+        <div ref={containerRef} style={{ height: "100%", background: "#fff" }} />
+        <div id="tooltip" style={tooltipStyle} />
+      </>
     );
   },
   (pre: IProps, next: IProps) => {

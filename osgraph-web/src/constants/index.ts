@@ -36,7 +36,8 @@ export const NODE_TYPE_MAP = {
   company: "company",
   github_user: "github_user",
   topic: "topic",
-  country: "country"
+  country: "country",
+  github_user_3d: 'github_user_3d'
 };
 export const NODE_TYPE_SHOW_GITHUB_LINK_MAP = {
   github_repo: true,
@@ -55,6 +56,7 @@ export const NODE_TYPE_COLOR_MAP: Record<
   country: "#f08f56",
   github_organization: "#00c9c9",
   github_user: ["#db9d0d", "#17C76F", "#1783ff", "#7863ff"],
+  github_user_3d: '#faebd7',
   github_repo: "#d580ff",
   topic: "#ff80ca"
 };

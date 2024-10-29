@@ -32,14 +32,28 @@ export default () => {
     shareLink: string;
     isLoading: boolean;
     isErrorShareParams: boolean;
-    renderMode: typeof GRAPH_RENDER_MODEL;
-  }>({
-    locationState: location || {},
-    isOpen: false,
-    shareLink: "",
-    isLoading: false,
-    isErrorShareParams: false,
-    renderMode: GRAPH_RENDER_MODEL['2D']
+    renderMode: string;
+  }>(() => {
+      /** 用于初始化渲染模式 */
+    const initializeRenderMode: () => string = () => {
+      const params = new URLSearchParams(location.search);
+      const renderMode = params.get('render-mode');
+    
+      if (renderMode === '3D') {
+        return GRAPH_RENDER_MODEL['3D'];
+      } else {
+        return GRAPH_RENDER_MODEL['2D'];
+      }
+    }
+
+    return {
+      locationState: location || {},
+      isOpen: false,
+      shareLink: "",
+      isLoading: false,
+      isErrorShareParams: false,
+      renderMode: initializeRenderMode()
+    }
   });
   const { locationState, isOpen, isLoading, shareLink } = state;
 
