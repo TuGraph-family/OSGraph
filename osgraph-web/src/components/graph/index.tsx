@@ -3,14 +3,13 @@ import type { DataID } from "@antv/g6";
 import { Graph, GraphEvent } from "@antv/g6";
 import { Button, message, Space } from "antd";
 import { isEmpty, isEqual, isFunction, cloneDeep, nth } from "lodash";
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import ReactDOM from "react-dom/client";
 import ForceGraph3D from '3d-force-graph';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'three';
 import { useTranslation } from "react-i18next";
-import { throttle } from 'lodash';
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
@@ -21,11 +20,13 @@ import {
 import { GRAPH_RENDER_MODEL } from '../../constants/graph';
 import { IconFont, iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from './translator/filterGraphData';
+import { GRAPH_TEMPLATE_ENUM } from '../../constants/index';
 
 interface IProps {
   data: DataID;
   onReady?: (graph: Graph) => void;
   renderMode?: GRAPH_RENDER_MODEL['2D'] | GRAPH_RENDER_MODEL['3D'];
+  renderTemplate?: GRAPH_TEMPLATE_ENUM;
 }
 
 /** 检测 tooltip status */
@@ -35,11 +36,15 @@ let showToolTipObj = {
 }
 
 export const GraphView = React.memo(
-  ({ data, renderMode, onReady }: IProps) => {
+  ({ data, renderMode, renderTemplate, onReady }: IProps) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
     const { t } = useTranslation();
     const selectEdges = useRef<string[]>([]);
+
+    const yValue = useMemo(() => {
+      return [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY, GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY].includes(renderTemplate) ? 300 : 170;
+    }, [renderTemplate]);
 
     const renderTooltipItem = (label: string, text: string) => {
       return (
@@ -282,7 +287,7 @@ export const GraphView = React.memo(
       let hoverNode: any = null;
 
       const graph = ForceGraph3D({controlType: 'trackball'})(containerRef.current)
-        .cameraPosition({ x: 0, y: 0, z: 177 })
+        .cameraPosition({ x: 0, y: 0, z: yValue })
         .nodeOpacity(0.6)
         .linkThreeObjectExtend(true)
         .linkCurvature('curvature')

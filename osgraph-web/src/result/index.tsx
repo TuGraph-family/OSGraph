@@ -249,7 +249,15 @@ export default () => {
                   {value: GRAPH_RENDER_MODEL['3D'], label: GRAPH_RENDER_MODEL['3D']}
                 ]}
                 value={state.renderMode}
-                onChange={(value: typeof GRAPH_RENDER_MODEL) => setState((draft: any) => {draft.renderMode = value})}
+                onChange={(value: string) => {
+                  setState((draft: any) => {
+                    draft.renderMode = value;
+                    if (draft.shareLink) {
+                      const renderModeParams = value === GRAPH_RENDER_MODEL['3D'] ? '&render-mode=3D' : '';
+                      draft.shareLink = draft.shareLink + renderModeParams;
+                    }
+                  });
+                }}
               />
               <button
                 onClick={() => {
@@ -269,6 +277,7 @@ export default () => {
               data={data}
               key={state.renderMode}
               renderMode={state.renderMode}
+              renderTemplate={templateId}
               onReady={(graph) => (graphRef.current = graph)}
             />
           </div>
