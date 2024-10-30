@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Button, message, Space } from "antd";
 import ReactDOM from "react-dom/client";

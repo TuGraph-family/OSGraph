@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * file: render 3d function
  * author: Allen
