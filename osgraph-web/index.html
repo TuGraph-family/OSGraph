@@ -19,6 +19,10 @@
       name="viewport"
       content="width=device-width, initial-scale=0,user-scalable=no,maximum-scale=1.0"
     />
+    <script>
+      // 解决 Multiple instances of Three.js being imported.的 warning， 参考：https://yanyunfeng.com/article/2
+      window.__THREE__ = null;
+    </script>
   </head>
 
   <body>

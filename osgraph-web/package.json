@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "3d-force-graph": "^1.73.4",
     "@ant-design/icons": "^5.3.6",
     "@antv/g6": "5.0.0-beta.34",
     "@emotion/react": "^11.11.4",
@@ -24,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^14.1.0",
     "react-router-dom": "^6.22.3",
+    "three-spritetext": "^1.9.0",
     "umi-request": "^1.4.0",
     "use-immer": "^0.9.0"
   },

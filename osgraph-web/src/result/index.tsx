@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
-import { Button, Modal, Spin, message, Divider } from "antd";
+import { Button, Modal, Spin, message, Divider, Select } from "antd";
 import React, { useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
@@ -16,6 +16,7 @@ import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
 import { graphTranslator } from './translator/graph';
 import { GRAPH_SHARE_LINK_MAP, GRAPH_TEMPLATE_ENUM, GRAPH_DOCUMENT_TITLE_MAP } from '../constants/index';
+import { GRAPH_RENDER_MODEL } from '../constants/graph';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -31,12 +32,28 @@ export default () => {
     shareLink: string;
     isLoading: boolean;
     isErrorShareParams: boolean;
-  }>({
-    locationState: location || {},
-    isOpen: false,
-    shareLink: "",
-    isLoading: false,
-    isErrorShareParams: false,
+    renderMode: string;
+  }>(() => {
+      /** 用于初始化渲染模式 */
+    const initializeRenderMode: () => string = () => {
+      const params = new URLSearchParams(location.search);
+      const renderMode = params.get('render-mode');
+    
+      if (renderMode === '3D') {
+        return GRAPH_RENDER_MODEL['3D'];
+      } else {
+        return GRAPH_RENDER_MODEL['2D'];
+      }
+    }
+
+    return {
+      locationState: location || {},
+      isOpen: false,
+      shareLink: "",
+      isLoading: false,
+      isErrorShareParams: false,
+      renderMode: initializeRenderMode()
+    }
   });
   const { locationState, isOpen, isLoading, shareLink } = state;
 
@@ -226,6 +243,22 @@ export default () => {
               />
             </div>
             <div className="control">
+              <Select
+                options={[
+                  {value: GRAPH_RENDER_MODEL['2D'], label: GRAPH_RENDER_MODEL['2D']},
+                  {value: GRAPH_RENDER_MODEL['3D'], label: GRAPH_RENDER_MODEL['3D']}
+                ]}
+                value={state.renderMode}
+                onChange={(value: string) => {
+                  setState((draft: any) => {
+                    draft.renderMode = value;
+                    if (draft.shareLink) {
+                      const renderModeParams = value === GRAPH_RENDER_MODEL['3D'] ? '&render-mode=3D' : '';
+                      draft.shareLink = draft.shareLink + renderModeParams;
+                    }
+                  });
+                }}
+              />
               <button
                 onClick={() => {
                   setState((draft) => {
@@ -242,6 +275,9 @@ export default () => {
           <div className={`${isShare ? 'graph-share' : 'graph'}`}>
             <GraphView
               data={data}
+              key={state.renderMode}
+              renderMode={state.renderMode}
+              renderTemplate={templateId}
               onReady={(graph) => (graphRef.current = graph)}
             />
           </div>
