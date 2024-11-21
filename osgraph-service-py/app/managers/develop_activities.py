@@ -1,7 +1,7 @@
 # app/manager/develop_activities.py
 import json
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from app.models.graph_view import Graph, Push, Repo, User
 from app.services.graph_services.develop_activities import DevelopActivitiesService
@@ -11,7 +11,7 @@ class DevelopActivitiesManager:
     def __init__(self) -> None:
         pass
 
-    def get_graph(self, data: Dict[str, Any]) -> Dict | None:
+    def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
         service = DevelopActivitiesService()
         graph = Graph()
         result = service.execute(data=data)
@@ -91,3 +91,4 @@ class DevelopActivitiesManager:
                 if summary:
                     graph.update_summary(summary=summary)
             return graph.to_dict()
+        return None

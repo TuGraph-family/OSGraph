@@ -2,7 +2,7 @@
 import json
 import os
 from dataclasses import asdict, dataclass, is_dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from dotenv import load_dotenv
 from flask import current_app
@@ -77,7 +77,7 @@ class GraphClient:
         except Exception as e:
             current_app.logger.info(f"Label '{label}' may already exist. {str(e)}")
 
-    def get_label(self, label_type: str, label_name: str) -> Dict[str, any]:
+    def get_label(self, label_type: str, label_name: str) -> Union[str, None]:
         try:
             with self.driver.session(database=self.graph_name) as session:
                 if label_type == "vertex":
@@ -90,9 +90,10 @@ class GraphClient:
             current_app.logger.info(
                 f"Faild to get {label_type} {label_name} . Errormessage: {str(e)}"
             )
+            return None
 
     # 创建节点
-    def create_vertex(self, label: str, properties: Dict[str, any]):
+    def create_vertex(self, label: str, properties: Dict[str, Any]):
         try:
             properties_str = self._convert_dict_to_str(properties)
             query = f"""
@@ -347,7 +348,7 @@ class GraphClient:
             return ""
 
         # 如果是 dataclass，则将其转换为字典
-        if is_dataclass(properties):
+        if is_dataclass(properties) and not isinstance(properties, type):
             properties = asdict(properties)
 
         def convert_value(value: Any) -> str:

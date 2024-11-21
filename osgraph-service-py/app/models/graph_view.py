@@ -1,7 +1,7 @@
 # app/models/graph_view.py
 
 from dataclasses import asdict, dataclass, field
-from typing import List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 
 @dataclass
@@ -90,7 +90,7 @@ class Graph:
             if all(getattr(edge, key) == value for key, value in criteria.items())
         ]
 
-    def to_dict(self) -> str:
+    def to_dict(self) -> Dict[str, Any]:
         graph_dict = {
             "vertices": [v.to_dict() for v in self.vertices],
             "edges": [e.to_dict() for e in self.edges],
@@ -155,27 +155,27 @@ class Create(Edge):
 
 
 @dataclass
-class CreatePR(Create):
+class CreatePR(Edge):
     name: Literal["创建 PR"] = field(default="创建 PR", init=False)
 
 
 @dataclass
-class CreateIssue(Create):
+class CreateIssue(Edge):
     name: Literal["创建 Issue"] = field(default="创建 Issue", init=False)
 
 
 @dataclass
-class CreateCommit(Create):
+class CreateCommit(Edge):
     name: Literal["创建 Commit"] = field(default="创建 Commit", init=False)
 
 
 @dataclass
-class CreateComment(Create):
+class CreateComment(Edge):
     name: Literal["创建 Comment"] = field(default="创建 Comment", init=False)
 
 
 @dataclass
-class CreateCR(Create):
+class CreateCR(Edge):
     name: Literal["创建 CR"] = field(default="创建 CR", init=False)
 
 
@@ -200,12 +200,12 @@ class PullRequestAction(Edge):
 
 
 @dataclass
-class Push(PullRequestAction):
+class Push(Edge):
     name: Literal["推送"] = field(default="推送", init=False)
 
 
 @dataclass
-class CommitAction(PullRequestAction):
+class CommitAction(Edge):
     name: Literal["提交"] = field(default="提交", init=False)
 
 

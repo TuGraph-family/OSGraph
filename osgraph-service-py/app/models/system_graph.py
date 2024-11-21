@@ -1,6 +1,6 @@
 # app/models/system_graph.py
-
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -15,7 +15,7 @@ class GraphService:
     label: str = "graph_service"
     primary: str = "name"
     type: str = "VERTEX"
-    props: GraphServiceProps = None
+    props: Optional[GraphServiceProps] = None
 
     def __init__(self, name: str, comment: str, input_types: str, filter_keys: str):
         self.props = GraphServiceProps(

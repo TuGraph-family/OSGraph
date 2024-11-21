@@ -38,14 +38,3 @@ class OpenAIClient:
     ):
         prompt = get_graph_summary_prompt(graph_data=graph_data)
         return self.ask_question(prompt)
-
-
-# 示例用法
-if __name__ == "__main__":
-    api_key = "your-openai-api-key"
-    client = OpenAIClient(api_key)
-
-    question = "什么是Python的主要用途？"
-    context = "请简要回答关于编程语言的问题。"
-    answer = client.ask_question(question, context)
-    print("回答:", answer)

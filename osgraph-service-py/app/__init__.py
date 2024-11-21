@@ -1,6 +1,7 @@
 # app/__init__.py
 import importlib
 import os
+from typing import Type, Union
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify
@@ -15,7 +16,9 @@ from .utils.logger import setup_logger
 load_dotenv()
 
 
-def create_app(config_class: str = "config.ProductionConfig") -> Flask:
+def create_app(
+    config_class: Union[str, Type[object]] = "config.ProductionConfig"
+) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_class)
     setup_logger(app)

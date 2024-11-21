@@ -1,7 +1,7 @@
 # app/manager/project_community.py
 import json
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from app.models.graph_view import (
     Belong,
@@ -19,7 +19,7 @@ class ProjectCommunityManager:
     def __init__(self) -> None:
         pass
 
-    def get_graph(self, data: Dict[str, Any]) -> Dict | None:
+    def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
         service = ProjectCommunityService()
         graph = Graph()
         result = service.execute(data=data)
@@ -97,3 +97,4 @@ class ProjectCommunityManager:
                 if summary:
                     graph.update_summary(summary=summary)
             return graph.to_dict()
+        return None

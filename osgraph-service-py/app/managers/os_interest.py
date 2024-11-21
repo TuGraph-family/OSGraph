@@ -1,7 +1,7 @@
 # app/manager/os_interest.py
 import json
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from app.models.graph_view import Belong, ContributeRepo, Graph, Repo, Topic, User
 from app.services.graph_services.os_interest import OSInterestService
@@ -11,7 +11,7 @@ class OSInterestManager:
     def __init__(self) -> None:
         pass
 
-    def get_graph(self, data: Dict[str, Any]) -> Dict | None:
+    def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
         service = OSInterestService()
         graph = Graph()
         result = service.execute(data=data)
@@ -71,3 +71,4 @@ class OSInterestManager:
                 if summary:
                     graph.update_summary(summary=summary)
             return graph.to_dict()
+        return None
