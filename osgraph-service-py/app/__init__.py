@@ -88,7 +88,12 @@ def initialize_system_graph(app: Flask):
                 type=GraphService.type,
                 properties=[
                     LabelProps(name=key, type="string", optional=True)
-                    for key in vars(GraphService.props).keys()
+                    for key in (
+                        GraphService.props.keys()
+                        if isinstance(GraphService.props, dict)
+                        else dir(GraphService.props)
+                    )
+                    if not key.startswith("_")
                 ],
             )
             client.create_label(label)

@@ -29,7 +29,6 @@ class GraphLabel:
     properties: Optional[List[LabelProps]] = None
 
     def to_dict(self) -> Dict[str, Any]:
-        # 遍历属性列表，找到与 primary 匹配的属性并设置 optional 和 index
         if self.properties:
             for prop in self.properties:
                 if prop.name == self.primary:
