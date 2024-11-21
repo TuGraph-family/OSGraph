@@ -36,8 +36,6 @@ line_length = 88
 known_first_party = ["osgraph-service-py"]
 default_section = "THIRDPARTY"
 
-[flake8]
-max-line-length = 88
-exclude = [".venv", "__pycache__", "build", "dist", "static"]
+
 
 
