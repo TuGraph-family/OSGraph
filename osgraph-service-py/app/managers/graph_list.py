@@ -2,13 +2,14 @@
 from typing import List
 from app.services.graph_list import GraphListService
 
+
 class GraphListManager:
     def __init__(self) -> None:
         pass
 
     def get_graph_list(self) -> List | None:
         service = GraphListService()
-        graph_list:List = []
+        graph_list: List = []
         result = service.execute()
         if result:
             for item in result:

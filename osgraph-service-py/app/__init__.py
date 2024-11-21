@@ -8,9 +8,11 @@ from app.services import register_all_services
 from app.dal.graph.tugraph import GraphClient, GraphLabel, LabelProps
 from app.models.system_graph import GraphService
 from dotenv import load_dotenv
+
 load_dotenv()
 
-def create_app(config_class: str = 'config.ProductionConfig') -> Flask:
+
+def create_app(config_class: str = "config.ProductionConfig") -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_class)
     setup_logger(app)
@@ -20,6 +22,7 @@ def create_app(config_class: str = 'config.ProductionConfig') -> Flask:
         register_all_services()
     register_error_handlers(app)
     return app
+
 
 def register_blueprints(app: Flask, blueprint_folder: str = "routes") -> None:
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -53,14 +56,15 @@ def register_error_handlers(app: Flask) -> None:
     def internal_error(error):
         app.logger.error("Internal Server Error")
         return jsonify({"message": "Internal server error"}), 500
-    
+
+
 def initialize_system_graph(app: Flask):
     """
     初始化 system_graph 和 graph_service 的基础库表。
     """
-    graph_name = os.getenv('TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME')
+    graph_name = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
     client = GraphClient(graph_name)
-    
+
     try:
         system_graph = client.get_graph()
         if system_graph:
@@ -77,9 +81,9 @@ def initialize_system_graph(app: Flask):
                 primary=GraphService.primary,
                 type=GraphService.type,
                 properties=[
-                    LabelProps(name=key, type="string", optional=True) 
+                    LabelProps(name=key, type="string", optional=True)
                     for key in vars(GraphService.props).keys()
-                ]
+                ],
             )
             client.create_label(label)
             app.logger.info("graph_service Label 已创建")

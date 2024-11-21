@@ -3,15 +3,19 @@ from typing import Dict, Any
 from app.services.graph_services.base import BaseService, ServiceConfig, FilterKey
 from app.dal.graph.tugraph import GraphClient
 from app.dal.search.es import ElasticsearchClient
-import os 
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 def get_default_start_time() -> int:
     return int((datetime.now() - timedelta(days=30)).timestamp() * 1000)
 
+
 def get_default_end_time() -> int:
     return int(datetime.now().timestamp() * 1000)
+
 
 class OSPartnerServiceConfig(ServiceConfig):
     def __init__(self):
@@ -21,8 +25,9 @@ class OSPartnerServiceConfig(ServiceConfig):
             inputTypes=["GitHubUser"],
             filterKeys=[
                 FilterKey(key="topn", type="int", default=50, required=False),
-            ]
+            ],
         )
+
 
 class OSPartnerService(BaseService):
     def __init__(self):
@@ -33,16 +38,12 @@ class OSPartnerService(BaseService):
         github_user: str = validated_data["GitHubUser"]
         topn: int = validated_data["topn"]
         es = ElasticsearchClient()
-        query = {
-            "term": {
-                "name.keyword": github_user
-            }
-        }
-        res = es.search(index='github_user',query=query)
+        query = {"term": {"name.keyword": github_user}}
+        res = es.search(index="github_user", query=query)
         if len(res):
             user_id = res[0]["id"]
             graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
             client = GraphClient(graph_name)
-            cypher = f'''CALL osgraph.get_developer_by_developer('{{"developer_id":{user_id},"top_n":{topn}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node'''
+            cypher = f"""CALL osgraph.get_developer_by_developer('{{"developer_id":{user_id},"top_n":{topn}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node"""
             result = client.run(cypher)
             return result

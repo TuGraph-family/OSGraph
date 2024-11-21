@@ -1,14 +1,17 @@
 from dataclasses import dataclass, asdict
 from typing import Any, Optional
-import os 
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
-graph_name = os.getenv('TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME')
+graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
+
+
 class Vertex:
     label: str
     primary: str
-    type: str = 'vertex'
+    type: str = "vertex"
     _props: Optional[Any] = None
 
     def __init__(self, label: str, primary: str):
@@ -20,12 +23,15 @@ class Vertex:
         return self._props
 
     def __repr__(self):
-        return (f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
-                f"type={self.type}, props={self.props})")
+        return (
+            f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
+            f"type={self.type}, props={self.props})"
+        )
+
 
 class Edge:
     label: str
-    type: str = 'edge'
+    type: str = "edge"
     source: Any
     target: Any
     _props: Optional[Any] = None
@@ -40,8 +46,11 @@ class Edge:
         return self._props
 
     def __repr__(self):
-        return (f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
-                f"type={self.type}, source={self.source}, target={self.target}, props={self.props})")
+        return (
+            f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
+            f"type={self.type}, source={self.source}, target={self.target}, props={self.props})"
+        )
+
 
 @dataclass
 class GitHubUserProps:
@@ -49,6 +58,7 @@ class GitHubUserProps:
     name: Optional[str] = None
     company: Optional[str] = None
     country: Optional[str] = None
+
 
 class GitHubUser(Vertex):
     def __init__(self, props: GitHubUserProps):
@@ -190,6 +200,7 @@ class GitHubOrganization(Vertex):
             raise ValueError("props must be an instance of GitHubOrganizationProps.")
         super().__init__(label="github_organization", primary="id")
         self._props = props
+
 
 @dataclass
 class PushProps:
@@ -388,6 +399,3 @@ class UseLicense(Edge):
     def __init__(self, source, target):
         super().__init__(label="use_license", source=source, target=target)
         self._props = None
-
-
-

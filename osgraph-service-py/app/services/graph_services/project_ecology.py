@@ -3,15 +3,19 @@ from typing import Dict, Any
 from app.services.graph_services.base import BaseService, ServiceConfig, FilterKey
 from app.dal.graph.tugraph import GraphClient
 from app.dal.search.es import ElasticsearchClient
-import os 
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 def get_default_start_time() -> int:
     return int((datetime.now() - timedelta(days=30)).timestamp() * 1000)
 
+
 def get_default_end_time() -> int:
     return int(datetime.now().timestamp() * 1000)
+
 
 class ProjectEcologyServiceConfig(ServiceConfig):
     def __init__(self):
@@ -21,8 +25,9 @@ class ProjectEcologyServiceConfig(ServiceConfig):
             inputTypes=["GitHubRepo"],
             filterKeys=[
                 FilterKey(key="topn", type="int", default=50, required=False),
-            ]
+            ],
         )
+
 
 class ProjectEcologyService(BaseService):
     def __init__(self):
@@ -33,16 +38,12 @@ class ProjectEcologyService(BaseService):
         github_repo: str = validated_data["GitHubRepo"]
         top_n: int = validated_data["topn"]
         es = ElasticsearchClient()
-        query = {
-            "term": {
-                "name.keyword": github_repo
-            }
-        }
-        res = es.search(index='github_repo',query=query)
+        query = {"term": {"name.keyword": github_repo}}
+        res = es.search(index="github_repo", query=query)
         if len(res):
             repo_id = res[0]["id"]
             graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
             client = GraphClient(graph_name)
-            cypher = f'''CALL osgraph.get_repo_by_repo('{{"repo_id":{repo_id}, "top_n":{top_n}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node'''
+            cypher = f"""CALL osgraph.get_repo_by_repo('{{"repo_id":{repo_id}, "top_n":{top_n}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node"""
             result = client.run(cypher)
             return result

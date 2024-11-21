@@ -9,12 +9,14 @@ import os
 
 load_dotenv()
 
+
 @dataclass
 class FilterKey:
     key: str
     type: str
     default: Union[Callable[[], Any], Any]
     required: bool = False
+
 
 @dataclass
 class ServiceConfig:
@@ -29,17 +31,19 @@ class ServiceConfig:
         properties = {
             "name": self.name,
             "comment": self.comment,
-            "input_types": ','.join(self.inputTypes),
-            "filter_keys": ','.join([f"{key.key}:{key.default}" for key in self.filterKeys])
+            "input_types": ",".join(self.inputTypes),
+            "filter_keys": ",".join(
+                [f"{key.key}:{key.default}" for key in self.filterKeys]
+            ),
         }
         service = GraphService(
             name=self.name,
             comment=self.comment,
             input_types=properties["input_types"],
-            filter_keys=properties["filter_keys"]   
+            filter_keys=properties["filter_keys"],
         )
-        client.upsert_vertex(GraphService.label,service.props)
-        
+        client.upsert_vertex(GraphService.label, service.props)
+
 
 class BaseService(ABC):
     def __init__(self, config: ServiceConfig):
@@ -58,14 +62,20 @@ class BaseService(ABC):
             if filter_key.key not in data:
                 if filter_key.required:
                     raise InvalidUsage(f"Missing required filter key: {filter_key.key}")
-                value = filter_key.default() if callable(filter_key.default) else filter_key.default
+                value = (
+                    filter_key.default()
+                    if callable(filter_key.default)
+                    else filter_key.default
+                )
             else:
                 value = data[filter_key.key]
             if filter_key.type == "int":
                 try:
                     validated_filters[filter_key.key] = int(value)
                 except ValueError:
-                    raise InvalidUsage(f"Invalid value for {filter_key.key}: must be an integer.")
+                    raise InvalidUsage(
+                        f"Invalid value for {filter_key.key}: must be an integer."
+                    )
             elif filter_key.type == "str":
                 validated_filters[filter_key.key] = str(value)
             else:

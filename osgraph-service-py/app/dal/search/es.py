@@ -5,12 +5,16 @@ from typing import Dict, List, Optional, Any
 import logging
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class ElasticsearchClient:
-    def __init__(self,):
+    def __init__(
+        self,
+    ):
         """初始化 Elasticsearch 连接"""
         ES_HOST = os.getenv("ES_HOST")
         ES_PORT = os.getenv("ES_PORT")
@@ -19,8 +23,10 @@ class ElasticsearchClient:
         try:
             self.es = Elasticsearch(
                 hosts=[f"http://{ES_HOST}:{ES_PORT}"],
-                basic_auth=(ES_USERNAME, ES_PASSWORD) if ES_USERNAME and ES_PASSWORD else None,
-                verify_certs=False
+                basic_auth=(
+                    (ES_USERNAME, ES_PASSWORD) if ES_USERNAME and ES_PASSWORD else None
+                ),
+                verify_certs=False,
             )
             if self.es.ping():
                 logger.info("Connected to Elasticsearch successfully.")
@@ -30,10 +36,12 @@ class ElasticsearchClient:
             logger.error(f"Error connecting to Elasticsearch: {e}")
             raise
 
-    def search(self, index: str, query: Dict[str, Any], size: int = 10) -> List[Dict[str, Any]]:
+    def search(
+        self, index: str, query: Dict[str, Any], size: int = 10
+    ) -> List[Dict[str, Any]]:
         try:
             response = self.es.search(index=index, query=query, size=size)
-            return [hit["_source"] for hit in response['hits']['hits']]
+            return [hit["_source"] for hit in response["hits"]["hits"]]
         except NotFoundError:
             logger.error(f"Index '{index}' not found.")
             return []
@@ -74,6 +82,3 @@ class ElasticsearchClient:
     def close(self):
         self.es.close()
         logger.info("Elasticsearch connection closed.")
-
-
-

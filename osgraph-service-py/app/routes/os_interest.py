@@ -6,8 +6,9 @@ from typing import Dict, Any
 import logging
 from dataclasses import asdict
 
-os_interest_bp = Blueprint('os_interest', __name__, url_prefix='/api/graph')
+os_interest_bp = Blueprint("os_interest", __name__, url_prefix="/api/graph")
 logger = logging.getLogger(__name__)
+
 
 class OSInterestController:
     def __init__(self):
@@ -27,9 +28,11 @@ class OSInterestController:
             logger.exception("Internal server error")
             return ResponseHandler.error("Internal server error", 500)
 
+
 controller = OSInterestController()
 
-@os_interest_bp.route('/os-interest', methods=['GET'])
+
+@os_interest_bp.route("/os-interest", methods=["GET"])
 def get_os_interest():
     """
     获取项目贡献的图谱

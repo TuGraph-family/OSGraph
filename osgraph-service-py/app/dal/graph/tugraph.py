@@ -10,14 +10,16 @@ import json
 
 load_dotenv()
 
+
 @dataclass
 class LabelProps:
-    name:str
+    name: str
     type: str
     optional: bool
     index: Optional[bool] = None
 
-@dataclass  
+
+@dataclass
 class GraphLabel:
     label: str
     primary: str
@@ -39,8 +41,11 @@ class GraphLabel:
             "label": self.label,
             "primary": self.primary,
             "type": self.type,
-            "properties": [prop.__dict__ for prop in self.properties] if self.properties else []
+            "properties": (
+                [prop.__dict__ for prop in self.properties] if self.properties else []
+            ),
         }
+
 
 class GraphClient:
     def __init__(self, graph_name):
@@ -48,7 +53,10 @@ class GraphClient:
         TUGRAPHDB_PORT = os.getenv("TUGRAPHDB_PORT")
         TUGRAPHDB_USER = os.getenv("TUGRAPHDB_USER")
         TUGRAPHDB_PASSWORD = os.getenv("TUGRAPHDB_PASSWORD")
-        self.driver = GraphDatabase.driver(f'bolt://{TUGRAPHDB_HOST}:{TUGRAPHDB_PORT}', auth=(TUGRAPHDB_USER, TUGRAPHDB_PASSWORD))
+        self.driver = GraphDatabase.driver(
+            f"bolt://{TUGRAPHDB_HOST}:{TUGRAPHDB_PORT}",
+            auth=(TUGRAPHDB_USER, TUGRAPHDB_PASSWORD),
+        )
         self.graph_name = graph_name
 
     def close(self):
@@ -67,21 +75,22 @@ class GraphClient:
         except Exception as e:
             current_app.logger.info(f"Label '{label}' may already exist. {str(e)}")
 
-    def get_label(self,label_type:str,label_name:str) -> Dict[str,any]:
+    def get_label(self, label_type: str, label_name: str) -> Dict[str, any]:
         try:
             with self.driver.session(database=self.graph_name) as session:
-                if label_type == 'vertex':
+                if label_type == "vertex":
                     query = f"""CALL db.getVertexSchema('{label_name}')"""
                 else:
                     query = f"""CALL db.getEdgeSchema('{label_name}')"""
                 result = session.run(query).data()
                 return json.dumps(result)
         except Exception as e:
-            current_app.logger.info(f"Faild to get {label_type} {label_name} . Errormessage: {str(e)}")
-
+            current_app.logger.info(
+                f"Faild to get {label_type} {label_name} . Errormessage: {str(e)}"
+            )
 
     # 创建节点
-    def create_vertex(self, label:str, properties:Dict[str,any]):
+    def create_vertex(self, label: str, properties: Dict[str, any]):
         try:
             properties_str = self._convert_dict_to_str(properties)
             query = f"""
@@ -89,11 +98,15 @@ class GraphClient:
             """
             with self.driver.session(database=self.graph_name) as session:
                 result = session.run(query)
-                current_app.logger.info(f"Vertex '{ json.dumps(properties)}' created success.")
+                current_app.logger.info(
+                    f"Vertex '{ json.dumps(properties)}' created success."
+                )
                 return result.data()
         except Exception as e:
-            current_app.logger.info(f"Vertex '{ json.dumps(properties)}' created faild. Error message : {str(e)}")
-        
+            current_app.logger.info(
+                f"Vertex '{ json.dumps(properties)}' created faild. Error message : {str(e)}"
+            )
+
     # 创建边
     def create_relationship(
         self,
@@ -102,7 +115,7 @@ class GraphClient:
         dst_label: str = "",
         dst_filter: Optional[Dict[str, Any]] = None,
         relationship_type: str = "",
-        properties: Optional[Dict[str, Any]] = None
+        properties: Optional[Dict[str, Any]] = None,
     ) -> None:
         try:
             query = f"""
@@ -131,11 +144,16 @@ class GraphClient:
             """
             with self.driver.session(database=self.graph_name) as session:
                 result = session.run(query)
-                current_app.logger.info(f"Relationship '{json.dumps(properties)}' created.")
+                current_app.logger.info(
+                    f"Relationship '{json.dumps(properties)}' created."
+                )
                 return result.data()
         except Exception as e:
-            current_app.logger.error(f"Relationship '{json.dumps(properties)}' creation failed. Error message: {str(e)}")
-            return None   
+            current_app.logger.error(
+                f"Relationship '{json.dumps(properties)}' creation failed. Error message: {str(e)}"
+            )
+            return None
+
     def delete_relationship(
         self,
         src_label: str = "",
@@ -175,6 +193,7 @@ class GraphClient:
                 print("Relationship deleted successfully.")
         except Exception as e:
             print(f"Failed to delete relationship: {e}")
+
     def upsert_vertex(self, label, properties):
         try:
             with self.driver.session(database=self.graph_name) as session:
@@ -196,8 +215,13 @@ class GraphClient:
         query = f"MATCH (n:{label})"
         if filters:
             conditions = [
-                f"n.{key} = '{value}'" if isinstance(value, str) else f"n.{key} = {value}"
-                for key, value in asdict(filters).items() if value is not None
+                (
+                    f"n.{key} = '{value}'"
+                    if isinstance(value, str)
+                    else f"n.{key} = {value}"
+                )
+                for key, value in asdict(filters).items()
+                if value is not None
             ]
             if conditions:
                 query += " WHERE " + " AND ".join(conditions)
@@ -212,7 +236,9 @@ class GraphClient:
             print(f"Error fetching vertex: {e}")
             return None
 
-    def get_edge(self, edge_instance: Edge, deep: int = 3, limit: int = 50) -> Optional[list]:
+    def get_edge(
+        self, edge_instance: Edge, deep: int = 3, limit: int = 50
+    ) -> Optional[list]:
         if not isinstance(edge_instance, Edge):
             raise ValueError("Input must be an instance of an Edge-derived class.")
 
@@ -231,22 +257,37 @@ class GraphClient:
         # Add source (n) filters
         if hasattr(source, "props") and source.props:
             conditions += [
-                f"n.{key} = '{value}'" if isinstance(value, str) else f"n.{key} = {value}"
-                for key, value in asdict(source.props).items() if value is not None
+                (
+                    f"n.{key} = '{value}'"
+                    if isinstance(value, str)
+                    else f"n.{key} = {value}"
+                )
+                for key, value in asdict(source.props).items()
+                if value is not None
             ]
 
         # Add relationship (r) filters
         if props:
             conditions += [
-                f"r.{key} = '{value}'" if isinstance(value, str) else f"r.{key} = {value}"
-                for key, value in asdict(props).items() if value is not None
+                (
+                    f"r.{key} = '{value}'"
+                    if isinstance(value, str)
+                    else f"r.{key} = {value}"
+                )
+                for key, value in asdict(props).items()
+                if value is not None
             ]
 
         # Add target (m) filters
         if hasattr(target, "props") and target.props:
             conditions += [
-                f"m.{key} = '{value}'" if isinstance(value, str) else f"m.{key} = {value}"
-                for key, value in asdict(target.props).items() if value is not None
+                (
+                    f"m.{key} = '{value}'"
+                    if isinstance(value, str)
+                    else f"m.{key} = {value}"
+                )
+                for key, value in asdict(target.props).items()
+                if value is not None
             ]
 
         # Append WHERE clause if conditions exist
@@ -264,29 +305,38 @@ class GraphClient:
             print(f"Error fetching edge: {e}")
             return None
 
-
     def get_graph(self) -> Optional[dict]:
-        with self.driver.session(database='default') as session:
+        with self.driver.session(database="default") as session:
             graph_list = session.run("CALL dbms.graph.listGraphs()").data()
-            result = next((graph for graph in graph_list if graph.get("graph_name") == self.graph_name), None)
+            result = next(
+                (
+                    graph
+                    for graph in graph_list
+                    if graph.get("graph_name") == self.graph_name
+                ),
+                None,
+            )
             return result
 
     def create_graph(self):
         """Create a new graph in the database if it doesn't already exist."""
         try:
             with self.driver.session(database="default") as session:
-                session.run(f"CALL dbms.graph.createGraph('{self.graph_name}', '', 2048)")                
+                session.run(
+                    f"CALL dbms.graph.createGraph('{self.graph_name}', '', 2048)"
+                )
         except Exception as e:
-            raise Exception(f"Failed to create graph '{self.graph_name}': {str(e)}") from e
-        
-    def run(self,cypher:str) -> Any:
+            raise Exception(
+                f"Failed to create graph '{self.graph_name}': {str(e)}"
+            ) from e
+
+    def run(self, cypher: str) -> Any:
         try:
             with self.driver.session(database=self.graph_name) as session:
-                result = session.run(cypher)  
-                return result.data()              
+                result = session.run(cypher)
+                return result.data()
         except Exception as e:
             raise Exception(f"Error : {e}")
-        
 
     def _convert_dict_to_str(self, properties: Any) -> str:
         if not properties:
@@ -295,7 +345,7 @@ class GraphClient:
         # 如果是 dataclass，则将其转换为字典
         if is_dataclass(properties):
             properties = asdict(properties)
-        
+
         def convert_value(value: Any) -> str:
             if isinstance(value, str):
                 return f'"{value}"'
@@ -304,23 +354,27 @@ class GraphClient:
             elif isinstance(value, list):
                 return "[" + ", ".join(convert_value(item) for item in value) + "]"
             elif isinstance(value, dict):
-                return "{" + ", ".join(f"{k}: {convert_value(v)}" for k, v in value.items()) + "}"
+                return (
+                    "{"
+                    + ", ".join(f"{k}: {convert_value(v)}" for k, v in value.items())
+                    + "}"
+                )
             elif callable(value):
                 return convert_value(value())
             else:
                 return f'"{str(value)}"'
+
         properties_str = (
             "{"
             + ", ".join(f"{k}: {convert_value(v)}" for k, v in properties.items())
             + "}"
         )
         return properties_str
-    
 
     def _parse_edge_result(self, query_result: list) -> list:
         parsed_results = []
         for record in query_result:
-            path = record.get('p')  # Extract the Path object from the result
+            path = record.get("p")  # Extract the Path object from the result
 
             if path:
                 # Extract nodes (start and end nodes are the first and last in the list)
@@ -339,22 +393,20 @@ class GraphClient:
                 # Extract relationships along the path
                 relationships = []
                 for relationship in path.relationships:
-                    relationships.append({
-                        "type": relationship.type,
-                        "element_id": relationship.element_id,
-                        "properties": relationship._properties,
-                    })
+                    relationships.append(
+                        {
+                            "type": relationship.type,
+                            "element_id": relationship.element_id,
+                            "properties": relationship._properties,
+                        }
+                    )
 
-                parsed_results.append({
-                    "start": start_node,
-                    "relationships": relationships,
-                    "end": end_node,
-                })
+                parsed_results.append(
+                    {
+                        "start": start_node,
+                        "relationships": relationships,
+                        "end": end_node,
+                    }
+                )
 
         return parsed_results
-
-
-
-
-
-

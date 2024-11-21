@@ -6,12 +6,14 @@ from typing import Dict, Any
 import logging
 from dataclasses import asdict
 
-graph_list_bp = Blueprint('graph_list', __name__, url_prefix='/api/graph')
+graph_list_bp = Blueprint("graph_list", __name__, url_prefix="/api/graph")
 logger = logging.getLogger(__name__)
+
 
 class OSInterestController:
     def __init__(self):
         self.manager = GraphListManager()
+
     def get_graph_list(self) -> Dict[str, Any]:
         try:
             result = self.manager.get_graph_list()
@@ -23,9 +25,11 @@ class OSInterestController:
             logger.exception("Internal server error")
             return ResponseHandler.error("Internal server error", 500)
 
+
 controller = OSInterestController()
 
-@graph_list_bp.route('/list', methods=['GET'])
+
+@graph_list_bp.route("/list", methods=["GET"])
 def get_os_interest():
     response = controller.get_graph_list()
     return ResponseHandler.jsonify_response(response)

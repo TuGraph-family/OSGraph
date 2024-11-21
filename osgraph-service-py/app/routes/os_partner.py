@@ -6,8 +6,9 @@ from typing import Dict, Any
 import logging
 from dataclasses import asdict
 
-os_partner_bp = Blueprint('os_partner', __name__, url_prefix='/api/graph')
+os_partner_bp = Blueprint("os_partner", __name__, url_prefix="/api/graph")
 logger = logging.getLogger(__name__)
+
 
 class OSPartnerController:
     def __init__(self):
@@ -24,9 +25,11 @@ class OSPartnerController:
             logger.exception("Internal server error")
             return ResponseHandler.error("Internal server error", 500)
 
+
 controller = OSPartnerController()
 
-@os_partner_bp.route('/os-partner', methods=['GET'])
+
+@os_partner_bp.route("/os-partner", methods=["GET"])
 def get_os_partner():
     data = request.args.to_dict()
     response = controller.get_partner_graph(data)

@@ -14,6 +14,29 @@ elasticsearch = "^8.16.0"
 openai = "^1.54.5"
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
+mypy = "^1.13.0"
+bandit = "^1.7.10"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["osgraph-service-py"]
+default_section = "THIRDPARTY"
+
+[flake8]
+max-line-length = 88
+exclude = ".venv,__pycache__,build,dist"
+
+

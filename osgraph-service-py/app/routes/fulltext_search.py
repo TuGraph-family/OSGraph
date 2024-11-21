@@ -6,13 +6,15 @@ from typing import Dict, Any
 import logging
 from dataclasses import asdict
 
-fulltext_search_bp = Blueprint('fulltext_search', __name__, url_prefix='/api/graph')
+fulltext_search_bp = Blueprint("fulltext_search", __name__, url_prefix="/api/graph")
 logger = logging.getLogger(__name__)
+
 
 class FulltextSearchController:
     def __init__(self):
         self.manager = FulltextSearchManager()
-    def search(self,data) -> Dict[str, Any]:
+
+    def search(self, data) -> Dict[str, Any]:
         try:
             result = self.manager.search(data=data)
             return ResponseHandler.success(result)
@@ -23,9 +25,11 @@ class FulltextSearchController:
             logger.exception("Internal server error")
             return ResponseHandler.error("Internal server error", 500)
 
+
 controller = FulltextSearchController()
 
-@fulltext_search_bp.route('/fulltext-search', methods=['GET'])
+
+@fulltext_search_bp.route("/fulltext-search", methods=["GET"])
 def get_os_interest():
     data = request.args.to_dict()
     response = controller.search(data)
