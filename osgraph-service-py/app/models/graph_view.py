@@ -1,8 +1,8 @@
 # app/models/graph_view.py
 
-from dataclasses import dataclass, field, asdict
-from typing import List, Optional, Literal
 import json
+from dataclasses import asdict, dataclass, field
+from typing import List, Literal, Optional
 
 
 @dataclass

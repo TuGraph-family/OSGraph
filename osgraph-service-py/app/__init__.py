@@ -1,13 +1,16 @@
 # app/__init__.py
-from flask import Flask, jsonify
-import os
 import importlib
-from .utils.logger import setup_logger
-from .utils.custom_exceptions import InvalidUsage
-from app.services import register_all_services
+import os
+
+from dotenv import load_dotenv
+from flask import Flask, jsonify
+
 from app.dal.graph.tugraph import GraphClient, GraphLabel, LabelProps
 from app.models.system_graph import GraphService
-from dotenv import load_dotenv
+from app.services import register_all_services
+
+from .utils.custom_exceptions import InvalidUsage
+from .utils.logger import setup_logger
 
 load_dotenv()
 

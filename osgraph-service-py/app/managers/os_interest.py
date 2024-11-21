@@ -1,9 +1,10 @@
 # app/manager/os_interest.py
-from app.models.graph_view import Graph, User, Repo, Topic, Belong, ContributeRepo
-from typing import Dict, Any
-from app.services.graph_services.os_interest import OSInterestService
 import json
 import os
+from typing import Any, Dict
+
+from app.models.graph_view import Belong, ContributeRepo, Graph, Repo, Topic, User
+from app.services.graph_services.os_interest import OSInterestService
 
 
 class OSInterestManager:

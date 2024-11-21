@@ -1,18 +1,19 @@
 # app/manager/project_community.py
-from app.models.graph_view import (
-    Graph,
-    Repo,
-    Company,
-    Country,
-    User,
-    PullRequestAction,
-    Star,
-    Belong,
-)
-from typing import Dict, Any
-from app.services.graph_services.project_community import ProjectCommunityService
 import json
 import os
+from typing import Any, Dict
+
+from app.models.graph_view import (
+    Belong,
+    Company,
+    Country,
+    Graph,
+    PullRequestAction,
+    Repo,
+    Star,
+    User,
+)
+from app.services.graph_services.project_community import ProjectCommunityService
 
 
 class ProjectCommunityManager:

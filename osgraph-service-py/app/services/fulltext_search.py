@@ -1,8 +1,10 @@
+import os
 from typing import Any
+
+from dotenv import load_dotenv
+
 from app.dal.search.es import ElasticsearchClient
 from app.utils.custom_exceptions import InvalidUsage
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 

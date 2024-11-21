@@ -1,7 +1,9 @@
 # run.py
 import os
-from app import create_app
+
 from dotenv import load_dotenv
+
+from app import create_app
 from config import DevelopmentConfig, ProductionConfig
 
 load_dotenv()

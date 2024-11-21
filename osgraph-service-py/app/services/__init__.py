@@ -1,16 +1,17 @@
 # app/services/__init__.py
 
 from flask import current_app
+
+from app.services.graph_services.develop_activities import (
+    DevelopActivitiesServiceConfig,
+)
+from app.services.graph_services.os_interest import OSInterestServiceConfig
+from app.services.graph_services.os_partner import OSPartnerServiceConfig
+from app.services.graph_services.project_community import ProjectCommunityServiceConfig
 from app.services.graph_services.project_contribution import (
     ProjectContributionServiceConfig,
 )
 from app.services.graph_services.project_ecology import ProjectEcologyServiceConfig
-from app.services.graph_services.project_community import ProjectCommunityServiceConfig
-from app.services.graph_services.develop_activities import (
-    DevelopActivitiesServiceConfig,
-)
-from app.services.graph_services.os_partner import OSPartnerServiceConfig
-from app.services.graph_services.os_interest import OSInterestServiceConfig
 
 SERVICE_CONFIGS = [
     ProjectContributionServiceConfig(),

@@ -1,5 +1,6 @@
 # app/manager/graph_list.py
 from typing import List
+
 from app.services.graph_list import GraphListService
 
 

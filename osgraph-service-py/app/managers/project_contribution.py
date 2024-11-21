@@ -1,18 +1,19 @@
 # app/manager/project_contribution.py
-from app.models.graph_view import (
-    Graph,
-    User,
-    Repo,
-    CodeReviewAction,
-    CreateIssue,
-    CommitAction,
-    CommentIssue,
-    CreatePR,
-)
-from typing import Dict, Any
-from app.services.graph_services.project_contribution import ProjectContributionService
 import json
 import os
+from typing import Any, Dict
+
+from app.models.graph_view import (
+    CodeReviewAction,
+    CommentIssue,
+    CommitAction,
+    CreateIssue,
+    CreatePR,
+    Graph,
+    Repo,
+    User,
+)
+from app.services.graph_services.project_contribution import ProjectContributionService
 
 
 class ProjectContributionManager:

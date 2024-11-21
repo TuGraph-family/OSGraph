@@ -1,6 +1,8 @@
-from openai import OpenAI
 import os
+
 from dotenv import load_dotenv
+from openai import OpenAI
+
 from app.llm.prompt_templates.graph_summary import get_graph_summary_prompt
 
 load_dotenv()

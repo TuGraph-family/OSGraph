@@ -1,7 +1,9 @@
-from typing import Any
-from app.dal.graph.tugraph import GraphClient
 import os
+from typing import Any
+
 from dotenv import load_dotenv
+
+from app.dal.graph.tugraph import GraphClient
 
 load_dotenv()
 

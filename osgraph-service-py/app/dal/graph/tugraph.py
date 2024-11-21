@@ -1,12 +1,14 @@
 # app/dal/graph/tugraph.py
-import os
-from neo4j import GraphDatabase
-from dotenv import load_dotenv
-from typing import Optional, List, Dict, Any
-from flask import current_app
-from dataclasses import dataclass, asdict, is_dataclass
-from app.models.default_graph import Edge, Vertex
 import json
+import os
+from dataclasses import asdict, dataclass, is_dataclass
+from typing import Any, Dict, List, Optional
+
+from dotenv import load_dotenv
+from flask import current_app
+from neo4j import GraphDatabase
+
+from app.models.default_graph import Edge, Vertex
 
 load_dotenv()
 

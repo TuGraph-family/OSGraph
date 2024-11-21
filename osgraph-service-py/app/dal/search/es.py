@@ -1,10 +1,11 @@
 # # app/dal/graph/es.py
-from elasticsearch import Elasticsearch
-from elasticsearch.exceptions import NotFoundError, ConnectionError, RequestError
-from typing import Dict, List, Optional, Any
 import logging
-from dotenv import load_dotenv
 import os
+from typing import Any, Dict, List, Optional
+
+from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import ConnectionError, NotFoundError, RequestError
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)

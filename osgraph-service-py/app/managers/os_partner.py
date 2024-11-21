@@ -1,16 +1,17 @@
 # app/manager/os_partner.py
-from app.models.graph_view import (
-    Graph,
-    User,
-    CommonIssue,
-    CommonPR,
-    CommonStar,
-    CommonRepo,
-)
-from typing import Dict, Any
-from app.services.graph_services.os_partner import OSPartnerService
 import json
 import os
+from typing import Any, Dict
+
+from app.models.graph_view import (
+    CommonIssue,
+    CommonPR,
+    CommonRepo,
+    CommonStar,
+    Graph,
+    User,
+)
+from app.services.graph_services.os_partner import OSPartnerService
 
 
 class OSPartnerManager:

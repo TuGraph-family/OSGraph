@@ -1,6 +1,7 @@
-from dataclasses import dataclass, asdict
-from typing import Any, Optional
 import os
+from dataclasses import asdict, dataclass
+from typing import Any, Optional
+
 from dotenv import load_dotenv
 
 load_dotenv()

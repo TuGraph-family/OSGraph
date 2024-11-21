@@ -1,10 +1,12 @@
+import logging
+from dataclasses import asdict
+from typing import Any, Dict
+
 from flask import Blueprint, request
+
 from app.managers.fulltext_search import FulltextSearchManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
-from typing import Dict, Any
-import logging
-from dataclasses import asdict
 
 fulltext_search_bp = Blueprint("fulltext_search", __name__, url_prefix="/api/graph")
 logger = logging.getLogger(__name__)

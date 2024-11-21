@@ -1,5 +1,6 @@
-from flask import jsonify
 from typing import Any, Dict, Optional
+
+from flask import jsonify
 
 
 class ResponseHandler:

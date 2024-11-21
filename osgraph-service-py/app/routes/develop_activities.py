@@ -1,10 +1,12 @@
-from flask import Blueprint, request, abort
+import logging
+from dataclasses import asdict
+from typing import Any, Dict
+
+from flask import Blueprint, abort, request
+
 from app.managers.develop_activities import DevelopActivitiesManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
-from typing import Dict, Any
-import logging
-from dataclasses import asdict
 
 develop_activities_bp = Blueprint(
     "project_activities", __name__, url_prefix="/api/graph"

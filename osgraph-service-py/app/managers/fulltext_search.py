@@ -1,5 +1,6 @@
 # app/manager/fulltext_search.py
 from typing import List
+
 from app.services.fulltext_search import FulltextSearchService
 
 
