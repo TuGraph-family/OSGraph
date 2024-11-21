@@ -20,6 +20,7 @@ isort = "^5.13.2"
 flake8 = "^7.1.1"
 mypy = "^1.13.0"
 bandit = "^1.7.10"
+autoflake = "^2.3.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -37,6 +38,6 @@ default_section = "THIRDPARTY"
 
 [flake8]
 max-line-length = 88
-exclude = ".venv,__pycache__,build,dist"
+exclude = [".venv", "__pycache__", "build", "dist", "static"]
 
 

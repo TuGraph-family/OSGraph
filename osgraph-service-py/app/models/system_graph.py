@@ -23,4 +23,9 @@ class GraphService:
         )
 
     def __repr__(self):
-        return f"GitHubUser(label={self.label}, pk={self.primary}, type={self.type}, props={self.props})"
+        return (
+            f"{self.__class__.__name__}("
+            f"label={self.label}, "
+            f"primary={self.primary}, "
+            f"props={self.props})"
+        )

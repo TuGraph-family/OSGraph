@@ -46,6 +46,11 @@ class OSPartnerService(BaseService):
             user_id = res[0]["id"]
             graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
             client = GraphClient(graph_name)
-            cypher = f"""CALL osgraph.get_developer_by_developer('{{"developer_id":{user_id},"top_n":{topn}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node"""
+            cypher = (
+                f"CALL osgraph.get_developer_by_developer('{{"
+                f'"developer_id":{user_id},"top_n":{topn}'
+                f"}}') YIELD start_node, relationship, end_node "
+                "return start_node, relationship, end_node"
+            )
             result = client.run(cypher)
             return result

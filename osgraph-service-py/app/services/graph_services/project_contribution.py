@@ -54,7 +54,7 @@ class ProjectContributionService(BaseService):
         github_repo: str = validated_data["GitHubRepo"]
         start_time: int = validated_data["start-time"] or get_default_start_time()
         end_time: int = validated_data["end-time"] or get_default_end_time()
-        config_name = os.getenv("FLASK_CONFIG")
+        os.getenv("FLASK_CONFIG")
         # if config_name == 'development':
         #     start_time = 0
         start_time = 0
@@ -66,6 +66,12 @@ class ProjectContributionService(BaseService):
             repo_id = res[0]["id"]
             graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
             client = GraphClient(graph_name)
-            cypher = f"""CALL osgraph.get_repo_contribution('{{"repo_id":{repo_id},"start_timestamp":{start_time},"end_timestamp":{end_time},"top_n":{contribution_limit}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node"""
+            cypher = (
+                f"CALL osgraph.get_repo_contribution('{{"
+                f'"repo_id":{repo_id},"start_timestamp":{start_time},'
+                f'"end_timestamp":{end_time},"top_n":{contribution_limit}'
+                f"}}') YIELD start_node, relationship, end_node "
+                "return start_node, relationship, end_node"
+            )
             result = client.run(cypher)
             return result

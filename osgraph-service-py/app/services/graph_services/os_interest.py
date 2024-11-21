@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime, timedelta
 from typing import Any, Dict
@@ -50,6 +51,16 @@ class OSInterestService(BaseService):
             user_id = res[0]["id"]
             graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
             client = GraphClient(graph_name)
-            cypher = f"""CALL osgraph.get_developer_repos_profile('{{"developer_id":{user_id},"topic_topn":{topic_topn},"repo_topn":{repo_topn}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node"""
+            params_dict = {
+                "developer_id": user_id,
+                "topic_topn": topic_topn,
+                "repo_topn": repo_topn,
+            }
+            params = json.dumps(params_dict)
+            cypher = (
+                f"CALL osgraph.get_developer_repos_profile('{params}') "
+                "YIELD start_node, relationship, end_node "
+                "return start_node, relationship, end_node"
+            )
             result = client.run(cypher)
             return result

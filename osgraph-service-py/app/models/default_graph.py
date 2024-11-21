@@ -1,5 +1,5 @@
 import os
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Any, Optional
 
 from dotenv import load_dotenv
@@ -49,7 +49,8 @@ class Edge:
     def __repr__(self):
         return (
             f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
-            f"type={self.type}, source={self.source}, target={self.target}, props={self.props})"
+            f"type={self.type}, source={self.source}, "
+            f"target={self.target}, props={self.props})"
         )
 
 
@@ -69,11 +70,12 @@ class GitHubUser(Vertex):
         self._props = props
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, props={self._props})"
-
-
-from dataclasses import dataclass
-from typing import Optional
+        return (
+            f"{self.__class__.__name__}("
+            f"label={self.label}, "
+            f"primary={self.primary}, "
+            f"props={self._props})"
+        )
 
 
 @dataclass

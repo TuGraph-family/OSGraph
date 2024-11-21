@@ -1,6 +1,5 @@
 # app/models/graph_view.py
 
-import json
 from dataclasses import asdict, dataclass, field
 from typing import List, Literal, Optional
 

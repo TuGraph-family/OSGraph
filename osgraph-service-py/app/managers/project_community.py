@@ -5,7 +5,6 @@ from typing import Any, Dict
 
 from app.models.graph_view import (
     Belong,
-    Company,
     Country,
     Graph,
     PullRequestAction,

@@ -3,16 +3,7 @@ import json
 import os
 from typing import Any, Dict
 
-from app.models.graph_view import (
-    CodeReviewAction,
-    CommentIssue,
-    CreateIssue,
-    CreatePR,
-    Graph,
-    Push,
-    Repo,
-    User,
-)
+from app.models.graph_view import Graph, Push, Repo, User
 from app.services.graph_services.develop_activities import DevelopActivitiesService
 
 

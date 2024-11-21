@@ -46,6 +46,11 @@ class ProjectEcologyService(BaseService):
             repo_id = res[0]["id"]
             graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
             client = GraphClient(graph_name)
-            cypher = f"""CALL osgraph.get_repo_by_repo('{{"repo_id":{repo_id}, "top_n":{top_n}}}') YIELD start_node, relationship, end_node return start_node, relationship, end_node"""
+            cypher = (
+                f"CALL osgraph.get_repo_by_repo('{{"
+                f'"repo_id":{repo_id}, "top_n":{top_n}'
+                f"}}') YIELD start_node, relationship, end_node "
+                "return start_node, relationship, end_node"
+            )
             result = client.run(cypher)
             return result

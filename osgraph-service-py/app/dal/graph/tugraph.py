@@ -101,12 +101,13 @@ class GraphClient:
             with self.driver.session(database=self.graph_name) as session:
                 result = session.run(query)
                 current_app.logger.info(
-                    f"Vertex '{ json.dumps(properties)}' created success."
+                    f"Vertex '{json.dumps(properties)}' created success."
                 )
                 return result.data()
         except Exception as e:
             current_app.logger.info(
-                f"Vertex '{ json.dumps(properties)}' created faild. Error message : {str(e)}"
+                f"Vertex '{json.dumps(properties)}' created faild. "
+                f"Error message : {str(e)}"
             )
 
     # 创建边
@@ -152,7 +153,8 @@ class GraphClient:
                 return result.data()
         except Exception as e:
             current_app.logger.error(
-                f"Relationship '{json.dumps(properties)}' creation failed. Error message: {str(e)}"
+                f"Relationship '{json.dumps(properties)}' creation failed. "
+                f"Error message: {str(e)}"
             )
             return None
 

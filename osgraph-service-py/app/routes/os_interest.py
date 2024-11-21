@@ -1,8 +1,7 @@
 import logging
-from dataclasses import asdict
 from typing import Any, Dict
 
-from flask import Blueprint, abort, request
+from flask import Blueprint, request
 
 from app.managers.os_interest import OSInterestManager
 from app.utils.custom_exceptions import InvalidUsage
@@ -26,7 +25,7 @@ class OSInterestController:
         except InvalidUsage as e:
             logger.error(f"Invalid usage: {str(e)}")
             return ResponseHandler.error(str(e.message), e.status_code)
-        except Exception as e:
+        except Exception:
             logger.exception("Internal server error")
             return ResponseHandler.error("Internal server error", 500)
 

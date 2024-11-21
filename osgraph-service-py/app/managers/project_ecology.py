@@ -3,7 +3,7 @@ import json
 import os
 from typing import Any, Dict
 
-from app.models.graph_view import Belong, CommonDevelop, Graph, Orgnization, Repo, User
+from app.models.graph_view import Belong, CommonDevelop, Graph, Orgnization, Repo
 from app.services.graph_services.project_ecology import ProjectEcologyService
 
 
