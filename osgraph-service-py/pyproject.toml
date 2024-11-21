@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "osgraph-service"
+version = "0.1.0"
+description = ""
+authors = ["KingSkyLi <15566300566@163.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.0.3"
+python-dotenv = "^1.0.1"
+neo4j = "^5.26.0"
+elasticsearch = "^8.16.0"
+openai = "^1.54.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
