@@ -75,7 +75,21 @@ const graphTranslator = () => {
 
     /** 单独处理 contrib-repo，添加预处理参数 */
     if (templateType === GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]) {
-      const { startTimestamp, endTimestamp } = getLast10YearsTimestampsInSeconds();
+      const LastYearTimestamps = getLast10YearsTimestampsInSeconds();
+      /** 等到扩展参数阶段，开放用户自定义参数的功能 */
+      // const startDate = params.get('start');
+      // const endDate = params.get('end');
+      let startTimestamp = LastYearTimestamps.startTimestamp;
+      let endTimestamp = LastYearTimestamps.endTimestamp;
+
+      // if (startDate) {
+      //   startTimestamp = dateToTimestamp(startDate);
+      // }
+      
+      // if (endDate) { 
+      //   endTimestamp = dateToTimestamp(endDate);
+      // }
+      
       searchObj['start_timestamp'] = startTimestamp;
       searchObj['end_timestamp'] = endTimestamp;
     }
