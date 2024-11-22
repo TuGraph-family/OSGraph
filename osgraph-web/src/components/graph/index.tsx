@@ -1,6 +1,6 @@
 // @ts-nocheck
 import type { DataID } from "@antv/g6";
-import { Graph, GraphEvent } from "@antv/g6";
+import { Graph, GraphEvent, CanvasEvent } from "@antv/g6";
 import { isEmpty, isEqual, isFunction } from "lodash";
 import React, { useRef, useMemo } from "react";
 import ForceGraph3D, { ForceGraph3DInstance } from '3d-force-graph';
@@ -17,6 +17,7 @@ import { GRAPH_RENDER_MODEL } from '../../constants/graph';
 import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from './translator/filterGraphData';
 import { GRAPH_TEMPLATE_ENUM } from '../../constants/index';
+import { getExecuteShareLinkQuery } from "../../services/result";
 
 interface IProps {
   data: DataID;
@@ -124,7 +125,37 @@ export const GraphView = React.memo(
             enterable: true,
             getContent: (_, record: Record<string, any>) =>
               getTooltipContent(record)
-          }
+          },
+          {
+            type: 'contextmenu',
+            trigger: 'contextmenu',
+            onClick: (value) => {
+              const queryParams =  value.split('&');
+              getExecuteShareLinkQuery({
+                templateType: queryParams[0],
+                path: queryParams[1],
+                extendsStr: queryParams[0] === 'repo_contribute'
+                  ? 'start_timestamp=1416650305&end_timestamp=1732269505'
+                  : ''
+              })
+                .then(res => {
+                  console.log('res:', res);
+                })
+            },
+            getItems: (event) => {
+              const data = graphRef.current?.getNodeData(event.target.id);
+              const { properties } = data;
+              return [
+                { name: '项目贡献', value: `repo_contribute&${properties.name}` },
+                { name: '项目生态', value: `repo_ecology&${properties.name}` },
+                { name: '项目社区', value: `repo_community&${properties.name}` },
+                { name: '开发活动', value: `acct_activity&${properties.name}` },
+                { name: '开源伙伴', value: `acct_partner&${properties.name}` },
+                { name: '开源兴趣', value: `acct_interest&${properties.name}` },
+              ];
+            },
+            enable: (e) => e.targetType === 'node',
+          },
         ]
       });
       graph.render();
@@ -279,6 +310,16 @@ export const GraphView = React.memo(
           }
           showToolTipObj.isHoverToolTip = false;
         };
+
+        /** 点击画布其他区域时，把 contextMenu 收起来 */
+        if (graphRef.current) {
+          graphRef?.current.on(CanvasEvent.CLICK, () => {
+            const g6ContextMenuDom = document.querySelector('.g6-contextmenu') as HTMLDivElement;
+            if (g6ContextMenuDom) {
+              g6ContextMenuDom.style.display = 'none';
+            }
+          })
+        }
 
         tooltip?.addEventListener('mouseenter', handleMouseEnter);
         tooltip?.addEventListener('mouseleave', handleMouseLeave);
