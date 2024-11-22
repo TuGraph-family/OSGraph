@@ -17,3 +17,9 @@ app = create_app(config_class=config_class)
 
 if __name__ == "__main__":
     app.run(port=8000, debug=app.config.get("DEBUG", False))
+
+# if __name__ == "__main__":
+#     base_dir = os.path.dirname(os.path.abspath(__file__))
+#     cert_path = os.path.join(base_dir, "certs/cert.pem")
+#     key_path = os.path.join(base_dir, "certs/key.pem")
+#     app.run(host="0.0.0.0",port=8000, ssl_context=(cert_path, key_path))

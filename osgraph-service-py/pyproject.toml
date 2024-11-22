@@ -12,6 +12,8 @@ python-dotenv = "^1.0.1"
 neo4j = "^5.26.0"
 elasticsearch = "^8.16.0"
 openai = "^1.54.5"
+selenium = "^4.26.1"
+requests = "^2.32.3"
 
 
 [tool.poetry.group.dev.dependencies]
