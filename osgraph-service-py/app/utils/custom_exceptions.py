@@ -13,3 +13,6 @@ class InvalidUsage(Exception):
         rv = dict(self.payload or ())
         rv["message"] = self.message
         return rv
+    
+    def __str__(self):
+        return self.message

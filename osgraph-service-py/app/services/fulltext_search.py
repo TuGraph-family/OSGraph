@@ -12,6 +12,8 @@ class FulltextSearchService:
     def execute(self, data) -> Any:
         if "index-name" not in data:
             raise InvalidUsage("Missing necessary parameter: index-name")
+        if "keyword" not in data or not data["keyword"]:
+            raise InvalidUsage("Missing or invalid parameter: keyword")
         index_name = data["index-name"]
         keyword = data["keyword"]
         if not keyword:

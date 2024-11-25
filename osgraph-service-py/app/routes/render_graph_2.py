@@ -70,7 +70,7 @@ def render_graph_with_node(data):
     return BytesIO(output), None
 
 
-@render_graph_bp.route("/render", methods=["GET"])
+@render_graph2_bp.route("/render2", methods=["GET"])
 def render_graph():
     service = request.args.get('service')
     if not service:
