@@ -1,43 +1,65 @@
 import os
-from unittest.mock import patch
 import pytest
+from unittest.mock import patch
 from app.services.graph_list import GraphListService
+from app.utils.custom_exceptions import InvalidUsage
 
-@pytest.fixture
-def set_env():
+
+@pytest.fixture(autouse=True)
+def setup_and_teardown():
     os.environ["TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME"] = "test_graph"
+    yield
+    del os.environ["TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME"]
 
-# Mock 数据
-mock_graph_service_data = [
-    {
-        "identity": 3,
-        "label": "graph_service",
-        "properties": {
-            "comment": "这是一个开发活动图谱",
-            "filter_keys": "topn:50",
-            "input_types": "GitHubUser",
-            "name": "开发活动"
-        }
-    },
-    {
-        "identity": 4,
-        "label": "graph_service",
-        "properties": {
-            "comment": "这是一个获取开源伙伴的图谱",
-            "filter_keys": "topn:50",
-            "input_types": "GitHubUser",
-            "name": "开源伙伴"
-        }
-    }
-]
 
-# 测试方法
-def test_execute_returns_expected_data(set_env):
+def test_graph_client_is_called():
     with patch("app.services.graph_list.GraphClient") as MockGraphClient:
         mock_client_instance = MockGraphClient.return_value
-        mock_client_instance.run.return_value = mock_graph_service_data
+        mock_client_instance.run.return_value = []
+
         service = GraphListService()
         result = service.execute()
-        assert result == mock_graph_service_data
-        MockGraphClient.assert_called_once_with("test_graph")
+
+        MockGraphClient.assert_called_once_with(graph_name="test_graph")
         mock_client_instance.run.assert_called_once_with("MATCH (n:graph_service) RETURN n")
+        assert result == []
+
+
+def test_execute_returns_data():
+    with patch("app.services.graph_list.GraphClient") as MockGraphClient:
+        mock_client_instance = MockGraphClient.return_value
+        mock_client_instance.run.return_value = [
+            {"identity": 1, "label": "graph_service", "properties": {"name": "Test Graph"}}
+        ]
+
+        service = GraphListService()
+        result = service.execute()
+
+        MockGraphClient.assert_called_once_with(graph_name="test_graph")
+        mock_client_instance.run.assert_called_once_with("MATCH (n:graph_service) RETURN n")
+        assert result == [
+            {"identity": 1, "label": "graph_service", "properties": {"name": "Test Graph"}}
+        ]
+
+
+def test_execute_raises_graph_client_error():
+    with patch("app.services.graph_list.GraphClient") as MockGraphClient:
+        mock_client_instance = MockGraphClient.return_value
+        mock_client_instance.run.side_effect = Exception("Mocked Exception")
+
+        service = GraphListService()
+        with pytest.raises(InvalidUsage, match="GraphClient error: Mocked Exception"):
+            service.execute()
+
+
+def test_execute_handles_empty_result():
+    with patch("app.services.graph_list.GraphClient") as MockGraphClient:
+        mock_client_instance = MockGraphClient.return_value
+        mock_client_instance.run.return_value = []
+
+        service = GraphListService()
+        result = service.execute()
+
+        MockGraphClient.assert_called_once_with(graph_name="test_graph")
+        mock_client_instance.run.assert_called_once_with("MATCH (n:graph_service) RETURN n")
+        assert result == []
