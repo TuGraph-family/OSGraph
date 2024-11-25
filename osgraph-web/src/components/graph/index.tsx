@@ -1,8 +1,8 @@
 // @ts-nocheck
-import type { DataID } from "@antv/g6";
+import type { DataID, GraphData, NodeData } from "@antv/g6";
 import { Graph, GraphEvent, CanvasEvent } from "@antv/g6";
 import { isEmpty, isEqual, isFunction } from "lodash";
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import ForceGraph3D, { ForceGraph3DInstance } from '3d-force-graph';
 import { useTranslation } from "react-i18next";
 import { formatGraph3DData, generateLinkText, updateLinkPosition, generateNodeThreeObject, focusNodePositionForClick, calcTooltipPos } from '../../utils/graph3D';
@@ -18,9 +18,10 @@ import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from './translator/filterGraphData';
 import { GRAPH_TEMPLATE_ENUM } from '../../constants/index';
 import { getExecuteShareLinkQuery } from "../../services/result";
+import { graphDataTranslator } from "../../result/translator";
 
 interface IProps {
-  data: DataID;
+  data: GraphData;
   onReady?: (graph: Graph) => void;
   renderMode?: GRAPH_RENDER_MODEL['2D'] | GRAPH_RENDER_MODEL['3D'];
   renderTemplate?: GRAPH_TEMPLATE_ENUM;
@@ -42,6 +43,22 @@ export const GraphView = React.memo(
       return [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY, GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY].includes(renderTemplate) ? 300 : 170;
     }, [renderTemplate]);
 
+    const removeExistElement = (originData: GraphData, addData: GraphData): GraphData => {
+      const existingNodeIds = new Set(originData.nodes.map(node => node.id));
+      const existingEdges = new Set(originData.edges.map(edge => `${edge.source}-${edge.target}`));
+  
+      const newNodes = addData.nodes.filter(node => !existingNodeIds.has(node.id));
+  
+      const newEdges = addData.edges.filter(edge => 
+          !existingEdges.has(`${edge.source}-${edge.target}`)
+      );
+  
+      return {
+          nodes: newNodes,
+          edges: newEdges
+      };
+  };
+
     /** 自适应窗口 - 抽取出来定义，方便卸载 */
     const handleAfterLayout = () => {
       graphRef?.current?.fitView();
@@ -54,6 +71,7 @@ export const GraphView = React.memo(
         data: filterGraphDataTranslator(data),
         width,
         height,
+        animation: false,
         node: {
           style: {
             size: (d) => d.size,
@@ -97,15 +115,22 @@ export const GraphView = React.memo(
         },
         layout: {
           type: "force",
-          linkDistance: 240
+          linkDistance: 240,
+          preventOverlap: true,
+          minMovement: 0.05,
         },
         behaviors: [
-          { type: "click-element", multiple: false },
-          { type: "zoom-canvas", sensitivity: 0.1 },
-          "drag-canvas",
-          "drag-element",
-          "click-selected",
-          "hover-element"
+          'zoom-canvas',
+          {
+            key: 'drag-canvas',
+            type: 'drag-canvas',
+          },
+          'drag-element',
+          'click-select',
+          {
+            type: 'hover-activate',
+            degree: 1,
+          },
         ],
         autoResize: true,
         zoomRange: [0.1, 5],
@@ -139,20 +164,56 @@ export const GraphView = React.memo(
                   : ''
               })
                 .then(res => {
-                  console.log('res:', res);
+                  if (graphRef.current) {
+                    const translatorData = graphDataTranslator(res);
+
+                    /** 寻找需要 addData 的 diff 节点 */
+                    const graphData = graph.getData();
+                    const formatData = removeExistElement(graphData, translatorData);
+
+                    const extendId = queryParams[2];
+                    const extendData = graphRef.current?.getNodeData(extendId);
+
+                    /** addData 中需要 init 节点样式 */
+                    graphRef.current.addData({
+                      nodes: formatData?.nodes?.map(node => ({...node, style: extendData?.style})),
+                      edges: formatData.edges
+                    });
+
+                    /** 扩展的点是否需要更新样式，比如 nodeSize */
+                    if (formatData.nodes.length > 1) {
+                      const updateNodeData = translatorData.nodes.find(node => {
+                        return node.id === extendId;
+                      });
+                      graphRef.current.updateNodeData([updateNodeData]);
+                    }
+                    graphRef.current.render();
+                  }
                 })
             },
             getItems: (event) => {
-              const data = graphRef.current?.getNodeData(event.target.id);
+              const id = event.target.id;
+              const data = graphRef.current?.getNodeData(id);
               const { properties } = data;
-              return [
-                { name: '项目贡献', value: `repo_contribute&${properties.name}` },
-                { name: '项目生态', value: `repo_ecology&${properties.name}` },
-                { name: '项目社区', value: `repo_community&${properties.name}` },
-                { name: '开发活动', value: `acct_activity&${properties.name}` },
-                { name: '开源伙伴', value: `acct_partner&${properties.name}` },
-                { name: '开源兴趣', value: `acct_interest&${properties.name}` },
-              ];
+
+              const getMenuItems = (type: string) => {
+                if (type === NODE_TYPE_MAP.github_repo) {
+                  return [
+                    { name: '项目贡献', value: `repo_contribute&${properties.name}&${id}` },
+                    { name: '项目生态', value: `repo_ecology&${properties.name}&${id}` },
+                    { name: '项目社区', value: `repo_community&${properties.name}&${id}` },
+                  ];
+                }
+                else if (type === NODE_TYPE_MAP.github_user) {
+                  return [
+                    { name: '开发活动', value: `acct_activity&${properties.name}&${id}` },
+                    { name: '开源伙伴', value: `acct_partner&${properties.name}&${id}` },
+                    { name: '开源兴趣', value: `acct_interest&${properties.name}&${id}` },
+                  ];
+                }
+                return [];
+              };
+              return getMenuItems(data.nodeType);
             },
             enable: (e) => e.targetType === 'node',
           },
