@@ -7,6 +7,7 @@ import ForceGraph3D, { ForceGraph3DInstance } from '3d-force-graph';
 import { useTranslation } from "react-i18next";
 import { formatGraph3DData, generateLinkText, updateLinkPosition, generateNodeThreeObject, focusNodePositionForClick, calcTooltipPos } from '../../utils/graph3D';
 import { getTooltipContent } from '../../utils/toolTip';
+import { isFontLoaded } from '../../utils/isFontLoaded';
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
@@ -16,6 +17,7 @@ import {
 import { GRAPH_RENDER_MODEL } from '../../constants/graph';
 import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from './translator/filterGraphData';
+import { removeExistElement } from './translator/removeExistElement';
 import { GRAPH_TEMPLATE_ENUM } from '../../constants/index';
 import { getExecuteShareLinkQuery } from "../../services/result";
 import { graphDataTranslator } from "../../result/translator";
@@ -42,22 +44,6 @@ export const GraphView = React.memo(
     const yValue = useMemo(() => {
       return [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY, GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY].includes(renderTemplate) ? 300 : 170;
     }, [renderTemplate]);
-
-    const removeExistElement = (originData: GraphData, addData: GraphData): GraphData => {
-      const existingNodeIds = new Set(originData.nodes.map(node => node.id));
-      const existingEdges = new Set(originData.edges.map(edge => `${edge.source}-${edge.target}`));
-  
-      const newNodes = addData.nodes.filter(node => !existingNodeIds.has(node.id));
-  
-      const newEdges = addData.edges.filter(edge => 
-          !existingEdges.has(`${edge.source}-${edge.target}`)
-      );
-  
-      return {
-          nodes: newNodes,
-          edges: newEdges
-      };
-  };
 
     /** 自适应窗口 - 抽取出来定义，方便卸载 */
     const handleAfterLayout = () => {
@@ -174,7 +160,7 @@ export const GraphView = React.memo(
                     const extendId = queryParams[2];
                     const extendData = graphRef.current?.getNodeData(extendId);
 
-                    /** addData 中需要 init 节点样式 */
+                    /** addData 中需要 init 节点样式, 并设置扩展节点的初始坐标 */
                     graphRef.current.addData({
                       nodes: formatData?.nodes?.map(node => ({...node, style: extendData?.style})),
                       edges: formatData.edges
@@ -187,6 +173,10 @@ export const GraphView = React.memo(
                       });
                       graphRef.current.updateNodeData([updateNodeData]);
                     }
+                    
+                    /** 更新节点大小 */
+                    const mergeData = graphRef.current.getData();
+                    graphRef.current.updateData(graphDataTranslator(mergeData));
                     graphRef.current.render();
                   }
                 })
@@ -219,9 +209,14 @@ export const GraphView = React.memo(
           },
         ]
       });
-      graph.render();
-      graphRef.current = graph;
 
+      /** icon-font 加载完毕后再执行渲染，否则会闪烁一下 */
+      isFontLoaded('os-iconfont').then(isLoaded => {
+        if (isLoaded) {
+          graph.render();
+        }
+      });
+      graphRef.current = graph;
       graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
 
       if (isFunction(onReady)) onReady(graph);
@@ -243,20 +238,6 @@ export const GraphView = React.memo(
             .linkWidth(graph.linkWidth())
             .linkDirectionalParticles(graph.linkDirectionalParticles())
         }
-      };
-
-      /** 检测字体是否加载完 */
-      const isFontLoaded = async (fontName) => {
-        if ('fonts' in document) {
-          try {
-            await document.fonts.load(`16px ${fontName}`);
-            return document.fonts.check(`16px ${fontName}`);
-          } catch (error) {
-            console.error('Error loading font:', error);
-            return false;
-          }
-        }
-        return false;
       };
 
       const graph = ForceGraph3D()(containerRef.current)
