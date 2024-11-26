@@ -4,7 +4,7 @@ import os
 from typing import Type, Union
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 
 from app.dal.graph.tugraph import GraphClient, GraphLabel, LabelProps
 from app.models.system_graph import GraphService
@@ -19,7 +19,18 @@ load_dotenv()
 def create_app(
     config_class: Union[str, Type[object]] = "config.ProductionConfig"
 ) -> Flask:
-    app = Flask(__name__)
+    static_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../static")
+    app = Flask(__name__,static_folder=static_folder_path)
+    @app.route('/')
+    def serve_index():
+        return send_from_directory(app.static_folder, 'index.html')
+    @app.route('/<path:filename>')
+    def serve_static(filename):
+        try:
+            return send_from_directory(app.static_folder, filename)
+        except:
+            return send_from_directory(app.static_folder, 'index.html')
+    
     app.config.from_object(config_class)
     setup_logger(app)
     register_blueprints(app)

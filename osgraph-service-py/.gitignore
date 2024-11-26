@@ -9,6 +9,8 @@ venv.bak/
 logs/
 *.log
 app/script/node_modules
+static/*
+!static/README.md
 
 # Python cache
 __pycache__/
