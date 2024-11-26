@@ -16,7 +16,7 @@ config_class = config_mapping.get(config_name.lower(), ProductionConfig)
 app = create_app(config_class=config_class)
 
 if __name__ == "__main__":
-    app.run(port=8000, debug=app.config.get("DEBUG", False))
+    app.run(port=80, debug=app.config.get("DEBUG", False))
 
 # if __name__ == "__main__":
 #     base_dir = os.path.dirname(os.path.abspath(__file__))
