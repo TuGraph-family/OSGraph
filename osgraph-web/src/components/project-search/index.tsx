@@ -224,11 +224,7 @@ export const ProjectSearch: React.FC<{
       });
   };
 
-  useEffect(() => {
-    setState((draft) => {
-      draft.projectValue = graphProjectValue || "REPO_CONTRIBUTE";
-    });
-  }, [graphProjectValue]);
+  console.log('projectValue:', projectValue);
   useEffect(() => {
     setState((draft) => {
       draft.warehouseValue = graphWarehouseValue || undefined;
