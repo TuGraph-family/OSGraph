@@ -35,9 +35,6 @@ let showToolTipObj = {
   isHoverNode: false
 }
 
-/** cache data */
-let extendCacheData: GraphData = null;
-
 export const GraphView = React.memo(
   ({ data, renderMode, renderTemplate, onReady }: IProps) => {
     const containerRef = React.useRef(null);
@@ -57,7 +54,7 @@ export const GraphView = React.memo(
       const { clientHeight: height, clientWidth: width } = containerRef.current;
       const graph = new Graph({
         container: containerRef.current as HTMLDivElement,
-        data: filterGraphDataTranslator(extendCacheData ?? data),
+        data: filterGraphDataTranslator(data),
         width,
         height,
         animation: false,
@@ -179,7 +176,6 @@ export const GraphView = React.memo(
                     
                     /** 更新节点大小 */
                     const mergeData = graphRef.current.getData();
-                    extendCacheData = graphDataTranslator(mergeData);
                     graphRef.current.updateData(graphDataTranslator(mergeData));
                     graphRef.current.render();
                   }
@@ -228,7 +224,7 @@ export const GraphView = React.memo(
 
     const render3DGraph = () => {
       /**  数据深拷贝，且把 edges 映射到 links上 */
-      const graph3DData = formatGraph3DData(extendCacheData ?? data);
+      const graph3DData = formatGraph3DData(data);
       const highlightNodes = new Set();
       const highlightLinks = new Set();
       let nodeMaterials = new Map();
