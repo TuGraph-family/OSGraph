@@ -54,10 +54,6 @@ class ProjectContributionService(BaseService):
         github_repo: str = validated_data["GitHubRepo"]
         start_time: int = validated_data["start-time"] or get_default_start_time()
         end_time: int = validated_data["end-time"] or get_default_end_time()
-        os.getenv("FLASK_CONFIG")
-        # if config_name == 'development':
-        #     start_time = 0
-        start_time = 0
         contribution_limit: int = validated_data["contribution-limit"]
         es = ElasticsearchClient()
         query = {"term": {"name.keyword": github_repo}}

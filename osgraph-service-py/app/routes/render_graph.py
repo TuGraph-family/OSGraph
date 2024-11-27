@@ -86,7 +86,8 @@ def render_graph():
 
     query_params = request.args.to_dict()
     query_params.pop('service', None)
-    base_url = f"http://localhost:8000/api/graph/{service}"
+    port = os.getenv('FLASK_PORT')
+    base_url = f"http://localhost:{port}/api/graph/{service}"
     query_string = "&".join([f"{key}={value}" for key, value in query_params.items()])
     target_url = f"{base_url}?{query_string}"
 
