@@ -335,6 +335,7 @@ class GraphClient:
             ) from e
 
     def run(self, cypher: str) -> Any:
+        print(f'<---------------{self.graph_name}----------{cypher}------------------------------->')
         try:
             with self.driver.session(database=self.graph_name) as session:
                 result = session.run(cypher)
