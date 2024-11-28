@@ -28,8 +28,20 @@ class ServiceConfig:
     filterKeys: List[FilterKey]
 
     def register_service(self) -> None:
-        graph_name = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
-        client = GraphClient(graph_name)
+        TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
+        TUGRAPHDB_SYSTEM_HOST = os.getenv("TUGRAPHDB_SYSTEM_HOST")
+        TUGRAPHDB_SYSTEM_PORT = os.getenv("TUGRAPHDB_SYSTEM_PORT")
+        TUGRAPHDB_SYSTEM_USER = os.getenv("TUGRAPHDB_SYSTEM_USER")
+        TUGRAPHDB_SYSTEM_PASSWORD = os.getenv("TUGRAPHDB_SYSTEM_PASSWORD")
+
+        client = GraphClient(
+            host=TUGRAPHDB_SYSTEM_HOST,
+            port=TUGRAPHDB_SYSTEM_PORT,
+            user=TUGRAPHDB_SYSTEM_USER,
+            password=TUGRAPHDB_SYSTEM_PASSWORD,
+            graph_name=TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME
+        )
+
         properties = {
             "name": self.name,
             "comment": self.comment,
@@ -53,6 +65,20 @@ class BaseService(ABC):
         self.comment: str = config.comment
         self.inputTypes: List[str] = config.inputTypes
         self.filterKeys: List[FilterKey] = config.filterKeys
+        
+        TUGRAPHDB_HOST = os.getenv("TUGRAPHDB_HOST")
+        TUGRAPHDB_PORT = os.getenv("TUGRAPHDB_PORT")
+        TUGRAPHDB_USER = os.getenv("TUGRAPHDB_USER")
+        TUGRAPHDB_PASSWORD = os.getenv("TUGRAPHDB_PASSWORD")
+        TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
+        client = GraphClient(
+            host=TUGRAPHDB_HOST,
+            port=TUGRAPHDB_PORT,
+            user=TUGRAPHDB_USER,
+            password=TUGRAPHDB_PASSWORD,
+            graph_name=TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME
+        )
+        self.graphClient = client
 
     def validate_params(self, data: Dict[str, Any]) -> Dict[str, Any]:
         validated_filters: Dict[str, Any] = {}

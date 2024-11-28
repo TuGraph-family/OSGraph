@@ -49,14 +49,10 @@ class GraphLabel:
 
 
 class GraphClient:
-    def __init__(self, graph_name):
-        TUGRAPHDB_HOST = os.getenv("TUGRAPHDB_HOST")
-        TUGRAPHDB_PORT = os.getenv("TUGRAPHDB_PORT")
-        TUGRAPHDB_USER = os.getenv("TUGRAPHDB_USER")
-        TUGRAPHDB_PASSWORD = os.getenv("TUGRAPHDB_PASSWORD")
+    def __init__(self, host, port, user, password, graph_name):
         self.driver = GraphDatabase.driver(
-            f"bolt://{TUGRAPHDB_HOST}:{TUGRAPHDB_PORT}",
-            auth=(TUGRAPHDB_USER, TUGRAPHDB_PASSWORD),
+            f"bolt://{host}:{port}",
+            auth=(user, password),
         )
         self.graph_name = graph_name
 

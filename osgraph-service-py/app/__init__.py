@@ -76,11 +76,19 @@ def register_error_handlers(app: Flask) -> None:
 
 
 def initialize_system_graph(app: Flask):
-    """
-    初始化 system_graph 和 graph_service 的基础库表。
-    """
-    graph_name = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
-    client = GraphClient(graph_name)
+    TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
+    TUGRAPHDB_SYSTEM_HOST = os.getenv("TUGRAPHDB_SYSTEM_HOST")
+    TUGRAPHDB_SYSTEM_PORT = os.getenv("TUGRAPHDB_SYSTEM_PORT")
+    TUGRAPHDB_SYSTEM_USER = os.getenv("TUGRAPHDB_SYSTEM_USER")
+    TUGRAPHDB_SYSTEM_PASSWORD = os.getenv("TUGRAPHDB_SYSTEM_PASSWORD")
+
+    client = GraphClient(
+        host=TUGRAPHDB_SYSTEM_HOST,
+        port=TUGRAPHDB_SYSTEM_PORT,
+        user=TUGRAPHDB_SYSTEM_USER,
+        password=TUGRAPHDB_SYSTEM_PASSWORD,
+        graph_name=TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME
+    )
 
     try:
         system_graph = client.get_graph()

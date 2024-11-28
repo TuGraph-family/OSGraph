@@ -60,8 +60,6 @@ class ProjectContributionService(BaseService):
         res = es.search(index="github_repo", query=query)
         if len(res):
             repo_id = res[0]["id"]
-            graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
-            client = GraphClient(graph_name)
             cypher = (
                 f"CALL osgraph.get_repo_contribution('{{"
                 f'"repo_id":{repo_id},"start_timestamp":{start_time},'
@@ -69,5 +67,5 @@ class ProjectContributionService(BaseService):
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
-            result = client.run(cypher)
+            result = self.graphClient.run(cypher)
             return result

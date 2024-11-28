@@ -49,8 +49,6 @@ class OSInterestService(BaseService):
         res = es.search(index="github_user", query=query)
         if len(res):
             user_id = res[0]["id"]
-            graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
-            client = GraphClient(graph_name)
             params_dict = {
                 "developer_id": user_id,
                 "topic_topn": topic_topn,
@@ -62,5 +60,5 @@ class OSInterestService(BaseService):
                 "YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
-            result = client.run(cypher)
+            result = self.graphClient.run(cypher)
             return result
