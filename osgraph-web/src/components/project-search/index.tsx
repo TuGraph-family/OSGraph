@@ -207,6 +207,7 @@ export const ProjectSearch: React.FC<{
     getGraphLoading?.(true);
     getExecuteQueryTemplate({
       templateId: templateId,
+      value: value,
       templateParameterList: templateList,
     })
       .then((res) => {

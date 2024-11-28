@@ -45,9 +45,9 @@ class ServiceConfig:
         properties = {
             "name": self.name,
             "comment": self.comment,
-            "input_types": ",".join(self.inputTypes),
-            "filter_keys": ",".join(
-                [f"{key.key}:{key.default}" for key in self.filterKeys]
+            "input_types": ";".join(self.inputTypes),
+            "filter_keys": ";".join(
+                [f"key:{key.key},type:{key.type},default:{key.default},required:{key.required}" for key in self.filterKeys]
             ),
         }
         service = GraphService(
