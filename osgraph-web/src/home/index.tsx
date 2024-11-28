@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { ProjectSearch } from "../components";
+// import Language from "../components/language";
 import {
   ANTV,
   OSGRAPH_GITHUB,
@@ -14,6 +16,7 @@ const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);
   const [templateType, setTemplateType] = useState<string>("REPO_CONTRIBUTE");
   const isMobile = getIsMobile();
+  const { t } = useTranslation();
 
   const switchType = (value: number) => {
     if (value >= 980 && value <= 1580) {
@@ -70,6 +73,9 @@ const HomePage: React.FC = () => {
 
   return (
     <div className={styles["home"]}>
+      <div style={{position: 'absolute', top: 0, right: 0, zIndex: 99}}>
+        {/* <Language /> */}
+      </div>
       <img
         className={styles["logo"]}
         src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*YzqCQbdW7nUAAAAAAAAAAAAADu3UAQ/original"
@@ -109,10 +115,7 @@ const HomePage: React.FC = () => {
             />
           </div>
           <div className={styles["text"]}>
-            <p>
-              探索GitHub开源图谱数据，洞察开发行为与社区生态。
-              如：贡献、伙伴、兴趣、社区、生态等...
-            </p>
+            <p>{t('home.desc')}</p>
             <div className={styles["white-strip"]} />
           </div>
         </div>

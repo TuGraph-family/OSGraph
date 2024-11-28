@@ -1,12 +1,13 @@
 // @ts-nocheck
-import type { DataID } from "@antv/g6";
-import { Graph, GraphEvent } from "@antv/g6";
+import type { DataID, GraphData, NodeData } from "@antv/g6";
+import { Graph, GraphEvent, CanvasEvent } from "@antv/g6";
 import { isEmpty, isEqual, isFunction } from "lodash";
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import ForceGraph3D, { ForceGraph3DInstance } from '3d-force-graph';
 import { useTranslation } from "react-i18next";
 import { formatGraph3DData, generateLinkText, updateLinkPosition, generateNodeThreeObject, focusNodePositionForClick, calcTooltipPos } from '../../utils/graph3D';
 import { getTooltipContent } from '../../utils/toolTip';
+import { isFontLoaded } from '../../utils/isFontLoaded';
 import {
   EDGE_DISPLAY_NAME_MAP,
   NODE_TYPE_COLOR_MAP,
@@ -16,10 +17,13 @@ import {
 import { GRAPH_RENDER_MODEL } from '../../constants/graph';
 import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from './translator/filterGraphData';
+import { removeExistElement } from './translator/removeExistElement';
 import { GRAPH_TEMPLATE_ENUM } from '../../constants/index';
+import { getExecuteShareLinkQuery } from "../../services/result";
+import { graphDataTranslator } from "../../result/translator";
 
 interface IProps {
-  data: DataID;
+  data: GraphData;
   onReady?: (graph: Graph) => void;
   renderMode?: GRAPH_RENDER_MODEL['2D'] | GRAPH_RENDER_MODEL['3D'];
   renderTemplate?: GRAPH_TEMPLATE_ENUM;
@@ -53,11 +57,12 @@ export const GraphView = React.memo(
         data: filterGraphDataTranslator(data),
         width,
         height,
+        animation: false,
         node: {
           style: {
             size: (d) => d.size,
             labelText: (d) => d?.properties?.name,
-            color: (d) => {
+            fill: (d) => {
               return d.nodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.nodeType][d.id % 4]
                 : NODE_TYPE_COLOR_MAP[d.nodeType];
@@ -84,7 +89,7 @@ export const GraphView = React.memo(
             endArrow: (d) => EDGE_DISPLAY_NAME_MAP[d?.edgeType].hasArrow,
             labelBackgroundFill: "#fff",
             labelBackground: true,
-            color: (d) =>
+            stroke: (d) =>
               d.targetNodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
                 : NODE_TYPE_COLOR_MAP[d.targetNodeType],
@@ -96,15 +101,22 @@ export const GraphView = React.memo(
         },
         layout: {
           type: "force",
-          linkDistance: 240
+          linkDistance: 240,
+          preventOverlap: true,
+          minMovement: 0.05,
         },
         behaviors: [
-          { type: "click-element", multiple: false },
-          { type: "zoom-canvas", sensitivity: 0.1 },
-          "drag-canvas",
-          "drag-element",
-          "click-selected",
-          "hover-element"
+          'zoom-canvas',
+          {
+            key: 'drag-canvas',
+            type: 'drag-canvas',
+          },
+          'drag-element',
+          'click-select',
+          {
+            type: 'hover-activate',
+            degree: 1,
+          },
         ],
         autoResize: true,
         zoomRange: [0.1, 5],
@@ -124,12 +136,87 @@ export const GraphView = React.memo(
             enterable: true,
             getContent: (_, record: Record<string, any>) =>
               getTooltipContent(record)
-          }
+          },
+          {
+            type: 'contextmenu',
+            trigger: 'contextmenu',
+            onClick: (value) => {
+              const queryParams =  value.split('&');
+              getExecuteShareLinkQuery({
+                templateType: queryParams[0],
+                path: queryParams[1],
+                extendsStr: queryParams[0] === 'repo_contribute'
+                  ? 'start_timestamp=1416650305&end_timestamp=1732269505'
+                  : ''
+              })
+                .then(res => {
+                  if (graphRef.current) {
+                    const translatorData = graphDataTranslator(res);
+
+                    /** 寻找需要 addData 的 diff 节点 */
+                    const graphData = graph.getData();
+                    const formatData = removeExistElement(graphData, translatorData);
+
+                    const extendId = queryParams[2];
+                    const extendData = graphRef.current?.getNodeData(extendId);
+
+                    /** addData 中需要 init 节点样式, 并设置扩展节点的初始坐标 */
+                    graphRef.current.addData({
+                      nodes: formatData?.nodes?.map(node => ({...node, style: extendData?.style})),
+                      edges: formatData.edges
+                    });
+
+                    /** 扩展的点是否需要更新样式，比如 nodeSize */
+                    if (formatData.nodes.length > 1) {
+                      const updateNodeData = translatorData.nodes.find(node => {
+                        return node.id === extendId;
+                      });
+                      graphRef.current.updateNodeData([updateNodeData]);
+                    }
+                    
+                    /** 更新节点大小 */
+                    const mergeData = graphRef.current.getData();
+                    graphRef.current.updateData(graphDataTranslator(mergeData));
+                    graphRef.current.render();
+                  }
+                })
+            },
+            getItems: (event) => {
+              const id = event.target.id;
+              const data = graphRef.current?.getNodeData(id);
+              const { properties } = data;
+
+              const getMenuItems = (type: string) => {
+                if (type === NODE_TYPE_MAP.github_repo) {
+                  return [
+                    { name: '项目贡献', value: `repo_contribute&${properties.name}&${id}` },
+                    { name: '项目生态', value: `repo_ecology&${properties.name}&${id}` },
+                    { name: '项目社区', value: `repo_community&${properties.name}&${id}` },
+                  ];
+                }
+                else if (type === NODE_TYPE_MAP.github_user) {
+                  return [
+                    { name: '开发活动', value: `acct_activity&${properties.name}&${id}` },
+                    { name: '开源伙伴', value: `acct_partner&${properties.name}&${id}` },
+                    { name: '开源兴趣', value: `acct_interest&${properties.name}&${id}` },
+                  ];
+                }
+                return [];
+              };
+              return getMenuItems(data.nodeType);
+            },
+            enable: (e) => e.targetType === 'node',
+          },
         ]
       });
-      graph.render();
-      graphRef.current = graph;
 
+      /** icon-font 加载完毕后再执行渲染，否则会闪烁一下 */
+      isFontLoaded('os-iconfont').then(isLoaded => {
+        if (isLoaded) {
+          graph.render();
+        }
+      });
+      graphRef.current = graph;
       graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
 
       if (isFunction(onReady)) onReady(graph);
@@ -151,20 +238,6 @@ export const GraphView = React.memo(
             .linkWidth(graph.linkWidth())
             .linkDirectionalParticles(graph.linkDirectionalParticles())
         }
-      };
-
-      /** 检测字体是否加载完 */
-      const isFontLoaded = async (fontName) => {
-        if ('fonts' in document) {
-          try {
-            await document.fonts.load(`16px ${fontName}`);
-            return document.fonts.check(`16px ${fontName}`);
-          } catch (error) {
-            console.error('Error loading font:', error);
-            return false;
-          }
-        }
-        return false;
       };
 
       const graph = ForceGraph3D()(containerRef.current)
@@ -280,13 +353,24 @@ export const GraphView = React.memo(
           showToolTipObj.isHoverToolTip = false;
         };
 
-        tooltip?.addEventListener('mouseenter', handleMouseEnter);
-        tooltip?.addEventListener('mouseleave', handleMouseLeave);
+        /** 点击画布其他区域时，把 contextMenu 收起来 */
+        if (graphRef.current && renderMode === GRAPH_RENDER_MODEL['2D']) {
+          graphRef?.current.on(CanvasEvent.CLICK, () => {
+            const g6ContextMenuDom = document.querySelector('.g6-contextmenu') as HTMLDivElement;
+            if (g6ContextMenuDom) {
+              g6ContextMenuDom.style.display = 'none';
+            }
+          })
+        }
+
+        const tooltipDom = document.querySelector('#tooltip');
+        tooltipDom?.addEventListener('mouseenter', handleMouseEnter);
+        tooltipDom?.addEventListener('mouseleave', handleMouseLeave);
         
         return () => {
 
-          tooltip?.removeEventListener('mouseenter', handleMouseEnter);
-          tooltip?.removeEventListener('mouseleave', handleMouseLeave);
+          tooltipDom?.removeEventListener('mouseenter', handleMouseEnter);
+          tooltipDom?.removeEventListener('mouseleave', handleMouseLeave);
 
           if (graphRef.current) {
             if (typeof graphRef.current?.off === 'function') {

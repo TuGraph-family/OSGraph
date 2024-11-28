@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
 import { GRAPH_TYPE_CLUSTER, PLACEHOLDER_MAP } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
+import { TranslatorTemplateList } from './translator/transTemplateList';
 import {
   getExecuteFullTextQuery,
   getExecuteQueryTemplate,
@@ -96,36 +97,6 @@ export const ProjectSearch: React.FC<{
     borderRadius: defaultStyle ? "6px" : "12px",
   };
 
-  const switchName = (parameterName: string, parameterValue: string) => {
-    switch (parameterName) {
-      case "start_timestamp":
-        return Math.floor(
-          new Date().setMonth(new Date().getMonth() - 120) / 1000
-        );
-      case "end_timestamp":
-        return Math.floor(new Date().getTime() / 1000);
-      default:
-        return parameterValue;
-    }
-  };
-
-  const handleJson = (templateList: any, value: string) => {
-    return templateList.map(
-      (item: {
-        parameterName: string;
-        parameterValue: string;
-        valueType: string;
-      }) => {
-        const { parameterName, parameterValue, valueType } = item;
-        return {
-          parameterName: parameterName,
-          parameterValue: switchName(parameterName, parameterValue || value),
-          valueType: valueType,
-        };
-      }
-    );
-  };
-
   const handleProjectChange = (value: string, item: any) => {
     if (
       projectValue &&
@@ -196,7 +167,7 @@ export const ProjectSearch: React.FC<{
     setState((draft) => {
       draft.warehouseValue = value;
     });
-    const templateList = handleJson(templateParameterList, value);
+    const templateList = TranslatorTemplateList(templateParameterList, value);
 
     const paramsValue = templateList
       ?.map((item: { parameterValue: string }) => {
@@ -253,11 +224,7 @@ export const ProjectSearch: React.FC<{
       });
   };
 
-  useEffect(() => {
-    setState((draft) => {
-      draft.projectValue = graphProjectValue || "REPO_CONTRIBUTE";
-    });
-  }, [graphProjectValue]);
+  console.log('projectValue:', projectValue);
   useEffect(() => {
     setState((draft) => {
       draft.warehouseValue = graphWarehouseValue || undefined;

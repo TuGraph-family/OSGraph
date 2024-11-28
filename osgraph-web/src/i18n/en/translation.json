@@ -1,5 +1,7 @@
 {
-  "home": "Home",
+  "home": {
+    "desc": "Explore GitHub open source graph data to gain insights into development behaviors and community ecosystems. For example: contributions, partners, interests, community, ecosystem, etc..."
+  },
   "graph": "Graph",
   "search": "Search",
   "404": "Page not found"
