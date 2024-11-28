@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { ProjectSearch } from "../components";
-import Language from "../components/language";
+// import Language from "../components/language";
 import {
   ANTV,
   OSGRAPH_GITHUB,
@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
   return (
     <div className={styles["home"]}>
       <div style={{position: 'absolute', top: 0, right: 0, zIndex: 99}}>
-        <Language />
+        {/* <Language /> */}
       </div>
       <img
         className={styles["logo"]}
