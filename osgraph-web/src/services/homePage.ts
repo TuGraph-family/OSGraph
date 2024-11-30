@@ -2,31 +2,70 @@ import { message } from "antd";
 import { template } from "lodash";
 import request from "umi-request";
 
-function parseStringToObjects(inputStr:string) {
+
+function changeNodeType(data: string) {
+  let type = ''
+  switch (data.toLowerCase()) {
+    case 'user': type = 'github_user'
+      break;
+    case 'organization': type = 'github_organization'
+      break;
+    case 'company': type = 'company'
+      break;
+    case 'topic': type = 'topic'
+      break;
+    case 'country': type = 'country'
+      break;
+    default:
+      type = ''
+  }
+  return type
+}
+
+function changeEdgeType(data: string) {
+  let type = ''
+  switch (data) {
+    case 'CommitAction': type = 'push'
+      break;
+    case 'CreatePR': type = 'open_pr'
+      break;
+    case 'CodeReviewAction': type = 'code_review'
+      break;
+    case 'CreateIssue': type = 'open_issue'
+      break;
+    case 'CommentIssue': type = 'comment_issue'
+      break;
+    default:
+      type = ''
+  }
+  return type
+}
+
+function parseStringToObjects(inputStr: string) {
   if (typeof inputStr !== 'string') {
-      throw new TypeError('输入必须是一个字符串');
+    throw new TypeError('输入必须是一个字符串');
   }
 
   const parts = inputStr.split(';').filter(part => part.trim() !== '');
 
   const result = parts.map(part => {
-      const obj:any = {};
-      const keyValuePairs = part.split(',').filter(pair => pair.trim() !== '');
+    const obj: any = {};
+    const keyValuePairs = part.split(',').filter(pair => pair.trim() !== '');
 
-      keyValuePairs.forEach(pair => {
-          const [key, value] = pair.split(':').map(str => str.trim());
-          let parsedValue;
-          if (/^-?\d+(\.\d+)?$/.test(value)) {
-              parsedValue = Number(value);
-          } else if (/^(true|false)$/i.test(value)) {
-              parsedValue = value.toLowerCase() === 'true';
-          } else {
-              parsedValue = value.replace(/^"(.+)"$/, '$1');
-          }
-          obj[key] = parsedValue;
-      });
+    keyValuePairs.forEach(pair => {
+      const [key, value] = pair.split(':').map(str => str.trim());
+      let parsedValue;
+      if (/^-?\d+(\.\d+)?$/.test(value)) {
+        parsedValue = Number(value);
+      } else if (/^(true|false)$/i.test(value)) {
+        parsedValue = value.toLowerCase() === 'true';
+      } else {
+        parsedValue = value.replace(/^"(.+)"$/, '$1');
+      }
+      obj[key] = parsedValue;
+    });
 
-      return obj;
+    return obj;
   });
 
   return result;
@@ -41,9 +80,9 @@ export const getListQueryTemplate = async () => {
   if (response?.status === 1) {
     return [];
   }
-  let data = response?.data?.map((item:any)=>{
+  let data = response?.data?.map((item: any) => {
     item.templateName = item.name
-    item.templateParameterList = parseStringToObjects(item.filter_keys).map((item:any)=>{
+    item.templateParameterList = parseStringToObjects(item.filter_keys).map((item: any) => {
       return {
         "parameterName": item.key,
         "parameterValue": item.default,
@@ -52,25 +91,25 @@ export const getListQueryTemplate = async () => {
     })
     item.templateId = item.name
     item.id = item.name
-    switch(item.name) {
+    switch (item.name) {
       case '项目贡献':
         item.templateType = 'REPO_CONTRIBUTE'
         break;
       case '项目生态':
-         item.templateType = 'REPO_ECOLOGY'
+        item.templateType = 'REPO_ECOLOGY'
         break;
       case '项目社区':
         item.templateType = 'REPO_COMMUNITY'
         break;
       case '开发活动':
-         item.templateType = 'ACCT_ACTIVITY'
+        item.templateType = 'ACCT_ACTIVITY'
         break;
       case '开源伙伴':
         item.templateType = 'ACCT_PARTNER'
         break;
       case '开源兴趣':
         item.templateType = 'ACCT_INTEREST'
-        break;  
+        break;
       default:
         item.templateType = ''
     }
@@ -102,7 +141,7 @@ export const getExecuteFullTextQuery = async (params: {
       uniqueDataForOf.push(item);
     }
   }
-  
+
   return uniqueDataForOf
 };
 
@@ -110,17 +149,17 @@ export const getExecuteFullTextQuery = async (params: {
 export const getExecuteQueryTemplate = async (params: {
   templateId: string;
   value: any;
-  templateParameterList:any;
+  templateParameterList: any;
 }) => {
   let url = ''
-  let args:any = {}
-  if(params.templateId === "项目贡献"){
+  let args: any = {}
+  if (params.templateId === "项目贡献") {
     url = '/api/graph/project-contribution'
     args = {
-      'GitHubRepo':params.value
+      'GitHubRepo': params.value
     }
-    params.templateParameterList.forEach((item:any)=>{
-      if(item.parameterName === 'start-time'){
+    params.templateParameterList.forEach((item: any) => {
+      if (item.parameterName === 'start-time') {
         item.parameterValue = 1
       }
       args[item.parameterName] = item.parameterValue
@@ -130,20 +169,29 @@ export const getExecuteQueryTemplate = async (params: {
     method: "get",
     params: args
   });
-  response.data.vertices.forEach((item:any)=>{
-    item.properties = item
+  response.data.vertices.forEach((item: any) => {
+    item.nodeType = changeNodeType(item.type)
+    item.properties = {
+      name: item.name
+    }
   })
-  response.data.edges.forEach((item:any)=>{
-    item.properties = item
+  response.data.edges.forEach((item: any) => {
+    item.source = item.sid
+    item.target = item.tid
+    item.properties = {
+      name:item.name,
+      count:item.count || 0
+    }
+    item.edgeType = changeEdgeType(item.type)
   })
-  let res:any = {
-    data:{
-      nodes:response.data.vertices,
-      edges:response.data.edges,
+  let res: any = {
+    data: {
+      nodes: response.data.vertices,
+      edges: response.data.edges,
     },
-    message:response.message,
+    message: response.message,
   }
-  if(response.status === 0){
+  if (response.status === 0) {
     res.success = true
   }
   return res;

@@ -38,7 +38,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api/graph": {
-        target: isDev ? "http://127.0.0.1:8001" : "https://osgraph.com",
+        target: isDev ? "http://127.0.0.1:8000" : "https://osgraph.com",
         changeOrigin: isDev
       }
     }
