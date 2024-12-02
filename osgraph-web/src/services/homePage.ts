@@ -1,5 +1,3 @@
-import { message } from "antd";
-import { template } from "lodash";
 import request from "umi-request";
 
 
