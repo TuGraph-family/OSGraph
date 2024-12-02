@@ -3,7 +3,7 @@ import json
 import os
 from typing import Any, Dict, Union
 
-from app.models.graph_view import Graph, Push, Repo, User
+from app.models.graph_view import Graph, Push, Repo, User, OpenPR
 from app.services.graph_services.develop_activities import DevelopActivitiesService
 
 
@@ -48,7 +48,7 @@ class DevelopActivitiesManager:
                     graph.insert_relationship(push)
 
                 if relationship["type"] == "open_pr":
-                    open_pr = Push(
+                    open_pr = OpenPR(
                         sid=relationship["src"],
                         tid=relationship["dst"],
                         id=relationship["id"],

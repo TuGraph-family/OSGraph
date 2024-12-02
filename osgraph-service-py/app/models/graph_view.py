@@ -205,6 +205,11 @@ class Push(Edge):
 
 
 @dataclass
+class OpenPR(Edge):
+    name: Literal["推送PR"] = field(default="推送PR", init=False)
+
+
+@dataclass
 class CommitAction(Edge):
     name: Literal["提交"] = field(default="提交", init=False)
 

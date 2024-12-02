@@ -57,7 +57,7 @@ export const GraphView = React.memo(
           style: {
             size: (d) => d.size,
             labelText: (d) => d?.properties?.name,
-            color: (d) => {
+            fill: (d) => {
               return d.nodeType === NODE_TYPE_MAP.github_user
                 ? NODE_TYPE_COLOR_MAP[d.nodeType][d.id % 4]
                 : NODE_TYPE_COLOR_MAP[d.nodeType];

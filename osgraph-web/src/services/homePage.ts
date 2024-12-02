@@ -8,6 +8,8 @@ function changeNodeType(data: string) {
   switch (data.toLowerCase()) {
     case 'user': type = 'github_user'
       break;
+    case 'repo': type = 'github_repo'
+      break;
     case 'organization': type = 'github_organization'
       break;
     case 'company': type = 'company'
@@ -34,6 +36,28 @@ function changeEdgeType(data: string) {
     case 'CreateIssue': type = 'open_issue'
       break;
     case 'CommentIssue': type = 'comment_issue'
+      break;
+    case 'Belong': type = 'belong_to'
+      break;
+    case 'PullRequestAction': type = 'PR'
+      break;
+    case 'Star': type = 'Star'
+      break;
+    case 'CommonDevelop': type = 'common_developer'
+      break;
+    case 'CommonIssue': type = 'common_issue'
+      break;
+    case 'CommonPR': type = 'common_pr'
+      break;
+    case 'CommonStar': type = 'common_star'
+      break;
+    case 'CommonRepo': type = 'common_repo'
+      break;
+    case 'ContributeRepo': type = 'common_repo'
+      break;
+    case 'OpenPR': type = 'open_pr'
+      break;
+    case 'Push': type = 'push'
       break;
     default:
       type = ''
@@ -91,9 +115,16 @@ export const getListQueryTemplate = async () => {
     })
     item.templateId = item.name
     item.id = item.name
+    if (item.input_types === 'GitHubUser') {
+      item.querySource = 'github_user'
+    }
+    if (item.input_types === 'GitHubRepo') {
+      item.querySource = 'github_repo'
+    }
     switch (item.name) {
       case '项目贡献':
         item.templateType = 'REPO_CONTRIBUTE'
+
         break;
       case '项目生态':
         item.templateType = 'REPO_ECOLOGY'
@@ -165,24 +196,81 @@ export const getExecuteQueryTemplate = async (params: {
       args[item.parameterName] = item.parameterValue
     })
   }
+  if (params.templateId === "项目社区") {
+    url = '/api/graph/project-community'
+    args = {
+      'GitHubRepo': params.value
+    }
+    params.templateParameterList.forEach((item: any) => {
+      args[item.parameterName] = item.parameterValue
+    })
+  }
+
+  if (params.templateId === "项目生态") {
+    url = '/api/graph/project-ecology'
+    args = {
+      'GitHubRepo': params.value
+    }
+    params.templateParameterList.forEach((item: any) => {
+      args[item.parameterName] = item.parameterValue
+    })
+  }
+
+  if (params.templateId === "开发活动") {
+    url = '/api/graph/develop-activities'
+    args = {
+      'GitHubUser': params.value
+    }
+    params.templateParameterList.forEach((item: any) => {
+      args[item.parameterName] = item.parameterValue
+    })
+  }
+
+  if (params.templateId === "开源伙伴") {
+    url = '/api/graph/os-partner'
+    args = {
+      'GitHubUser': params.value
+    }
+    params.templateParameterList.forEach((item: any) => {
+      args[item.parameterName] = item.parameterValue
+    })
+  }
+
+  if (params.templateId === "开源兴趣") {
+    url = '/api/graph/os-interest'
+    args = {
+      'GitHubUser': params.value
+    }
+    params.templateParameterList.forEach((item: any) => {
+      args[item.parameterName] = item.parameterValue
+    })
+  }
+
   const response = await request(url, {
     method: "get",
     params: args
   });
   response.data.vertices.forEach((item: any) => {
     item.nodeType = changeNodeType(item.type)
+    item.id = item.id.toString()
+    // item.type = 'node'
+    item.size = 36
     item.properties = {
       name: item.name
     }
+    delete item.type
   })
   response.data.edges.forEach((item: any) => {
-    item.source = item.sid
-    item.target = item.tid
-    item.properties = {
-      name:item.name,
-      count:item.count || 0
-    }
+    item.source = item.sid.toString()
+    item.target = item.tid.toString()
     item.edgeType = changeEdgeType(item.type)
+    item.id = item.source + '-' + item.target + '-' + item.id + '-' + item.type
+    item.properties = {
+      name: item.name,
+      count: item.count || 0
+    }
+    delete item.type
+
   })
   let res: any = {
     data: {
