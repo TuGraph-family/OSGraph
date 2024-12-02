@@ -9,7 +9,7 @@ venv.bak/
 logs/
 *.log
 app/script/node_modules
-static/*
+web/*
 !static/README.md
 
 # Python cache

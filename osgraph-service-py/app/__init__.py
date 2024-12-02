@@ -19,7 +19,7 @@ load_dotenv()
 def create_app(
     config_class: Union[str, Type[object]] = "config.ProductionConfig"
 ) -> Flask:
-    static_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../static")
+    static_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../web")
     app = Flask(__name__,static_folder=static_folder_path)
     @app.route('/')
     def serve_index():
