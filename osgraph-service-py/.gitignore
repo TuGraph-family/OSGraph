@@ -10,7 +10,7 @@ logs/
 *.log
 app/script/node_modules
 web/*
-!static/README.md
+!web/README.md
 
 # Python cache
 __pycache__/
