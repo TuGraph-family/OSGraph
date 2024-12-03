@@ -8,7 +8,7 @@ function changeNodeType(data: string) {
       break;
     case 'repo': type = 'github_repo'
       break;
-    case 'organization': type = 'github_organization'
+    case 'orgnization': type = 'github_organization'
       break;
     case 'company': type = 'company'
       break;
