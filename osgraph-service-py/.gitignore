@@ -1,0 +1,22 @@
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+logs/
+*.log
+app/script/node_modules
+web/*
+!web/README.md
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE files
+.vscode/
+.idea/
+.DS_Store
