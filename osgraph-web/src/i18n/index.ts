@@ -1,20 +1,28 @@
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
-import { LocalStore } from "../utils";
+/**
+ * file: i18n config
+ * author: Allen
+*/
+
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 import zh from "./zh/translation.json";
 import en from "./en/translation.json";
 
-i18next.use(initReactI18next).init({
-  lng: LocalStore.get("language") || "zh-CN", // if you're using a language detector, do not define the lng option
-  resources: {
-    "zh-CN": {
-      translation: zh,
+i18n
+  .use(initReactI18next)
+  .use(LanguageDetector)
+  .init({
+    resources: {
+      en: { translation: en },
+      zh: { translation: zh },
     },
-    "en-US": {
-      translation: en,
+    fallbackLng: 'zh',
+    preload: ['zh', 'en'],
+    interpolation: {
+      escapeValue: false,
     },
-  },
-  // if you see an error like: "Argument of type 'DefaultTFuncReturn' is not assignable to parameter of type xyz"
-  // set returnNull to false (and also in the i18next.d.ts options)
-  // returnNull: false,
-});
+  });
+
+export default i18n;
+

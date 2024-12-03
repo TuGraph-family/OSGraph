@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
-import { Button, Modal, Spin, message, Divider, Select } from "antd";
+import { Button, Modal, Spin, message, Divider } from "antd";
 import React, { useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
@@ -243,7 +243,7 @@ export default () => {
               />
             </div>
             <div className="control">
-              <Select
+              {/* <Select
                 options={[
                   {value: GRAPH_RENDER_MODEL['2D'], label: GRAPH_RENDER_MODEL['2D']},
                   {value: GRAPH_RENDER_MODEL['3D'], label: GRAPH_RENDER_MODEL['3D']}
@@ -258,7 +258,7 @@ export default () => {
                     }
                   });
                 }}
-              />
+              /> */}
               <button
                 onClick={() => {
                   setState((draft) => {
