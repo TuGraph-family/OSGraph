@@ -1,27 +1,35 @@
 /**
  * file: switch components of language
  * author: Allen
-*/
+ */
 
-import React from 'react';
-import { Select } from 'antd';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { getUrlParams } from "../../utils";
+import { IconFont } from "../icon-font";
+import style from "./index.module.less";
 
 const Language: React.FC = () => {
-
   const { i18n } = useTranslation();
+  const lang = getUrlParams("lang") || "zh-CN";
+
+  useEffect(() => {
+    i18n.changeLanguage(lang === "en-US" ? "en" : "zh");
+  }, []);
+
+  const onChangeLang = () => {
+    const url = new URL(window.location.href);
+    const newLang = lang === "en-US" ? "zh-CN" : "en-US";
+    i18n.changeLanguage(newLang === "en-US" ? "en" : "zh");
+    url.searchParams.set("lang", newLang);
+    window.history.pushState({}, "", url.toString());
+  };
 
   return (
-    <Select
-      defaultValue="zh"
-      style={{ width: 120 }}
-      onChange={value => i18n.changeLanguage(value)}
-      options={[
-        { value: 'zh', label: '中文（简）' },
-        { value: 'en', label: 'English(US)' },
-
-      ]}
-    />
+    <div className={style["language"]} onClick={onChangeLang}>
+      <IconFont type="os-icon-country" className={style["language-icon"]} />
+      <div>{lang === "zh-CN" ? "中" : "EN"}</div>
+    </div>
   );
 };
 
