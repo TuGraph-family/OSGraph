@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import { isEmpty } from "lodash";
 import { IconFont } from "../components/icon-font";
 import { NODE_TYPE_SHOW_GITHUB_LINK_MAP } from "../constants";
+import { TFunction } from "i18next";
 
 const renderTooltipItem = (label: string, text: string) => {
   return (
@@ -12,7 +13,7 @@ const renderTooltipItem = (label: string, text: string) => {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <div style={{ fontSize: 14, marginRight: 8 }}>
@@ -38,7 +39,7 @@ const renderTooltipItem = (label: string, text: string) => {
   );
 };
 
-const getTooltipContent = (record: Record<string, any>) => {
+const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
   const elementInfo = record[0];
   const { nodeType } = elementInfo;
   const showGitHubLink = NODE_TYPE_SHOW_GITHUB_LINK_MAP[nodeType];
@@ -64,15 +65,13 @@ const getTooltipContent = (record: Record<string, any>) => {
     <>
       <Space direction="vertical" key={nodeId}>
         {isNode && renderTooltipItem("ID", nodeId)}
-        {
-          Object.keys(properties)
-            // 过滤没有信息的属性
-            .filter(item => properties[item] !== undefined && properties[item] !== null)
-            .map((item) =>
-              renderTooltipItem(item, properties[item]
-            )
+        {Object.keys(properties)
+          // 过滤没有信息的属性
+          .filter(
+            (item) =>
+              properties[item] !== undefined && properties[item] !== null
           )
-        }
+          .map((item) => renderTooltipItem(item, properties[item]))}
       </Space>
       {!isShareRouter && properties?.name && showGitHubLink && (
         <a
@@ -80,7 +79,7 @@ const getTooltipContent = (record: Record<string, any>) => {
           target="_blank"
           style={{ padding: "10px 10px 4px 0", display: "block" }}
         >
-          前往 Github 查看
+          {t("inGithub")}
         </a>
       )}
     </>
@@ -89,7 +88,4 @@ const getTooltipContent = (record: Record<string, any>) => {
   return outDiv;
 };
 
-export {
-  renderTooltipItem,
-  getTooltipContent
-}
+export { renderTooltipItem, getTooltipContent };

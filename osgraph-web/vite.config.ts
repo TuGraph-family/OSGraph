@@ -10,7 +10,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        index: resolve(__dirname, "index.html")
+        index: resolve(__dirname, "index.html"),
       },
       output: {
         chunkFileNames: "static/js/[name]-[hash].js",
@@ -29,18 +29,18 @@ export default defineConfig({
             return "static/fonts/[name].[hash][ext]";
           }
           return "static/[ext]/name1-[hash].[ext]";
-        }
-      }
+        },
+      },
     },
-    assetsInlineLimit: 1
+    assetsInlineLimit: 1,
   },
   server: {
     host: "0.0.0.0",
     proxy: {
       "/tumaker/api": {
-        target: isDev ? "http://127.0.0.1:80" : "https://osgraph.com",
-        changeOrigin: isDev
-      }
-    }
-  }
+        target: !isDev ? "http://127.0.0.1:80" : "https://osgraph.com",
+        changeOrigin: isDev,
+      },
+    },
+  },
 });
