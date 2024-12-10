@@ -10,7 +10,7 @@ import {
   getExecuteFullTextQuery,
   getExecuteQueryTemplate,
   getListQueryTemplate,
-} from "../../services/homePage";
+} from "../../services/homePage_new";
 import styles from "./index.module.less";
 
 export const ProjectSearch: React.FC<{
@@ -178,6 +178,7 @@ export const ProjectSearch: React.FC<{
     getGraphLoading?.(true);
     getExecuteQueryTemplate({
       templateId: templateId,
+      value: value,
       templateParameterList: templateList,
     })
       .then((res) => {
