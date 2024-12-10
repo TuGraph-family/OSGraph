@@ -41,6 +41,7 @@ class ElasticsearchClient:
         self, index: str, query: Dict[str, Any], size: int = 10
     ) -> List[Dict[str, Any]]:
         try:
+            print(query)
             response = self.es.search(index=index, query=query, size=size)
             return [hit["_source"] for hit in response["hits"]["hits"]]
         except NotFoundError:

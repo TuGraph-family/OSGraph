@@ -40,8 +40,8 @@ class ProjectEcologyService(BaseService):
         github_repo: str = validated_data["GitHubRepo"]
         top_n: int = validated_data["topn"]
         es = ElasticsearchClient()
-        query = {"term": {"name.keyword": github_repo}}
-        res = es.search(index="github_repo", query=query)
+        query = {"match": {"name": github_repo}}
+        res = es.search(index="github_repo", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             cypher = (

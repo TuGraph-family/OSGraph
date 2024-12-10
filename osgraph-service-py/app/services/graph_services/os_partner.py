@@ -40,8 +40,8 @@ class OSPartnerService(BaseService):
         github_user: str = validated_data["GitHubUser"]
         topn: int = validated_data["topn"]
         es = ElasticsearchClient()
-        query = {"term": {"name.keyword": github_user}}
-        res = es.search(index="github_user", query=query)
+        query = {"match": {"name": github_user}}
+        res = es.search(index="github_user", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
             cypher = (

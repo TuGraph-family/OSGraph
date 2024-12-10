@@ -40,8 +40,8 @@ class DevelopActivitiesService(BaseService):
         github_user: str = validated_data["GitHubUser"]
         topn: int = validated_data["topn"] | 50
         es = ElasticsearchClient()
-        query = {"term": {"name.keyword": github_user}}
-        res = es.search(index="github_user", query=query)
+        query = {"match": {"name": github_user}}
+        res = es.search(index="github_user", query=query, size=1)
         if len(res):
             develop_id = res[0]["id"]
             cypher = (

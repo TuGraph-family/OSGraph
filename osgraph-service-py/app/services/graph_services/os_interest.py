@@ -41,12 +41,12 @@ class OSInterestService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        user_name: str = validated_data["GitHubUser"]
+        github_user: str = validated_data["GitHubUser"]
         topic_topn: int = validated_data["topic-topn"]
         repo_topn: int = validated_data["githubrepo-topn"]
         es = ElasticsearchClient()
-        query = {"term": {"name.keyword": user_name}}
-        res = es.search(index="github_user", query=query)
+        query = {"match": {"name": github_user}}
+        res = es.search(index="github_user", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
             params_dict = {

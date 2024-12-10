@@ -56,8 +56,8 @@ class ProjectContributionService(BaseService):
         end_time: int = validated_data["end-time"] or get_default_end_time()
         contribution_limit: int = validated_data["contribution-limit"]
         es = ElasticsearchClient()
-        query = {"term": {"name.keyword": github_repo}}
-        res = es.search(index="github_repo", query=query)
+        query = {"match": {"name": github_repo}}
+        res = es.search(index="github_repo", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             cypher = (
@@ -67,5 +67,6 @@ class ProjectContributionService(BaseService):
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
+            print(cypher)
             result = self.graphClient.run(cypher)
             return result
