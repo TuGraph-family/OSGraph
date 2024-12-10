@@ -19,7 +19,7 @@ app = create_app(config_class=config_class)
 port = os.getenv('FLASK_PORT')
 
 if __name__ == "__main__":
-    app.run(port=port, debug=app.config.get("DEBUG", False))
+    app.run(host="0.0.0.0", port=port, debug=app.config.get("DEBUG", False))
 
 # if __name__ == "__main__":
 #     base_dir = os.path.dirname(os.path.abspath(__file__))
