@@ -41,6 +41,22 @@ jobs:
         env:
           DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
         run: |
-          scp -o StrictHostKeyChecking=no -r ./osgraph-web/dist/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
+          scp -o StrictHostKeyChecking=no -r ./osgraph-web/dist/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
+
+      # Step 6: 更新后端代码并重启服务
+      - name: Deploy backend
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
+          set -e
+          cd $DEPLOY_PATH_BACKEND
+          git pull origin master
+          poetry install
+          pkill -f 'gunicorn' || true  # 停止服务（如果运行中）
+          nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app &
+          EOF
