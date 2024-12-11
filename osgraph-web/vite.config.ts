@@ -42,5 +42,5 @@ export default defineConfig({
         changeOrigin: isDev,
       },
     },
-  },
+  }
 });
