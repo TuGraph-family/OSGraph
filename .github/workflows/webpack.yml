@@ -1,10 +1,9 @@
 name: Build and Deploy
 
 on:
-  push:
+  pull_request:
     branches:
-      - master  # 当代码推送到 master 分支时触发
-      - main    # 或 main 分支
+      - master
 
 jobs:
   build-and-deploy:
