@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 export const NODE_SIZE_RANGE = [16, 80];
 export const NODE_COLORS = [
   "#99ADD1",
