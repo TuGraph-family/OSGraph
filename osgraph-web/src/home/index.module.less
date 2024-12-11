@@ -20,17 +20,17 @@
     height: 100vh;
     width: 100%;
     position: relative;
+
     .linear {
       width: 100%;
       height: 100px;
       position: absolute;
       bottom: 0;
-      background-image: linear-gradient(
-        0deg,
-        rgba(3, 3, 16, 1) 0%,
-        rgba(5, 6, 39, 0) 90%
-      );
+      background-image: linear-gradient(0deg,
+          rgba(3, 3, 16, 1) 0%,
+          rgba(5, 6, 39, 0) 90%);
     }
+
     .header-img {
       position: absolute;
       top: 0;
@@ -40,6 +40,7 @@
       object-fit: cover;
       z-index: 0;
     }
+
     .open-source {
       position: absolute;
       left: 160px;
@@ -51,10 +52,12 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
       .title {
         width: 661px;
         height: 219px;
       }
+
       .tuGraph-icon {
         display: flex;
         flex-direction: row;
@@ -69,15 +72,18 @@
           background-size: 100% 100%;
           cursor: pointer;
         }
+
         .tuGraph-img:hover {
           background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*wFZwRpgk7lYAAAAAAAAAAAAADu3UAQ/original");
         }
+
         .line {
           width: 24px;
           height: 16px;
           margin-left: 24px;
           border-left: 1px solid #ccc;
         }
+
         .x-lab {
           width: 60px;
           height: 24px;
@@ -85,10 +91,12 @@
           background-size: 100% 100%;
           cursor: pointer;
         }
+
         .x-lab:hover {
           background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*rmlbS7hPvBMAAAAAAAAAAAAADu3UAQ/original");
         }
       }
+
       .text {
         width: 353px;
         height: 60px;
@@ -98,6 +106,7 @@
         font-size: 16px;
         color: #ffffff;
         line-height: 24px;
+
         .white-strip {
           width: 46px;
           height: 4px;
@@ -108,30 +117,36 @@
       }
     }
   }
+
   .tuGraph-project {
     width: 100%;
     height: 600px;
     margin-top: 80px;
     display: flex;
     justify-content: center;
+
     .project-body {
       height: 100%;
       display: flex;
       align-items: center;
       flex-direction: row;
+
       .title-left,
       .title-right {
         width: 400px;
         height: 120px;
+
         .project-info {
           display: flex;
           flex-direction: row;
           align-items: center;
-          height: 48px;
+          min-height: 48px;
+
           .info-video {
             height: 48px;
             width: 48px;
           }
+
           .info-title {
             font-size: 40px;
             color: #e6ecff;
@@ -140,6 +155,7 @@
             margin-left: 16px;
           }
         }
+
         .project-parse {
           font-size: 16px;
           color: #ffffff;
@@ -148,10 +164,12 @@
           margin-top: 24px;
         }
       }
+
       .tuGraphImg-right {
         width: 600px;
         margin-left: 71px;
       }
+
       .tuGraphImg-left {
         width: 600px;
       }
@@ -166,20 +184,25 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+
     .gov {
       font-size: 12px;
       padding: 10px 0;
       color: #8b90b0;
+
       &-text {
         cursor: pointer;
+
         &:hover {
           color: #3a63f2;
         }
       }
     }
+
     .os-graph {
       width: 100%;
     }
+
     .bottom-img {
       width: 506px;
       height: 42px;
@@ -188,6 +211,7 @@
       bottom: 96px;
       justify-content: space-between;
       align-items: center;
+
       .tuGraph-url {
         width: 120px;
         height: 20px;
@@ -210,6 +234,7 @@
         background-size: 100% 100%;
       }
     }
+
     .bottom-link {
       display: flex;
       flex-direction: row;
@@ -219,14 +244,18 @@
       color: #ffffff;
       font-weight: 500;
     }
+
     .bottom-link:hover {
       color: #3a63f2;
+
       .gitHub-url {
         background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*I9I1S4lWlzwAAAAAAAAAAAAADu3UAQ/original");
       }
+
       .antv-url {
         background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*UARqT77tlJUAAAAAAAAAAAAADu3UAQ/original");
       }
+
       .tuGraph-url {
         background-image: url("https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*w-qITIZMNEgAAAAAAAAAAAAADu3UAQ/original");
       }
