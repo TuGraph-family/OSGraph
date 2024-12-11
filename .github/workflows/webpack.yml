@@ -1,0 +1,41 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master  # 当代码推送到 master 分支时触发
+      - main    # 或 main 分支
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: 安装 Node.js 和 pnpm 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # Step 3: 构建前端代码
+      - name: Build frontend
+        working-directory: ./osgraph-web # 假设前端代码在项目的 frontend 目录
+        run: |
+          pnpm install
+          pnpm run build
+
+      # Step 4: 上传前端构建产物到服务器
+      - name: Deploy frontend
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./osgraph-web/build/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
