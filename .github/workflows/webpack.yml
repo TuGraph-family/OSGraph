@@ -41,6 +41,6 @@ jobs:
         env:
           DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           scp -o StrictHostKeyChecking=no -r ./osgraph-web/dist/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
