@@ -24,8 +24,7 @@ jobs:
           set -e
           echo "Testing SSH connection..."
           echo "Current PATH: \$PATH"
-          echo "Adding Poetry to PATH..."
-          export PATH="\$HOME/.local/bin:\$PATH"
+          source /root/.bashrc
           echo "Checking Poetry version..."
           poetry --version || echo "Poetry not found"
           EOF
