@@ -20,10 +20,12 @@ jobs:
           DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
-          ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
+          ssh -T -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           echo "Testing SSH connection..."
           echo "Current PATH: \$PATH"
+          echo "Adding Poetry to PATH..."
+          export PATH="\$HOME/.local/bin:\$PATH"
           echo "Checking Poetry version..."
           poetry --version || echo "Poetry not found"
           EOF
