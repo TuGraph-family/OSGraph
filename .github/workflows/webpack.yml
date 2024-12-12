@@ -43,7 +43,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
         run: |
-          scp -o StrictHostKeyChecking=no -r ./osgraph-web/dist/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
+          scp -o StrictHostKeyChecking=no -rf ./osgraph-web/dist/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
 
       # Step 6: 更新后端代码并重启服务
       - name: Deploy backend
@@ -52,7 +52,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
         run: |
-          scp -o StrictHostKeyChecking=no -r ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
+          scp -o StrictHostKeyChecking=no -rf ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           source ~/.bashrc
