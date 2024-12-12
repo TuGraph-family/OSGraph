@@ -25,6 +25,7 @@ jobs:
           echo "Testing SSH connection..."
           echo "Current PATH: \$PATH"
           source /root/.bashrc
+          echo "New PATH: \$PATH"
           echo "Checking Poetry version..."
           poetry --version || echo "Poetry not found"
           EOF
