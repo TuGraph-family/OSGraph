@@ -43,11 +43,8 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
         run: |
-          # 压缩前端构建产物
           tar -czf osgraph-web-dist.tar.gz -C ./osgraph-web/dist .
-          # 上传压缩包到服务器
           scp -o StrictHostKeyChecking=no osgraph-web-dist.tar.gz $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
-          # 解压并清理压缩包
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           tar -xzf $DEPLOY_PATH_FRONTEND/osgraph-web-dist.tar.gz -C $DEPLOY_PATH_FRONTEND --strip-components=0
@@ -61,11 +58,8 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
         run: |
-          # 压缩后端代码
           tar -czf osgraph-service-py.tar.gz -C ./osgraph-service-py .
-          # 上传压缩包到服务器
           scp -o StrictHostKeyChecking=no osgraph-service-py.tar.gz $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
-          # 解压并清理压缩包，安装依赖并重启服务
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           cd $DEPLOY_PATH_BACKEND
