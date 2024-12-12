@@ -52,12 +52,11 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
         run: |
-          ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
+          scp -o StrictHostKeyChecking=no -r ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
+          ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
-          cd $OSGRAPH_PATH
-          git pull origin master
           cd $DEPLOY_PATH_BACKEND
           poetry install
-          pkill -f 'gunicorn' || true  # 停止服务（如果运行中）
-          nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app &
-          EOF
+          lsof -ti:8000 | xargs kill -9 || true
+          nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app > gunicorn.log 2>&1 &
+        EOF
