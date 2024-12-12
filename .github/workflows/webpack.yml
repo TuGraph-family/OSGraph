@@ -43,8 +43,8 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
         run: |
-          tar -czf osgraph-web-dist.tar.gz -C ./osgraph-web/dist .
-          scp -o StrictHostKeyChecking=no osgraph-web-dist.tar.gz $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
+          timeout 300 tar -czf osgraph-web-dist.tar.gz -C ./osgraph-web/dist .
+          timeout 300 scp -o StrictHostKeyChecking=no osgraph-web-dist.tar.gz $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           tar -xzf $DEPLOY_PATH_FRONTEND/osgraph-web-dist.tar.gz -C $DEPLOY_PATH_FRONTEND --strip-components=0
