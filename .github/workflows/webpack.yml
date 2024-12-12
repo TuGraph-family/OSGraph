@@ -54,8 +54,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
           set -e
-          cd $DEPLOY_PATH_BACKEND
+          cd $OSGRAPH_PATH
           git pull origin master
+          cd $DEPLOY_PATH_BACKEND
           poetry install
           pkill -f 'gunicorn' || true  # 停止服务（如果运行中）
           nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app &
