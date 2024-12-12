@@ -55,6 +55,7 @@ jobs:
           scp -o StrictHostKeyChecking=no -r ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
+          source ~/.bashrc
           cd $DEPLOY_PATH_BACKEND
           poetry install
           lsof -ti:8000 | xargs kill -9 || true
