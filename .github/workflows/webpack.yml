@@ -56,6 +56,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           source ~/.bashrc
+          source /root/osgraph/myenv/bin/activate
           cd $DEPLOY_PATH_BACKEND
           poetry install
           lsof -ti:8000 | xargs kill -9 || true
