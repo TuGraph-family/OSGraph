@@ -1,0 +1,63 @@
+name: Build and Deploy
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: 安装 Node.js 和 pnpm 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # Step 3: 构建前端代码
+      - name: Build frontend
+        working-directory: ./osgraph-web
+        run: |
+          pnpm install
+          pnpm run build
+
+      # Step 4: 配置 SSH 密钥
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Step 5: 上传前端构建产物到服务器
+      - name: Deploy frontend
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH_FRONTEND: ${{ secrets.DEPLOY_PATH_FRONTEND }}
+        run: |
+          timeout 300 scp -o StrictHostKeyChecking=no -r ./osgraph-web/dist/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_FRONTEND
+
+      # Step 6: 更新后端代码并重启服务
+      - name: Deploy backend
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
+        run: |
+          timeout 300 scp -o StrictHostKeyChecking=no -r ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
+          ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
+          set -e
+          source ~/.bashrc
+          cd $DEPLOY_PATH_BACKEND
+          poetry install
+          lsof -ti:8000 | xargs kill -9 || true
+          nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app > gunicorn.log 2>&1 &
+          EOF
