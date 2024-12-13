@@ -90,17 +90,10 @@ export const ProjectSearch: React.FC<{
     }
     return {};
   }, [textQuery]);
-  const [servicesLoaded, setServicesLoaded] = useState(false);
-  useEffect(()=>{
-    var loadService = async () => {
-      const module = await import(modulePath);
-      getExecuteFullTextQuery = module.getExecuteFullTextQuery;
-      getExecuteQueryTemplate = module.getExecuteQueryTemplate;
-      getListQueryTemplate = module.getListQueryTemplate;
-      setServicesLoaded(true)
-    };
-    loadService()
-  },[])
+  // const [servicesLoaded, setServicesLoaded] = useState(false);
+  // useEffect(()=>{
+    
+  // },[])
 
   useEffect(() => {
     if (graphProjectValue) {
@@ -284,12 +277,17 @@ export const ProjectSearch: React.FC<{
   }, [queryList, projectValue]);
 
   useEffect(() => {
-    if(servicesLoaded){
+    var loadService = async () => {
+      const module = await import(modulePath);
+      getExecuteFullTextQuery = module.getExecuteFullTextQuery;
+      getExecuteQueryTemplate = module.getExecuteQueryTemplate;
+      getListQueryTemplate = module.getListQueryTemplate;
       getListQueryTemplate().then((res) => {
         setQueryList(res);
       });
-    }
-  }, [servicesLoaded]);
+    };
+    loadService()
+  }, []);
 
   useEffect(() => {
     if (graphQuerySource && graphSearchValue) {
