@@ -6,19 +6,19 @@ import { useImmer } from "use-immer";
 import { GRAPH_TYPE_CLUSTER } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
 import { TranslatorTemplateList } from "./translator/transTemplateList";
+import * as homePageNew from "../../services/homePage_new";
+import * as homepage from "../../services/homePage"
 import styles from "./index.module.less";
 import { useTranslation } from "react-i18next";
 import { GET_TEMPLATE, getPlaceholder } from "../../constants/data";
 
-let modulePath = '';
-if (import.meta.env.VITE_MODULE_VERSION === 'stage') {
-  modulePath = '../../services/homePage_new';
-} else {
-  modulePath = '../../services/homePage';
-}
-let getExecuteFullTextQuery:(...args: any[]) => Promise<any>
-let getExecuteQueryTemplate: (...args: any[]) => Promise<any>
-let getListQueryTemplate:(...args: any[]) => Promise<any>
+let isStage = import.meta.env.VITE_MODULE_VERSION === 'stage'
+
+const selectModule = isStage ? homePageNew: homepage
+
+let getExecuteFullTextQuery:(...args: any[]) => Promise<any> = selectModule.getExecuteFullTextQuery
+let getExecuteQueryTemplate: (...args: any[]) => Promise<any> = selectModule.getExecuteQueryTemplate
+let getListQueryTemplate:(...args: any[]) => Promise<any> = selectModule.getListQueryTemplate
 
 export const ProjectSearch: React.FC<{
   needFixed: boolean;
@@ -90,10 +90,6 @@ export const ProjectSearch: React.FC<{
     }
     return {};
   }, [textQuery]);
-  // const [servicesLoaded, setServicesLoaded] = useState(false);
-  // useEffect(()=>{
-    
-  // },[])
 
   useEffect(() => {
     if (graphProjectValue) {
@@ -277,16 +273,9 @@ export const ProjectSearch: React.FC<{
   }, [queryList, projectValue]);
 
   useEffect(() => {
-    var loadService = async () => {
-      const module = await import(modulePath);
-      getExecuteFullTextQuery = module.getExecuteFullTextQuery;
-      getExecuteQueryTemplate = module.getExecuteQueryTemplate;
-      getListQueryTemplate = module.getListQueryTemplate;
-      getListQueryTemplate().then((res) => {
-        setQueryList(res);
-      });
-    };
-    loadService()
+    getListQueryTemplate().then((res) => {
+      setQueryList(res);
+    });
   }, []);
 
   useEffect(() => {
