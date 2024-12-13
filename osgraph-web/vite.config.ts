@@ -6,6 +6,9 @@ const isDev = process.env.NODE_ENV === "development";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_MODULE_VERSION': JSON.stringify(process.env.VITE_MODULE_VERSION),
+  },
   plugins: [react()],
   build: {
     rollupOptions: {
@@ -37,8 +40,8 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     proxy: {
-      "/tumaker/api": {
-        target: isDev ? "http://127.0.0.1:80" : "https://osgraph.com",
+      "/api/graph": {
+        target: isDev ? "http://116.62.110.113:8000/" : "https://osgraph.com",
         changeOrigin: isDev,
       },
     },
