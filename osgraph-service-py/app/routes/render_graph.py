@@ -5,8 +5,9 @@ import requests
 from flask import Blueprint, send_file, request, jsonify
 import subprocess
 from io import BytesIO
+from dotenv import load_dotenv
 
-
+load_dotenv()
 
 render_graph_bp = Blueprint("render_graph", __name__, url_prefix="/api/graph")
 logger = logging.getLogger(__name__)
@@ -56,26 +57,54 @@ def process_graph_data(graph_data):
     return result
 
 def render_graph_with_node(data):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    node_script = os.path.join(parent_dir, "script", "g6_render.js")
-    env = os.environ.copy()
-    if not os.path.exists(node_script):
-        raise FileNotFoundError(f"Node.js script not found at {node_script}")
-    
-    process = subprocess.Popen(
-        ["node", node_script],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        env=env
-    )
+    asset_id = os.getenv("ASSETID")
+    if asset_id is None:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_dir)
+        node_script = os.path.join(parent_dir, "script", "g6_render.js")
+        env = os.environ.copy()
+        if not os.path.exists(node_script):
+            raise FileNotFoundError(f"Node.js script not found at {node_script}")
+        
+        process = subprocess.Popen(
+            ["node", node_script],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env
+        )
 
-    output, error = process.communicate(input=json.dumps(data).encode('utf-8'))
-    if process.returncode != 0:
-        return None, error.decode('utf-8')
+        output, error = process.communicate(input=json.dumps(data).encode('utf-8'))
+        if process.returncode != 0:
+            return None, error.decode('utf-8')
+        
+        return BytesIO(output), None
+    else:
+        context = {"width": 500, "height": 500, "devicePixelRatio": 1}
+        params = {
+            "assetId": asset_id,
+            "config": {
+                "data":data
+            },
+            "output": "json",
+            "context": context,
+        }
 
-    return BytesIO(output), None
+        url = "https://webgw.antgroup-inc.cn/180020010001271369/visservice/api/oneclip"
+
+        response = requests.post(
+            url,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(params),
+        )
+
+        # Check the response
+        if response.status_code != 200:
+            logger.error(f"API request failed with status {response.status_code}")
+            return None, f"Error: {res.status_code}" 
+        else:
+            res = requests.get(response.json()['resultObj'])
+            return BytesIO(res.content), None      
 
 
 @render_graph_bp.route("/render", methods=["GET"])
