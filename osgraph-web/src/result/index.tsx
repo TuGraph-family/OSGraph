@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
 import { Button, Modal, Spin, message, Divider } from "antd";
-import React, { useEffect, useRef } from "react";
+import { UndoOutlined, RedoOutlined } from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -33,6 +34,10 @@ export default () => {
   const navigate = useNavigate();
 
   const powerByRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<{
+    redo?: () => void,
+    undo?: () => void
+  }>({});
 
   const [state, setState] = useImmer<{
     locationState: Record<string, any>;
@@ -63,6 +68,12 @@ export default () => {
       renderMode: initializeRenderMode(),
     };
   });
+
+  const [historyStatus, setHistoryStatus] = useState<{
+    undo: boolean;
+    redo: boolean;
+  }>({undo: true, redo: true});
+
   const { locationState, isOpen, isLoading, shareLink } = state;
 
   const {
@@ -236,7 +247,6 @@ export default () => {
       <div
         className={isMobile ? styles["mobile-result"] : "graph-container"}
         css={GRAPH_STYLE}
-        style={{}}
       >
         {!isShare && (
           <div className="header">
@@ -260,6 +270,21 @@ export default () => {
                 onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
               />
+
+              <div style={{ display: 'flex' }}>
+                <span onClick={() => historyRef.current?.undo?.()}>
+                  <Button style={{width: 'auto'}} disabled={historyStatus.undo}>
+                    <UndoOutlined />
+                    { t("historyAction.undo") }
+                  </Button>
+                </span>
+                <span onClick={() => historyRef.current?.redo?.()}>
+                  <Button style={{width: 'auto'}} disabled={historyStatus.redo}>
+                    <RedoOutlined />
+                    { t("historyAction.redo") }
+                  </Button>
+                </span>
+              </div>
             </div>
             <div className="control">
               {/* <Select
@@ -301,6 +326,8 @@ export default () => {
               renderMode={state.renderMode}
               renderTemplate={templateId}
               onReady={(graph) => (graphRef.current = graph)}
+              setHistoryStatus={setHistoryStatus}
+              ref={historyRef}
             />
           </div>
         </Spin>
