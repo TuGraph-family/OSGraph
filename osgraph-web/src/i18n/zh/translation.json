@@ -20,7 +20,7 @@
   },
   "graph": {
     "type": {
-      "label1": "项目贡献1",
+      "label1": "项目贡献",
       "label2": "项目生态",
       "label3": "项目社区",
       "label4": "开发活动",
@@ -61,5 +61,9 @@
   "copy": "复制",
   "share link": "分享链接",
   "copy success": "复制成功",
-  "inGithub": "前往 Github 查看"
+  "inGithub": "前往 Github 查看",
+  "historyAction": {
+    "undo": "撤销",
+    "redo": "恢复"
+  }
 }
