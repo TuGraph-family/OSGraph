@@ -57,8 +57,8 @@ def process_graph_data(graph_data):
     return result
 
 def render_graph_with_node(data):
-    asset_id = os.getenv("ASSETID")
-    if asset_id is None:
+    oneclip_url = os.getenv("ONECLIP_URL")
+    if oneclip_url is None:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         node_script = os.path.join(parent_dir, "script", "g6_render.js")
@@ -82,17 +82,15 @@ def render_graph_with_node(data):
     else:
         context = {"width": 500, "height": 500, "devicePixelRatio": 1}
         params = {
-            "assetId": asset_id,
+            # "assetId": asset_id,
             "config": {
                 "data":data
             },
             "output": "json",
             "context": context,
         }
-
-        url = "https://webgw.antgroup-inc.cn/180020010001271369/visservice/api/oneclip"
-
-        response = requests.post(
+        url = oneclip_url
+        response = requests.get(
             url,
             headers={"Content-Type": "application/json"},
             data=json.dumps(params),
@@ -103,7 +101,7 @@ def render_graph_with_node(data):
             logger.error(f"API request failed with status {response.status_code}")
             return None, f"Error: {res.status_code}" 
         else:
-            res = requests.get(response.json()['resultObj'])
+            res = requests.get(json.loads(response.text)['resultObj'])
             return BytesIO(res.content), None      
 
 
