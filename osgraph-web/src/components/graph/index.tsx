@@ -1,8 +1,9 @@
 // @ts-nocheck
-import type { DataID, GraphData, NodeData } from "@antv/g6";
-import { Graph, GraphEvent, CanvasEvent } from "@antv/g6";
+import type { GraphData, NodeData } from "@antv/g6";
+import { Graph, GraphEvent, CanvasEvent, HistoryEvent } from "@antv/g6";
+import { Spin } from 'antd';
 import { isEmpty, isEqual, isFunction } from "lodash";
-import React, { useRef, useMemo, useState, useEffect } from "react";
+import React, { useRef, useMemo, useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import ForceGraph3D, { ForceGraph3DInstance } from "3d-force-graph";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,6 +32,10 @@ import { GET_EDGE_DISPLAY_NAME_MAP } from "../../constants/data";
 
 interface IProps {
   data: GraphData;
+  setHistoryStatus: React.Dispatch<React.SetStateAction<{
+    undo: boolean;
+    redo: boolean;
+  }>>;
   onReady?: (graph: Graph) => void;
   renderMode?: GRAPH_RENDER_MODEL["2D"] | GRAPH_RENDER_MODEL["3D"];
   renderTemplate?: GRAPH_TEMPLATE_ENUM;
@@ -43,10 +48,32 @@ let showToolTipObj = {
 };
 
 export const GraphView = React.memo(
-  ({ data, renderMode, renderTemplate, onReady }: IProps) => {
+  forwardRef(({ data, renderMode, renderTemplate, setHistoryStatus, onReady }: IProps, ref) => {
     const containerRef = React.useRef(null);
     const graphRef = React.useRef<Graph>(null);
     const selectEdges = useRef<string[]>([]);
+    const graphDataMapForID = useRef<Record<string, NodeData>>({});
+    const [isCanvasLoading, setIsCanvasLoading] = useState<boolean>(false);
+    const isShare = location.pathname.includes("/graphs") && location.pathname.includes("/github");
+
+    const redoAndUndo = (action: 'redo' | 'undo') => {
+      if (graphRef.current) {
+        const history = graphRef.current.getPluginInstance('history');
+
+        if (action === 'redo' && history.canRedo()) {
+          history.redo();
+        }
+
+        if (action === 'undo' && history.canUndo()) {
+          history.undo();
+        }
+      }
+    };
+
+    useImperativeHandle(ref, () => ({
+      redo: () => redoAndUndo('redo'),
+      undo: () => redoAndUndo('undo'),
+    }));
 
     const yValue = useMemo(() => {
       return [
@@ -62,6 +89,24 @@ export const GraphView = React.memo(
     /** 自适应窗口 - 抽取出来定义，方便卸载 */
     const handleAfterLayout = () => {
       graphRef?.current?.fitView();
+    };
+
+    /** update function for x, y of node */
+    const updateGraphDataMapXY = (graph: Graph) => {
+      const nodeData = graph.getNodeData();
+      for (let node of nodeData) {
+        graphDataMapForID.current[node.id] = node;
+      }
+    };
+
+    const updateDataXY = (nodeDataTODO: GraphData) => {
+      const finishNodeData = nodeDataTODO.nodes.map(node => {
+        return graphDataMapForID.current[node.id];
+      });
+      return {
+        nodes: finishNodeData,
+        edges: nodeDataTODO.edges
+      }
     };
 
     const renderGraph = () => {
@@ -115,7 +160,7 @@ export const GraphView = React.memo(
         },
         layout: {
           type: "force",
-          linkDistance: 240,
+          linkDistance: 300,
           preventOverlap: true,
           minMovement: 0.05,
         },
@@ -131,13 +176,18 @@ export const GraphView = React.memo(
             type: "hover-activate",
             degree: 1,
           },
+          // {
+          //   type: 'auto-adapt-label',
+          //   enable: true,
+          //   padding: 0,
+          // },
         ],
         autoResize: true,
         zoomRange: [0.1, 5],
         transforms: [
           {
             type: "process-parallel-edges",
-            distance: 20,
+            distance: 30,
           },
         ],
         autoFit: "center",
@@ -152,10 +202,15 @@ export const GraphView = React.memo(
               getTooltipContent(record, t),
           },
           {
+            type: 'history',
+            key: 'history',
+          },
+          {
             type: "contextmenu",
             trigger: "contextmenu",
             onClick: (value) => {
               const queryParams = value.split("&");
+              setIsCanvasLoading(true);
               getExecuteShareLinkQuery({
                 templateType: queryParams[0],
                 path: queryParams[1],
@@ -163,7 +218,7 @@ export const GraphView = React.memo(
                   queryParams[0] === "repo_contribute"
                     ? "start_timestamp=1416650305&end_timestamp=1732269505"
                     : "",
-              }).then((res) => {
+              }).then(async (res) => {
                 if (graphRef.current) {
                   const translatorData = graphDataTranslator(res);
 
@@ -197,7 +252,12 @@ export const GraphView = React.memo(
                   /** 更新节点大小 */
                   const mergeData = graphRef.current.getData();
                   graphRef.current.updateData(graphDataTranslator(mergeData));
-                  graphRef.current.render();
+                  await graphRef.current.render();
+                  setIsCanvasLoading(false);
+                  setHistoryStatus({undo: false, redo: true});
+                  const history = graphRef.current?.getPluginInstance('history');
+                  history.redoStack = [];
+                  updateGraphDataMapXY(graphRef.current);
                 }
               });
             },
@@ -207,33 +267,36 @@ export const GraphView = React.memo(
               const { properties } = data;
 
               const getMenuItems = (type: string) => {
+
+                if (isShare) return;
+
                 if (type === NODE_TYPE_MAP.github_repo) {
                   return [
                     {
-                      name: "项目贡献",
+                      name: t('template.REPO_CONTRIBUTE'),
                       value: `repo_contribute&${properties.name}&${id}`,
                     },
                     {
-                      name: "项目生态",
+                      name: t('template.REPO_ECOLOGY'),
                       value: `repo_ecology&${properties.name}&${id}`,
                     },
                     {
-                      name: "项目社区",
+                      name: t('template.REPO_COMMUNITY'),
                       value: `repo_community&${properties.name}&${id}`,
                     },
                   ];
                 } else if (type === NODE_TYPE_MAP.github_user) {
                   return [
                     {
-                      name: "开发活动",
+                      name: t('template.ACCT_ACTIVITY'),
                       value: `acct_activity&${properties.name}&${id}`,
                     },
                     {
-                      name: "开源伙伴",
+                      name: t('template.ACCT_PARTNER'),
                       value: `acct_partner&${properties.name}&${id}`,
                     },
                     {
-                      name: "开源兴趣",
+                      name: t('template.ACCT_INTEREST'),
                       value: `acct_interest&${properties.name}&${id}`,
                     },
                   ];
@@ -247,10 +310,48 @@ export const GraphView = React.memo(
         ],
       });
 
+      const formatUndoStack = (stack) => {
+
+        if (stack.length <= 0) {
+          return [];
+        }
+  
+        const stackValue = stack[stack.length - 1];
+  
+        if (Object.values(stackValue?.current?.add ?? {}).length === 0) {
+          stack.pop();
+          formatUndoStack(stack);
+        }
+        else {
+          return stack;
+        }
+      }
+
       /** icon-font 加载完毕后再执行渲染，否则会闪烁一下 */
       isFontLoaded("os-iconfont").then((isLoaded) => {
         if (isLoaded) {
-          graph.render();
+          graph.render().then(async() => {
+            const history = graphRef.current?.getPluginInstance('history');
+            updateGraphDataMapXY(graphRef.current);
+            history.on(HistoryEvent.ADD, (event) => {
+              formatUndoStack(history.undoStack);
+            });
+            history.on(HistoryEvent.REDO, async (event) => {
+              const finishNodeData = updateDataXY(history.undoStack[history.undoStack.length - 1]?.original?.remove);
+              graphRef.current?.updateData(finishNodeData);
+              await graphRef.current.draw();
+              setHistoryStatus({
+                undo: false,
+                redo: history.redoStack?.length < 1,
+              });
+            });
+            history.on(HistoryEvent.UNDO, () => {
+              setHistoryStatus({
+                undo: history.undoStack?.length <= 1,
+                redo: false,
+              });
+            });
+          });
         }
       });
       graphRef.current = graph;
@@ -381,7 +482,7 @@ export const GraphView = React.memo(
       });
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
         if (!containerRef.current) return;
         renderMode === GRAPH_RENDER_MODEL["2D"]
@@ -442,15 +543,15 @@ export const GraphView = React.memo(
     };
 
     return (
-      <>
+      <Spin spinning={isCanvasLoading} style={{height: '100%'}}>
         <div
           ref={containerRef}
           style={{ height: "100%", background: "#fff" }}
         />
         <div id="tooltip" style={tooltipStyle} />
-      </>
+      </Spin>
     );
-  },
+  }),
   (pre: IProps, next: IProps) => {
     return (
       isEqual(pre.data, next.data) && isEqual(pre?.renderMode, next?.renderMode)
