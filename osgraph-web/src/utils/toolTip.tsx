@@ -6,6 +6,7 @@ import { isEmpty } from "lodash";
 import { IconFont } from "../components/icon-font";
 import { NODE_TYPE_SHOW_GITHUB_LINK_MAP } from "../constants";
 import { TFunction } from "i18next";
+import { GET_EDGE_DISPLAY_NAME_MAP } from "../constants/data";
 
 const renderTooltipItem = (label: string, text: string) => {
   return (
@@ -53,6 +54,7 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
 
   const nodeId = record[0]?.id;
   const isNode = Boolean(record[0]?.nodeType);
+  const isEdge = Boolean(record[0]?.edgeType);
   const outDiv = document.createElement("div");
 
   outDiv.style.padding = "6px";
@@ -71,7 +73,13 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
             (item) =>
               properties[item] !== undefined && properties[item] !== null
           )
-          .map((item) => renderTooltipItem(item, properties[item]))}
+          .map((item) => renderTooltipItem(
+            isEdge
+              ? GET_EDGE_DISPLAY_NAME_MAP(t)[record[0]?.edgeType]?.displayName
+              : item, properties[item]
+            )
+          )
+        }
       </Space>
       {!isShareRouter && properties?.name && showGitHubLink && (
         <a

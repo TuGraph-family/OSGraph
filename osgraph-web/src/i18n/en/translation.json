@@ -1,6 +1,6 @@
 {
   "home": {
-    "desc": "Explore GitHub open source graph data to gain insights into development behaviors and community ecosystems. For example: contributions, partners, interests, community, ecosystem, etc...",
+    "desc": "Explore GitHub graph data to gain insights into development behaviors and community ecosystems.",
     "repository-placeholder": "Please enter the GitHub repository name",
     "account-placeholder": "Please enter the GitHub account name",
     "project": {
@@ -58,5 +58,9 @@
   "search": "Search",
   "404": "Page not found",
   "copy": "copy",
-  "inGithub": "View in GitHub"
+  "inGithub": "View in GitHub",
+  "historyAction": {
+    "undo": "UNDO",
+    "redo": "REDO"
+  }
 }
