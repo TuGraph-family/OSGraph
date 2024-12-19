@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ProjectSearch } from "../components";
 import Language from "../components/language";
+import { getUrlParams } from "../utils";
 import {
   ANTV,
   OSGRAPH_GITHUB,
@@ -43,6 +44,12 @@ const HomePage: React.FC = () => {
   const toGov = () => {
     window.open("https://beian.miit.gov.cn");
   };
+
+  useEffect(() => {
+    const lang = getUrlParams("lang") || "zh-CN";
+    i18n.changeLanguage(lang === "en-US" ? "en" : "zh");
+  }, []);
+
   useEffect(() => {
     window.onscroll = function () {
       const { scrollHeight, clientHeight, scrollTop } =
