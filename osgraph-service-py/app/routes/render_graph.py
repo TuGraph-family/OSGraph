@@ -90,7 +90,7 @@ def render_graph_with_node(data):
             "context": context,
         }
         url = oneclip_url
-        response = requests.get(
+        response = requests.post(
             url,
             headers={"Content-Type": "application/json"},
             data=json.dumps(params),
