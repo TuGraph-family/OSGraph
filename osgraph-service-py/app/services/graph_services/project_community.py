@@ -4,19 +4,11 @@ from typing import Any, Dict
 
 from dotenv import load_dotenv
 
-from app.dal.graph.tugraph import GraphClient
+
 from app.dal.search.es import ElasticsearchClient
 from app.services.graph_services.base import BaseService, FilterKey, ServiceConfig
 
 load_dotenv()
-
-
-def get_default_start_time() -> int:
-    return int((datetime.now() - timedelta(days=30)).timestamp() * 1000)
-
-
-def get_default_end_time() -> int:
-    return int(datetime.now().timestamp() * 1000)
 
 
 class ProjectCommunityServiceConfig(ServiceConfig):
@@ -56,5 +48,6 @@ class ProjectCommunityService(BaseService):
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
+            self.graphClient.get_vertex()
             result = self.graphClient.run(cypher)
             return result

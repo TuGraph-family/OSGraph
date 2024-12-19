@@ -5,7 +5,6 @@ from typing import Any, Dict
 
 from dotenv import load_dotenv
 
-from app.dal.graph.tugraph import GraphClient
 from app.dal.search.es import ElasticsearchClient
 from app.services.graph_services.base import BaseService, FilterKey, ServiceConfig
 
