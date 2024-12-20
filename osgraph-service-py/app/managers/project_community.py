@@ -68,24 +68,24 @@ class ProjectCommunityManager:
 
                 if relationship["type"] == "PR":
                     pr = PullRequestAction(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(pr)
                 if relationship["type"] == "Star":
                     star = Star(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(star)
                 if relationship["type"] == "belong_to":
                     belong = Belong(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                     )
                     graph.insert_relationship(belong)

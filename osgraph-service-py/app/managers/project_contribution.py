@@ -48,40 +48,40 @@ class ProjectContributionManager:
 
                 if relationship["type"] == "open_issue":
                     create_issue = CreateIssue(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(create_issue)
                 if relationship["type"] == "push":
                     commit = CommitAction(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(commit)
                 if relationship["type"] == "open_pr":
                     create_pr = CreatePR(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(create_pr)
                 if relationship["type"] == "code_review":
                     cr = CodeReviewAction(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(cr)
                 if relationship["type"] == "comment_issue":
                     comment_issue = CommentIssue(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )

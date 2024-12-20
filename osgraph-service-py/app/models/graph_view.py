@@ -15,17 +15,17 @@ class Vertex:
     @property
     def vertex_type(self):
         return self.__class__.__name__
-
+    
     def to_dict(self) -> dict:
         data = asdict(self)
-        data["type"] = self.vertex_type
+        data["nodeType"] = self.vertex_type
         return data
 
 
 @dataclass
 class Edge:
-    sid: str | int
-    tid: str | int
+    source: str | int
+    target: str | int
     id: str | int
     name: str
     direction: Literal["both", "out", "in"] = "out"
@@ -39,7 +39,7 @@ class Edge:
 
     def to_dict(self) -> dict:
         data = asdict(self)
-        data["type"] = self.edge_type
+        data["edgeType"] = self.edge_type
         return data
 
 
@@ -64,8 +64,8 @@ class Graph:
     def insert_relationship(self, new_edge: Edge):
         for i, edge in enumerate(self.edges):
             if (
-                edge.sid == new_edge.sid
-                and edge.tid == new_edge.tid
+                edge.source == new_edge.source
+                and edge.target == new_edge.target
                 and edge.edge_type == new_edge.edge_type
             ):
                 # Update existing relationship
@@ -92,7 +92,7 @@ class Graph:
 
     def to_dict(self) -> Dict[str, Any]:
         graph_dict = {
-            "vertices": [v.to_dict() for v in self.vertices],
+            "nodes": [v.to_dict() for v in self.vertices],
             "edges": [e.to_dict() for e in self.edges],
             "summary": self.summary,
         }

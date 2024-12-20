@@ -50,15 +50,15 @@ class OSInterestManager:
 
                 if relationship["type"] == "belong_to":
                     belong_to = Belong(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                     )
                     graph.insert_relationship(belong_to)
                 if relationship["type"] == "repo":
                     contribute_repo = ContributeRepo(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )

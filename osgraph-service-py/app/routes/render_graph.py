@@ -26,14 +26,13 @@ def get_graph_data(target_url:str)->dict:
     else:
         return {'error': 'No data found in response'}, 400
 
-    processed_data = process_graph_data(graph_data)
+    # processed_data = process_graph_data(graph_data)
 
-    return processed_data
+    return graph_data
 
 def process_graph_data(graph_data):
     vertices = graph_data.get("vertices", [])
     edges = graph_data.get("edges", [])
-    id_map = {}
     nodes = []
     for vertex in vertices:
         node_id = f"{vertex['id']}"
@@ -51,7 +50,10 @@ def process_graph_data(graph_data):
         converted_edges.append({
             "source": f'{edge["sid"]}',
             "target": f'{edge["tid"]}',
-            "id":f'{edge["sid"]}_{edge["tid"]}_{edge["type"]}'
+            "id":f'{edge["sid"]}_{edge["tid"]}_{edge["type"]}',
+            "properties":{
+                "count":edge.get('count',None)
+            }
         })
 
     result = {

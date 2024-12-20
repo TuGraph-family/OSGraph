@@ -40,8 +40,8 @@ class DevelopActivitiesManager:
 
                 if relationship["type"] == "push":
                     push = Push(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -49,8 +49,8 @@ class DevelopActivitiesManager:
 
                 if relationship["type"] == "open_pr":
                     open_pr = OpenPR(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -58,8 +58,8 @@ class DevelopActivitiesManager:
 
                 if relationship["type"] == "code_review":
                     code_review = Push(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -67,8 +67,8 @@ class DevelopActivitiesManager:
 
                 if relationship["type"] == "open_issue":
                     open_issue = Push(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -76,8 +76,8 @@ class DevelopActivitiesManager:
 
                 if relationship["type"] == "comment_issue":
                     comment_issue = Push(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )

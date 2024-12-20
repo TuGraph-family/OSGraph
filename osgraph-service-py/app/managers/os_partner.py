@@ -41,8 +41,8 @@ class OSPartnerManager:
 
                 if relationship["type"] == "common_issue":
                     common_issue = CommonIssue(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -50,8 +50,8 @@ class OSPartnerManager:
 
                 if relationship["type"] == "common_pr":
                     common_pr = CommonPR(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -59,8 +59,8 @@ class OSPartnerManager:
 
                 if relationship["type"] == "common_star":
                     common_star = CommonStar(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
@@ -68,8 +68,8 @@ class OSPartnerManager:
 
                 if relationship["type"] == "common_repo":
                     common_repo = CommonRepo(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
+                        source=relationship["src"],
+                        target=relationship["dst"],
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
