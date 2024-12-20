@@ -36,18 +36,22 @@ def process_graph_data(graph_data):
     id_map = {}
     nodes = []
     for vertex in vertices:
-        node_id = f"node{vertex['id']}"
-        id_map[vertex['id']] = node_id
+        node_id = f"{vertex['id']}"
         nodes.append({
             "id": node_id,
-            "label": vertex["name"] if vertex["name"] else f"Unnamed {vertex['id']}"
+            "nodeType":vertex["type"],
+            "label": vertex["name"] if vertex["name"] else f"Unnamed {vertex['id']}",
+            "properties":{
+                "name": vertex["name"] if vertex["name"] else f"Unnamed {vertex['id']}"
+            }
         })
 
     converted_edges = []
     for edge in edges:
         converted_edges.append({
-            "source": id_map.get(edge["sid"], f"node{edge['sid']}"),
-            "target": id_map.get(edge["tid"], f"node{edge['tid']}")
+            "source": f'{edge["sid"]}',
+            "target": f'{edge["tid"]}',
+            "id":f'{edge["sid"]}_{edge["tid"]}_{edge["type"]}'
         })
 
     result = {
