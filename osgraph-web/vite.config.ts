@@ -38,7 +38,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/tumaker/api": {
-        target: isDev ? "http://127.0.0.1:80" : "https://osgraph.com",
+        target: !isDev ? "http://127.0.0.1:80" : "https://osgraph.com",
         changeOrigin: isDev,
       },
     },

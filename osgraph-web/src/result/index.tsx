@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
 import { Button, Modal, Spin, message, Divider } from "antd";
-import { UndoOutlined, RedoOutlined } from '@ant-design/icons';
-import React, { useEffect, useRef, useState } from "react";
+import { UndoOutlined, RedoOutlined } from "@ant-design/icons";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -23,9 +23,12 @@ import {
   GRAPH_SHARE_LINK_MAP,
   GRAPH_TEMPLATE_ENUM,
   GRAPH_DOCUMENT_TITLE_MAP,
+  GRAPH_EXTEND_PARAMS_MAP,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
+import LayouSelect from "../components/layout-select";
+import ExtendParams from "../components/extend-params";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -35,8 +38,8 @@ export default () => {
 
   const powerByRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<{
-    redo?: () => void,
-    undo?: () => void
+    redo?: () => void;
+    undo?: () => void;
   }>({});
 
   const [state, setState] = useImmer<{
@@ -46,6 +49,7 @@ export default () => {
     isLoading: boolean;
     isErrorShareParams: boolean;
     renderMode: string;
+    extendParams: Record<string, any>;
   }>(() => {
     /** 用于初始化渲染模式 */
     const initializeRenderMode: () => string = () => {
@@ -66,15 +70,16 @@ export default () => {
       isLoading: false,
       isErrorShareParams: false,
       renderMode: initializeRenderMode(),
+      extendParams: {},
     };
   });
 
   const [historyStatus, setHistoryStatus] = useState<{
     undo: boolean;
     redo: boolean;
-  }>({undo: true, redo: true});
+  }>({ undo: true, redo: true });
 
-  const { locationState, isOpen, isLoading, shareLink } = state;
+  const { locationState, isOpen, isLoading, shareLink, extendParams } = state;
 
   const {
     data,
@@ -134,34 +139,34 @@ export default () => {
       const { templateId, warehouseName } = shareInfo;
       const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
 
-      const searchPaht = window.location.search
+      const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPaht}contrib-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}contrib-limit=${top_n}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPaht}repo-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
         /** repo community */
         const { country_topn, company_topn, developer_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPaht}country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPaht}repo-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
         const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPaht}partner-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}partner-limit=${top_n}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
         /** acct interest */
         const { repo_topn, topic_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPaht}repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
       }
     });
   };
@@ -242,6 +247,17 @@ export default () => {
     }
   };
 
+  const graphExtendParams = useMemo(() => {
+    console.log("lkmextendParams", extendParams);
+    let newParams = {};
+    Object.keys(extendParams)?.forEach((key) => {
+      newParams[
+        GRAPH_EXTEND_PARAMS_MAP[GRAPH_SHARE_LINK_MAP[templateId] + key]
+      ] = extendParams[key];
+    });
+    return newParams;
+  }, [extendParams]);
+
   return (
     <OSGraph>
       <div
@@ -269,22 +285,44 @@ export default () => {
                 graphParameterList={templateParameterList}
                 onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
+                graphExtendParams={graphExtendParams}
               />
-
-              <div style={{ display: 'flex' }}>
+              <ExtendParams
+                templateId={templateId}
+                onChangeParams={(data: any) =>
+                  setState((draft) => {
+                    draft.extendParams = data;
+                  })
+                }
+              />
+              <div style={{ display: "flex" }}>
                 <span onClick={() => historyRef.current?.undo?.()}>
-                  <Button style={{width: 'auto'}} disabled={historyStatus.undo}>
+                  <Button
+                    style={{ width: "auto" }}
+                    disabled={historyStatus.undo}
+                  >
                     <UndoOutlined />
-                    { t("historyAction.undo") }
+                    {t("historyAction.undo")}
                   </Button>
                 </span>
                 <span onClick={() => historyRef.current?.redo?.()}>
-                  <Button style={{width: 'auto'}} disabled={historyStatus.redo}>
+                  <Button
+                    style={{ width: "auto" }}
+                    disabled={historyStatus.redo}
+                  >
                     <RedoOutlined />
-                    { t("historyAction.redo") }
+                    {t("historyAction.redo")}
                   </Button>
                 </span>
               </div>
+              <LayouSelect
+                setLayout={(layout: string) => {
+                  graphRef.current?.setLayout({
+                    type: layout,
+                  });
+                  graphRef.current?.layout();
+                }}
+              />
             </div>
             <div className="control">
               {/* <Select

@@ -226,6 +226,85 @@ export const GRAPH_EXTEND_PARAMS_MAP = {
     "topic_topn",
 };
 
+export const GRAPH_EXTEND_PARAMS_FORM = {
+  [GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]: [
+    {
+      type: "date",
+      key: "start",
+      label: "params.start",
+    },
+    {
+      type: "date",
+      key: "end",
+      label: "params.end",
+    },
+    {
+      type: "inputNumber",
+      key: "contrib-limit",
+      label: "params.contrib",
+      defaultValue: 10,
+    },
+  ],
+  [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]: [
+    {
+      type: "inputNumber",
+      key: "repo-limit",
+      label: "params.repo",
+      defaultValue: 10,
+    },
+  ],
+  [GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]: [
+    {
+      type: "inputNumber",
+      key: "country-limit",
+      label: "params.country",
+      defaultValue: 5,
+    },
+    {
+      type: "inputNumber",
+      key: "org-limit",
+      label: "params.org",
+      defaultValue: 5,
+    },
+    {
+      type: "inputNumber",
+      key: "contrib-limit",
+      label: "params.contrib",
+      defaultValue: 3,
+    },
+  ],
+  [GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]: [
+    {
+      type: "inputNumber",
+      key: "repo-limit",
+      label: "params.repo",
+      defaultValue: 10,
+    },
+  ],
+  [GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]: [
+    {
+      type: "inputNumber",
+      key: "partner-limit",
+      label: "params.partner",
+      defaultValue: 10,
+    },
+  ],
+  [GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]: [
+    {
+      type: "inputNumber",
+      key: "repo-limit",
+      label: "params.repo",
+      defaultValue: 3,
+    },
+    {
+      type: "inputNumber",
+      key: "topic-limit",
+      label: "params.topic",
+      defaultValue: 5,
+    },
+  ],
+};
+
 /** limit extends params input */
 export const GRAPH_LIMIT_MAP = {
   /** REPO_CONTRIBUTE */

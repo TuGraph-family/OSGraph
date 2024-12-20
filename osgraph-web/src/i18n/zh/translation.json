@@ -65,5 +65,15 @@
   "historyAction": {
     "undo": "撤销",
     "redo": "恢复"
+  },
+  "params": {
+    "start": "开始时间",
+    "end": "结束时间",
+    "contrib": "贡献者数量",
+    "repo": "项目数量",
+    "country": "国家数量",
+    "org": "组织数量",
+    "partner": "伙伴数量",
+    "topic": "标签数据"
   }
 }

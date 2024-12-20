@@ -62,5 +62,15 @@
   "historyAction": {
     "undo": "UNDO",
     "redo": "REDO"
+  },
+  "params": {
+    "start": "Start time",
+    "end": "End time",
+    "contrib": "Contrib Limit",
+    "repo": "Repo Limit",
+    "country": "Country Limit",
+    "org": "Org Limit",
+    "partner": "Partner Limit",
+    "topic": "Topic Limit"
   }
 }
