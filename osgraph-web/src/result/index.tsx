@@ -248,7 +248,7 @@ export default () => {
   };
 
   const graphExtendParams = useMemo(() => {
-    let newParams = {};
+    let newParams: Record<string, any> = {};
     Object.keys(extendParams)?.forEach((key) => {
       newParams[
         GRAPH_EXTEND_PARAMS_MAP[GRAPH_SHARE_LINK_MAP[templateId] + key]

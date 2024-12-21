@@ -7,11 +7,12 @@ import { useTranslation } from "react-i18next";
 import { getLast10YearsTimestampsInSeconds } from "../../utils/date";
 import dayjs from "dayjs";
 import { TooltipPlacement } from "antd/es/tooltip";
+import { IOptions } from "../../interfaces";
 
 const { Item } = Form;
 
 interface Props {
-  templateId: any;
+  templateId: Record<string, any>;
   onChangeParams: (params: any) => void;
   placement?: TooltipPlacement;
   popupContainer?: HTMLElement;
@@ -27,7 +28,7 @@ const ExtendParams: React.FC<Props> = ({
   const { t } = useTranslation();
 
   const { startTimestamp } = getLast10YearsTimestampsInSeconds();
-  const renderItem = (option) => {
+  const renderItem = (option: IOptions) => {
     switch (option.type) {
       case "inputNumber":
         return (
@@ -65,7 +66,7 @@ const ExtendParams: React.FC<Props> = ({
   const onSubmit = () => {
     form.validateFields().then((values) => {
       setOpen(false);
-      if (templateId === 1) {
+      if (+templateId === 1) {
         onChangeParams({
           ...values,
           start: values?.start ? dayjs(values.start).valueOf() : undefined,
@@ -98,9 +99,9 @@ const ExtendParams: React.FC<Props> = ({
               <CloseOutlined onClick={() => setOpen(false)} />
             </div>
             <Form form={form}>
-              {GRAPH_EXTEND_PARAMS_FORM?.[templateId]?.map((item) =>
-                renderItem(item)
-              )}
+              {GRAPH_EXTEND_PARAMS_FORM[
+                templateId as unknown as keyof typeof GRAPH_EXTEND_PARAMS_FORM
+              ]?.map((item: IOptions) => renderItem(item))}
             </Form>
             <div className={style.footerBtn}>
               <Button onClick={onReset}>{t("reset")}</Button>

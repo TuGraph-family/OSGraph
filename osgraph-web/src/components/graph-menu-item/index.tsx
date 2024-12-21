@@ -9,10 +9,11 @@ import { translatorParamsName } from "../project-search/translator/transParamsNa
 import style from "./index.module.less";
 import { getLast10YearsTimestampsInSeconds } from "../../utils/date";
 import dayjs from "dayjs";
+import { IOptions } from "../../interfaces";
 
 interface Props {
   title: string;
-  templateId: string;
+  templateId: Record<string, any>;
   onSearch?: (params: any) => void;
 }
 const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
@@ -29,16 +30,18 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
       onSearch?.(newParams?.join("&"));
       const g6ContextmenuDom =
         document.getElementsByClassName("g6-contextmenu")[0];
-      if (g6ContextmenuDom) {
-        g6ContextmenuDom.click();
+      if (g6ContextmenuDom && g6ContextmenuDom instanceof HTMLElement) {
+        g6ContextmenuDom?.click();
       }
     }
   };
 
   useEffect(() => {
     const { startTimestamp } = getLast10YearsTimestampsInSeconds();
-    const defaultValue = {};
-    GRAPH_EXTEND_PARAMS_FORM[templateId]?.forEach((item) => {
+    const defaultValue: Record<string, any> = {};
+    GRAPH_EXTEND_PARAMS_FORM[
+      templateId as unknown as keyof typeof GRAPH_EXTEND_PARAMS_FORM
+    ]?.forEach((item: IOptions) => {
       switch (true) {
         case item.type === "inputNumber":
           defaultValue[item.key] = item.defaultValue;
@@ -63,7 +66,9 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
           onChangeParams={onChangeParams}
           placement="rightTop"
           popupContainer={
-            document.getElementsByClassName("g6-contextmenu")?.[0]
+            document.getElementsByClassName(
+              "g6-contextmenu"
+            )?.[0] as HTMLElement
           }
         />
       </div>
