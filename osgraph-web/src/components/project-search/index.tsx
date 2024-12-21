@@ -187,11 +187,11 @@ export const ProjectSearch: React.FC<{
   ) => {
     if (!value) return;
     const { templateId, templateParameterList } = templateInfo;
+
     setState((draft) => {
       draft.warehouseValue = value;
     });
     const templateList = TranslatorTemplateList(templateParameterList, value);
-
     const paramsValue = templateList
       ?.map((item: { parameterValue: string }) => {
         return item.parameterValue;
@@ -309,9 +309,7 @@ export const ProjectSearch: React.FC<{
         templateId: templateId,
         templateParameterList: newTemplateParameterList,
       });
-      console.log(graphExtendParams, "lkms", newTemplateParameterList);
     }
-    // console.log(templateParameterList, "lkms", newTemplateParameterList);
   }, [graphExtendParams]);
 
   return (

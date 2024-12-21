@@ -10,7 +10,7 @@ const LayouSelect: React.FC<Props> = ({ setLayout }) => {
   const LAYOUT_OPTIONS = [
     {
       img: "https://mdn.alipayobjects.com/huamei_qcdryc/afts/img/A*KgwCS5Fjk4MAAAAAAAAAAAAADgOBAQ/original",
-      title: "力导向布局",
+      title: "Force布局",
       type: "force",
     },
   ];

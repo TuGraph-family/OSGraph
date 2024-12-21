@@ -4,7 +4,8 @@
 
 const translatorParamsName = (
   parameterName: string,
-  parameterValue: string
+  parameterValue: string,
+  defaultValue: string
 ) => {
   switch (parameterName) {
     case "start_timestamp":
@@ -15,7 +16,7 @@ const translatorParamsName = (
     case "end_timestamp":
       return Math.floor((+parameterValue || new Date().getTime()) / 1000);
     default:
-      return parameterValue;
+      return parameterValue || defaultValue;
   }
 };
 

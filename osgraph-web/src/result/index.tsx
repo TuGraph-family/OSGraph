@@ -248,7 +248,6 @@ export default () => {
   };
 
   const graphExtendParams = useMemo(() => {
-    console.log("lkmextendParams", extendParams);
     let newParams = {};
     Object.keys(extendParams)?.forEach((key) => {
       newParams[

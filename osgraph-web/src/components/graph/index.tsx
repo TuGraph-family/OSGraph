@@ -36,6 +36,10 @@ import { GRAPH_TEMPLATE_ENUM } from "../../constants/index";
 import { getExecuteShareLinkQuery } from "../../services/result";
 import { graphDataTranslator } from "../../result/translator";
 import { GET_EDGE_DISPLAY_NAME_MAP } from "../../constants/data";
+import ReactDOM from "react-dom";
+import LayouSelect from "../layout-select";
+import GraphMenuItem from "../graph-menu-item";
+import { createRoot } from "react-dom/client";
 
 interface IProps {
   data: GraphData;
@@ -281,10 +285,66 @@ export const GraphView = React.memo(
                   }
                 });
               },
-              getItems: (event) => {
+              getContent: (event) => {
                 const id = event.target.id;
                 const data = graphRef.current?.getNodeData(id);
                 const { properties } = data;
+
+                const onClick = (templateType, extendsStr) => {
+                  setIsCanvasLoading(true);
+                  getExecuteShareLinkQuery({
+                    templateType,
+                    path: properties.name,
+                    extendsStr,
+                  }).then(async (res) => {
+                    if (graphRef.current) {
+                      const translatorData = graphDataTranslator(res);
+
+                      /** 寻找需要 addData 的 diff 节点 */
+                      const graphData = graph.getData();
+                      const formatData = removeExistElement(
+                        graphData,
+                        translatorData
+                      );
+
+                      const extendId = id;
+                      const extendData =
+                        graphRef.current?.getNodeData(extendId);
+
+                      /** addData 中需要 init 节点样式, 并设置扩展节点的初始坐标 */
+                      graphRef.current.addData({
+                        nodes: formatData?.nodes?.map((node) => ({
+                          ...node,
+                          style: extendData?.style,
+                        })),
+                        edges: formatData.edges,
+                      });
+
+                      /** 扩展的点是否需要更新样式，比如 nodeSize */
+                      if (formatData.nodes.length > 1) {
+                        const updateNodeData = translatorData.nodes.find(
+                          (node) => {
+                            return node.id === extendId;
+                          }
+                        );
+                        graphRef.current.updateNodeData([updateNodeData]);
+                      }
+
+                      /** 更新节点大小 */
+                      const mergeData = graphRef.current.getData();
+                      graphRef.current.updateData(
+                        graphDataTranslator(mergeData)
+                      );
+                      await graphRef.current.render();
+                      setIsCanvasLoading(false);
+                      setHistoryStatus({ undo: false, redo: true });
+                      const history =
+                        graphRef.current?.getPluginInstance("history");
+                      history.redoStack = [];
+                      updateGraphDataMapXY(graphRef.current);
+                    }
+                  });
+                };
 
                 const getMenuItems = (type: string) => {
                   if (isShare) return;
@@ -293,38 +353,61 @@ export const GraphView = React.memo(
                     return [
                       {
                         name: t("template.REPO_CONTRIBUTE"),
-                        value: `repo_contribute&${properties.name}&${id}`,
+                        templateType: "repo_contribute",
+                        key: "1",
                       },
                       {
                         name: t("template.REPO_ECOLOGY"),
-                        value: `repo_ecology&${properties.name}&${id}`,
+                        templateType: "repo_ecology",
+                        key: "2",
                       },
                       {
                         name: t("template.REPO_COMMUNITY"),
-                        value: `repo_community&${properties.name}&${id}`,
+                        templateType: "repo_community",
+                        key: "3",
                       },
                     ];
                   } else if (type === NODE_TYPE_MAP.github_user) {
                     return [
                       {
                         name: t("template.ACCT_ACTIVITY"),
-                        value: `acct_activity&${properties.name}&${id}`,
+                        templateType: "acct_activity",
+                        key: "4",
                       },
                       {
                         name: t("template.ACCT_PARTNER"),
-                        value: `acct_partner&${properties.name}&${id}`,
+                        templateType: "acct_partner",
+                        key: "5",
                       },
                       {
                         name: t("template.ACCT_INTEREST"),
-                        value: `acct_interest&${properties.name}&${id}`,
+                        templateType: "acct_interest",
+                        key: "6",
                       },
                     ];
                   }
                   return [];
                 };
-                return getMenuItems(data.nodeType);
+                const menuList = getMenuItems(data.nodeType);
+                const mountNode = document.createElement("div");
+                const root = createRoot(mountNode);
+                root.render(
+                  <ul className="g6-contextmenu-ul">
+                    {getMenuItems(data.nodeType)?.map((item) => (
+                      <GraphMenuItem
+                        key={item.key}
+                        title={item.name}
+                        templateId={item.key}
+                        onSearch={(params: string) =>
+                          onClick(item.templateType, params)
+                        }
+                      />
+                    ))}
+                  </ul>
+                );
+                return mountNode;
               },
-              getContent: () => <div>test11</div>,
+
               enable: (e) => e.targetType === "node",
             },
           ],
