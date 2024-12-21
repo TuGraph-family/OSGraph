@@ -18,13 +18,21 @@ interface Props {
 const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
   const [value, setValue] = useState("");
 
-  const onChangeParams = (data: any) => {
+  const onChangeParams = (data: any, isinit = false) => {
     const newParams = Object.keys(data)?.map((key) => {
       const paramsName =
         GRAPH_EXTEND_PARAMS_MAP[GRAPH_SHARE_LINK_MAP[templateId] + key];
       return `${paramsName}=${translatorParamsName(paramsName, data[key], "")}`;
     });
     setValue(newParams?.join("&"));
+    if (!isinit) {
+      onSearch?.(newParams?.join("&"));
+      const g6ContextmenuDom =
+        document.getElementsByClassName("g6-contextmenu")[0];
+      if (g6ContextmenuDom) {
+        g6ContextmenuDom.click();
+      }
+    }
   };
 
   useEffect(() => {
@@ -43,7 +51,7 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
           break;
       }
     });
-    onChangeParams(defaultValue);
+    onChangeParams(defaultValue, true);
   }, []);
 
   return (
@@ -54,6 +62,9 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
           templateId={templateId}
           onChangeParams={onChangeParams}
           placement="rightTop"
+          popupContainer={
+            document.getElementsByClassName("g6-contextmenu")?.[0]
+          }
         />
       </div>
     </li>

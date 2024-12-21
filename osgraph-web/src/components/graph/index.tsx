@@ -229,63 +229,12 @@ export const GraphView = React.memo(
             {
               type: "contextmenu",
               trigger: "contextmenu",
-              onClick: (value) => {
-                const queryParams = value.split("&");
-                setIsCanvasLoading(true);
-                getExecuteShareLinkQuery({
-                  templateType: queryParams[0],
-                  path: queryParams[1],
-                  extendsStr:
-                    queryParams[0] === "repo_contribute"
-                      ? "start_timestamp=1416650305&end_timestamp=1732269505"
-                      : "",
-                }).then(async (res) => {
-                  if (graphRef.current) {
-                    const translatorData = graphDataTranslator(res);
-
-                    /** 寻找需要 addData 的 diff 节点 */
-                    const graphData = graph.getData();
-                    const formatData = removeExistElement(
-                      graphData,
-                      translatorData
-                    );
-
-                    const extendId = queryParams[2];
-                    const extendData = graphRef.current?.getNodeData(extendId);
-
-                    /** addData 中需要 init 节点样式, 并设置扩展节点的初始坐标 */
-                    graphRef.current.addData({
-                      nodes: formatData?.nodes?.map((node) => ({
-                        ...node,
-                        style: extendData?.style,
-                      })),
-                      edges: formatData.edges,
-                    });
-
-                    /** 扩展的点是否需要更新样式，比如 nodeSize */
-                    if (formatData.nodes.length > 1) {
-                      const updateNodeData = translatorData.nodes.find(
-                        (node) => {
-                          return node.id === extendId;
-                        }
-                      );
-                      graphRef.current.updateNodeData([updateNodeData]);
-                    }
-
-                    /** 更新节点大小 */
-                    const mergeData = graphRef.current.getData();
-                    graphRef.current.updateData(graphDataTranslator(mergeData));
-                    await graphRef.current.render();
-                    setIsCanvasLoading(false);
-                    setHistoryStatus({ undo: false, redo: true });
-                    const history =
-                      graphRef.current?.getPluginInstance("history");
-                    history.redoStack = [];
-                    updateGraphDataMapXY(graphRef.current);
-                  }
-                });
-              },
               getContent: (event) => {
+                const g6ContextMenuDom =
+                  document.getElementsByClassName("g6-contextmenu")[0];
+                if (g6ContextMenuDom) {
+                  g6ContextMenuDom.style.overflow = "visible";
+                }
                 const id = event.target.id;
                 const data = graphRef.current?.getNodeData(id);
                 const { properties } = data;
@@ -306,6 +255,14 @@ export const GraphView = React.memo(
                         graphData,
                         translatorData
                       );
+
+                      if (
+                        !formatData.nodes.length &&
+                        !formatData.edges.length
+                      ) {
+                        setIsCanvasLoading(false);
+                        return;
+                      }
 
                       const extendId = id;
                       const extendData =
@@ -407,7 +364,6 @@ export const GraphView = React.memo(
                 );
                 return mountNode;
               },
-
               enable: (e) => e.targetType === "node",
             },
           ],

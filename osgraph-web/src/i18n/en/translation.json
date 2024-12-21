@@ -63,6 +63,9 @@
     "undo": "UNDO",
     "redo": "REDO"
   },
+  "sure": "OK",
+  "reset": "Reset",
+  "layout": "Layout",
   "params": {
     "start": "Start time",
     "end": "End time",

@@ -1,16 +1,16 @@
 import { Button, Popover } from "antd";
 import style from "./index.module.less";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface Props {
   setLayout: (layout: string) => void;
 }
 const LayouSelect: React.FC<Props> = ({ setLayout }) => {
+  const { t } = useTranslation();
   const LAYOUT_OPTIONS = [
     {
       img: "https://mdn.alipayobjects.com/huamei_qcdryc/afts/img/A*KgwCS5Fjk4MAAAAAAAAAAAAADgOBAQ/original",
-      title: "Force布局",
+      title: `Force ${t("layout")}`,
       type: "force",
     },
   ];
@@ -35,7 +35,7 @@ const LayouSelect: React.FC<Props> = ({ setLayout }) => {
         </div>
       }
     >
-      <Button>布局</Button>
+      <Button>{t("layout")}</Button>
     </Popover>
   );
 };

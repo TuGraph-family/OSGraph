@@ -14,11 +14,13 @@ interface Props {
   templateId: any;
   onChangeParams: (params: any) => void;
   placement?: TooltipPlacement;
+  popupContainer?: HTMLElement;
 }
 const ExtendParams: React.FC<Props> = ({
   templateId,
   onChangeParams,
   placement = "bottom",
+  popupContainer = document.body,
 }) => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
@@ -101,15 +103,16 @@ const ExtendParams: React.FC<Props> = ({
               )}
             </Form>
             <div className={style.footerBtn}>
-              <Button onClick={onReset}>重置</Button>
+              <Button onClick={onReset}>{t("reset")}</Button>
               <Button type="primary" onClick={onSubmit}>
-                确定
+                {t("sure")}
               </Button>
             </div>
           </div>
         }
+        getPopupContainer={() => popupContainer}
       >
-        <Button onClick={(e) => setOpen(true)} type="text">
+        <Button onClick={() => setOpen(true)} type="text">
           <SettingOutlined />
         </Button>
       </Popover>
