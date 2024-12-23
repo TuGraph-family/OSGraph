@@ -35,7 +35,7 @@ const LayouSelect: React.FC<Props> = ({ setLayout }) => {
         </div>
       }
     >
-      <Button>{t("layout")}</Button>
+      <Button style={{ width: "auto" }}>{`Force ${t("layout")}`}</Button>
     </Popover>
   );
 };
