@@ -12,7 +12,7 @@ import { IOptions } from "../../interfaces";
 const { Item } = Form;
 
 interface Props {
-  templateId: Record<string, any>;
+  templateId: string;
   onChangeParams: (params: any) => void;
   placement?: TooltipPlacement;
   popupContainer?: HTMLElement;
