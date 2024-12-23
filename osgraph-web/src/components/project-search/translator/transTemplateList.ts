@@ -1,9 +1,9 @@
 /**
  * file: translator template list
  * author: Allen
-*/
+ */
 
-import { translatorParamsName } from './transParamsName';
+import { translatorParamsName } from "./transParamsName";
 
 const TranslatorTemplateList = (templateList: any, value: string) => {
   return templateList.map(
@@ -15,7 +15,11 @@ const TranslatorTemplateList = (templateList: any, value: string) => {
       const { parameterName, parameterValue, valueType } = item;
       return {
         parameterName: parameterName,
-        parameterValue: translatorParamsName(parameterName, parameterValue || value),
+        parameterValue: translatorParamsName(
+          parameterName,
+          parameterValue,
+          value
+        ),
         valueType: valueType,
       };
     }
