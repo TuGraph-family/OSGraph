@@ -28,6 +28,7 @@ export const ProjectSearch: React.FC<{
   onSearch?: (searchData: any) => void;
   templateType?: string | any;
   getGraphLoading?: (loading: boolean) => void;
+  graphExtendParams?: Record<string, any>;
 }> = ({
   needFixed,
   debounceTimeout = 300,
@@ -41,6 +42,7 @@ export const ProjectSearch: React.FC<{
   graphTemplateId,
   graphParameterList,
   getGraphLoading,
+  graphExtendParams,
 }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -185,11 +187,11 @@ export const ProjectSearch: React.FC<{
   ) => {
     if (!value) return;
     const { templateId, templateParameterList } = templateInfo;
+
     setState((draft) => {
       draft.warehouseValue = value;
     });
     const templateList = TranslatorTemplateList(templateParameterList, value);
-
     const paramsValue = templateList
       ?.map((item: { parameterValue: string }) => {
         return item.parameterValue;
@@ -288,6 +290,27 @@ export const ProjectSearch: React.FC<{
       });
     }
   }, [templateType]);
+
+  useEffect(() => {
+    if (graphExtendParams) {
+      const newTemplateParameterList = templateParameterList.map((item) => {
+        if (graphExtendParams[item.parameterName]) {
+          return {
+            ...item,
+            parameterValue: String(graphExtendParams[item.parameterName]),
+          };
+        }
+        return item;
+      });
+      setState((draft) => {
+        draft.templateParameterList = newTemplateParameterList;
+      });
+      handelWarehouseChange(warehouseValue, {
+        templateId: templateId,
+        templateParameterList: newTemplateParameterList,
+      });
+    }
+  }, [graphExtendParams]);
 
   return (
     <div
