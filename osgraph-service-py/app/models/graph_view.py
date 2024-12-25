@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Literal, Optional
 class Vertex:
     id: int | str
     name: str
-    name_en: str
     comment: Optional[str] = None
     source: Optional[str] = None
     size: Optional[int] = None
