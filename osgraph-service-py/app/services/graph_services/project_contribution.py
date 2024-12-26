@@ -11,11 +11,11 @@ load_dotenv()
 
 
 def get_default_start_time() -> int:
-    return int((datetime.now() - timedelta(days=30)).timestamp() * 1000)
+    return int((datetime.now() - timedelta(days=30)).timestamp())
 
 
 def get_default_end_time() -> int:
-    return int(datetime.now().timestamp() * 1000)
+    return int(datetime.now().timestamp())
 
 
 class ProjectContributionServiceConfig(ServiceConfig):

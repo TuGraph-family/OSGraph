@@ -3,7 +3,7 @@ name: Production Deployment
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build-and-deploy-tag:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
       - name: Install pnpm
         run: npm install -g pnpm
 
@@ -26,7 +26,7 @@ jobs:
       - name: Build frontend
         working-directory: ./osgraph-web
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm run build:prod
 
       # 配置 SSH 密钥
