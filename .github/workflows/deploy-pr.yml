@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -28,7 +28,7 @@ jobs:
         working-directory: ./osgraph-web
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm run build:stage
+          pnpm run build
 
       # Step 4: 配置 SSH 密钥
       - name: Configure SSH
