@@ -7,7 +7,9 @@ const isDev = process.env.NODE_ENV === "development";
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
-    'import.meta.env.VITE_MODULE_VERSION': JSON.stringify(process.env.VITE_MODULE_VERSION),
+    "import.meta.env.VITE_MODULE_VERSION": JSON.stringify(
+      process.env.VITE_MODULE_VERSION
+    ),
   },
   plugins: [react()],
   build: {
@@ -45,5 +47,5 @@ export default defineConfig({
         changeOrigin: isDev,
       },
     },
-  }
+  },
 });
