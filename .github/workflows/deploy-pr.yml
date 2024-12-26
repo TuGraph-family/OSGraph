@@ -27,7 +27,7 @@ jobs:
       - name: Build frontend
         working-directory: ./osgraph-web
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm run build:stage
 
       # Step 4: 配置 SSH 密钥

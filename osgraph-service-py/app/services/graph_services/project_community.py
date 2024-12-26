@@ -48,6 +48,5 @@ class ProjectCommunityService(BaseService):
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
-            self.graphClient.get_vertex()
             result = self.graphClient.run(cypher)
             return result
