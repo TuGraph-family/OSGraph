@@ -38,11 +38,20 @@ class ElasticsearchClient:
             raise
 
     def search(
-        self, index: str, query: Dict[str, Any], size: int = 10
+        self, index: str, query: Dict[str, Any], size: int = 10, sort: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         try:
+            search_params = {
+                "index":index,
+                "query":query,
+                "size":size
+            }
+            if sort:
+                field, order = sort.split(":")
+                search_params["sort"] = [{field:{"order":order}}]
+
             print(query)
-            response = self.es.search(index=index, query=query, size=size)
+            response = self.es.search(**search_params)
             return [hit["_source"] for hit in response["hits"]["hits"]]
         except NotFoundError:
             logger.error(f"Index '{index}' not found.")

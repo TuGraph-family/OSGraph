@@ -20,5 +20,5 @@ class FulltextSearchService:
             return []
         query = {"match": {"name": keyword}}
         client = ElasticsearchClient()
-        result = client.search(index=index_name, query=query, size=10)
+        result = client.search(index=index_name, query=query, size=10, sort="star:desc")
         return result
