@@ -7,18 +7,16 @@ import { GRAPH_TYPE_CLUSTER } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
 import { TranslatorTemplateList } from "./translator/transTemplateList";
 import * as homePageNew from "../../services/homePage_new";
-import * as homepage from "../../services/homePage"
 import styles from "./index.module.less";
 import { useTranslation } from "react-i18next";
 import { GET_TEMPLATE, getPlaceholder } from "../../constants/data";
 
-let isStage = import.meta.env.VITE_MODULE_VERSION === 'stage'
-
-const selectModule = isStage ? homePageNew: homepage
-
-let getExecuteFullTextQuery:(...args: any[]) => Promise<any> = selectModule.getExecuteFullTextQuery
-let getExecuteQueryTemplate: (...args: any[]) => Promise<any> = selectModule.getExecuteQueryTemplate
-let getListQueryTemplate:(...args: any[]) => Promise<any> = selectModule.getListQueryTemplate
+let getExecuteFullTextQuery: (...args: any[]) => Promise<any> =
+  homePageNew.getExecuteFullTextQuery;
+let getExecuteQueryTemplate: (...args: any[]) => Promise<any> =
+  homePageNew.getExecuteQueryTemplate;
+let getListQueryTemplate: (...args: any[]) => Promise<any> =
+  homePageNew.getListQueryTemplate;
 
 export const ProjectSearch: React.FC<{
   needFixed: boolean;
@@ -204,6 +202,7 @@ export const ProjectSearch: React.FC<{
       .join(",");
 
     getGraphLoading?.(true);
+
     getExecuteQueryTemplate({
       templateId: templateId,
       value: value,
@@ -245,7 +244,7 @@ export const ProjectSearch: React.FC<{
             },
           });
         } else {
-          message.error(res.message);
+          message.error(res?.message);
         }
       })
       .finally(() => {

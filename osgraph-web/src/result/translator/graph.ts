@@ -101,8 +101,8 @@ const graphTranslator = () => {
         endTimestamp = dateToTimestamp(endDate);
       }
 
-      searchObj["start_timestamp"] = startTimestamp;
-      searchObj["end_timestamp"] = endTimestamp;
+      searchObj["start-time"] = startTimestamp;
+      searchObj["end-time"] = endTimestamp;
     }
 
     return objectToSearchParams(searchObj);

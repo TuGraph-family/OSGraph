@@ -10,10 +10,8 @@ import { useImmer } from "use-immer";
 import { GraphView, ProjectSearch } from "../components";
 import PageNotFound from "../404";
 import { OSGraph } from "../controller";
-import {
-  getExecuteShareQueryTemplate,
-  getExecuteShareLinkQuery,
-} from "../services/result";
+import { getExecuteShareQueryTemplate } from "../services/result";
+
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
@@ -29,6 +27,7 @@ import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
 import LayouSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
+import { getExecuteShareLinkQuery } from "../services/result_new";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -145,28 +144,25 @@ export default () => {
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}contrib-limit=${top_n}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}contribution-limit=${shareInfo?.["contribution-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
+        const { topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
         /** repo community */
-        const { country_topn, company_topn, developer_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}country-topn=${shareInfo["country-topn"]}&company-topn=${shareInfo["company-topn"]}&developer-topn=${shareInfo["developer-topn"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
+        const { topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}partner-limit=${top_n}`;
+        const { topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
         /** acct interest */
-        const { repo_topn, topic_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}githubrepo-topn=${shareInfo["githubrepo-topn"]}&topic-topn=${shareInfo["topic-topn"]}`;
       }
     });
   };
@@ -397,7 +393,7 @@ export default () => {
       </div>
 
       <Modal
-        title={t`share`}
+        title={t`graph.share`}
         open={isOpen}
         footer={null}
         onCancel={() => {
@@ -434,7 +430,7 @@ export default () => {
             text={shareLink}
             onCopy={(_, result) => {
               if (result) {
-                message.success(t`copy success`);
+                message.success(t`copySuccess`);
               } else {
                 message.error("复制失败，请稍后再试");
               }

@@ -1,7 +1,7 @@
 import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, InputNumber, Popover } from "antd";
 import style from "./index.module.less";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GRAPH_EXTEND_PARAMS_FORM } from "../../constants";
 import { useTranslation } from "react-i18next";
 import { getLast10YearsTimestampsInSeconds } from "../../utils/date";
@@ -78,9 +78,12 @@ const ExtendParams: React.FC<Props> = ({
     });
   };
 
+  useEffect(() => {
+    form.resetFields();
+  }, [templateId]);
+
   const onReset = () => {
     form.resetFields();
-    onSubmit();
   };
 
   const stopPropagation = (event: React.MouseEvent) => {
