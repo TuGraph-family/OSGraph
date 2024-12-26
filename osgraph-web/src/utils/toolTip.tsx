@@ -24,7 +24,7 @@ const renderTooltipItem = (label: string, text: string) => {
         text={text}
         onCopy={(_, result) => {
           if (result) {
-            message.success(t`copy success`);
+            message.success(t`copySuccess`);
           } else {
             message.error("复制失败，请稍后再试");
           }
@@ -73,13 +73,14 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
             (item) =>
               properties[item] !== undefined && properties[item] !== null
           )
-          .map((item) => renderTooltipItem(
-            isEdge
-              ? GET_EDGE_DISPLAY_NAME_MAP(t)[record[0]?.edgeType]?.displayName
-              : item, properties[item]
+          .map((item) =>
+            renderTooltipItem(
+              isEdge
+                ? GET_EDGE_DISPLAY_NAME_MAP(t)[record[0]?.edgeType]?.displayName
+                : item,
+              properties[item]
             )
-          )
-        }
+          )}
       </Space>
       {!isShareRouter && properties?.name && showGitHubLink && (
         <a

@@ -59,6 +59,7 @@
   "404": "Page not found",
   "copy": "copy",
   "inGithub": "View in GitHub",
+  "copySuccess": "copy success",
   "historyAction": {
     "undo": "UNDO",
     "redo": "REDO"
