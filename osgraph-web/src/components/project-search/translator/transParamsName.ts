@@ -8,12 +8,12 @@ const translatorParamsName = (
   defaultValue: string
 ) => {
   switch (parameterName) {
-    case "start-time":
+    case "start_timestamp":
       return Math.floor(
         (+parameterValue || new Date().setMonth(new Date().getMonth() - 120)) /
           1000
       );
-    case "end-time":
+    case "end_timestamp":
       return Math.floor((+parameterValue || new Date().getTime()) / 1000);
     default:
       return parameterValue || defaultValue;
