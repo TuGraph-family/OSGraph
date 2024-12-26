@@ -33,7 +33,7 @@ import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from "./translator/filterGraphData";
 import { removeExistElement } from "./translator/removeExistElement";
 import { GRAPH_TEMPLATE_ENUM } from "../../constants/index";
-import { getExecuteShareLinkQuery } from "../../services/result_new";
+import { getExecuteShareLinkQuery } from "../../services/result";
 import { graphDataTranslator } from "../../result/translator";
 import { GET_EDGE_DISPLAY_NAME_MAP } from "../../constants/data";
 import ReactDOM from "react-dom";
@@ -238,6 +238,7 @@ export const GraphView = React.memo(
                 const id = event.target.id;
                 const data = graphRef.current?.getNodeData(id);
                 const { properties } = data;
+
                 const onClick = (templateType, extendsStr) => {
                   setIsCanvasLoading(true);
                   getExecuteShareLinkQuery({
@@ -309,17 +310,17 @@ export const GraphView = React.memo(
                     return [
                       {
                         name: t("template.REPO_CONTRIBUTE"),
-                        templateType: "project-contribution",
+                        templateType: "repo_contribute",
                         key: "1",
                       },
                       {
                         name: t("template.REPO_ECOLOGY"),
-                        templateType: "project-ecology",
+                        templateType: "repo_ecology",
                         key: "2",
                       },
                       {
                         name: t("template.REPO_COMMUNITY"),
-                        templateType: "project-community",
+                        templateType: "repo_community",
                         key: "3",
                       },
                     ];
@@ -327,17 +328,17 @@ export const GraphView = React.memo(
                     return [
                       {
                         name: t("template.ACCT_ACTIVITY"),
-                        templateType: "develop-activities",
+                        templateType: "acct_activity",
                         key: "4",
                       },
                       {
                         name: t("template.ACCT_PARTNER"),
-                        templateType: "os-partner",
+                        templateType: "acct_partner",
                         key: "5",
                       },
                       {
                         name: t("template.ACCT_INTEREST"),
-                        templateType: "os-interest",
+                        templateType: "acct_interest",
                         key: "6",
                       },
                     ];

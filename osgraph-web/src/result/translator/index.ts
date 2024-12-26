@@ -44,7 +44,7 @@ export const graphDataTranslator = (graphData: GraphData) => {
       lineWidth,
       targetNodeType,
       endArrowSize,
-      ...item,
+      ...item
     };
   });
   const countList = Object.values(nodeCountMap);
@@ -85,13 +85,13 @@ export const graphDataTranslator = (graphData: GraphData) => {
     }
 
     return {
-      ...node,
-      iconFontSize,
       size,
+      iconFontSize,
+      ...node
     };
   });
   return {
     nodes,
-    edges,
+    edges
   };
 };

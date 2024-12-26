@@ -174,15 +174,6 @@ export enum GRAPH_TEMPLATE_ENUM {
   ACCT_INTEREST,
 }
 
-export const GRAPH_TEMPLATE_ID_MAP = {
-  [GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]: "项目贡献",
-  [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]: "项目生态",
-  [GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]: "项目社区",
-  [GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]: "开发活动",
-  [GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]: "开源伙伴",
-  [GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]: "开源兴趣",
-};
-
 export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
   [GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]: "repo-contrib",
   [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]: "repo-eco",
@@ -202,37 +193,37 @@ export const GRAPH_SHARE_LINK_MAP: Record<string, string> = {
 export const GRAPH_EXTEND_PARAMS_MAP = {
   /** REPO_CONTRIBUTE */
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + "start"]:
-    "start-time",
+    "start_timestamp",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + "end"]:
-    "end-time",
+    "end_timestamp",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE] + "contrib-limit"]:
-    "contribution-limit",
+    "top_n",
 
   /** REPO_ECOLOGY */
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY] + "repo-limit"]:
-    "topn",
+    "top_n",
 
   /** REPO_COMMUNITY */
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY] + "country-limit"]:
-    "country-topn",
+    "country_topn",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY] + "org-limit"]:
-    "company-topn",
+    "company_topn",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY] + "contrib-limit"]:
-    "developer-topn",
+    "developer_topn",
 
   /** ACCT_ACTIVITY */
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY] + "repo-limit"]:
-    "topn",
+    "top_n",
 
   /** ACCT_PARTNER */
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER] + "partner-limit"]:
-    "topn",
+    "top_n",
 
   /** ACCT_INTEREST */
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST] + "repo-limit"]:
-    "githubrepo-topn",
+    "repo_topn",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST] + "topic-limit"]:
-    "topic-topn",
+    "topic_topn",
 };
 
 export const GRAPH_EXTEND_PARAMS_FORM = {
@@ -251,7 +242,7 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "contrib-limit",
       label: "params.contrib",
-      defaultValue: 50,
+      defaultValue: 10,
     },
   ],
   [GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]: [
@@ -259,7 +250,7 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "repo-limit",
       label: "params.repo",
-      defaultValue: 50,
+      defaultValue: 10,
     },
   ],
   [GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]: [
@@ -267,19 +258,19 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "country-limit",
       label: "params.country",
-      defaultValue: 50,
+      defaultValue: 5,
     },
     {
       type: "inputNumber",
       key: "org-limit",
       label: "params.org",
-      defaultValue: 50,
+      defaultValue: 5,
     },
     {
       type: "inputNumber",
       key: "contrib-limit",
       label: "params.contrib",
-      defaultValue: 50,
+      defaultValue: 3,
     },
   ],
   [GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]: [
@@ -287,7 +278,7 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "repo-limit",
       label: "params.repo",
-      defaultValue: 50,
+      defaultValue: 10,
     },
   ],
   [GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]: [
@@ -295,7 +286,7 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "partner-limit",
       label: "params.partner",
-      defaultValue: 50,
+      defaultValue: 10,
     },
   ],
   [GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]: [
@@ -303,13 +294,13 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "repo-limit",
       label: "params.repo",
-      defaultValue: 50,
+      defaultValue: 3,
     },
     {
       type: "inputNumber",
       key: "topic-limit",
       label: "params.topic",
-      defaultValue: 50,
+      defaultValue: 5,
     },
   ],
 };
@@ -370,14 +361,12 @@ export const GRAPH_LIMIT_MAP = {
 /** map path params */
 export const GRAPH_TEMPLATE_TYPE_MAP = {
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]]:
-    "project-contribution",
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]]: "project-ecology",
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]]:
-    "project-community",
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]]:
-    "develop-activities",
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: "os-partner",
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: "os-interest",
+    "repo_contribute",
+  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]]: "repo_ecology",
+  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]]: "repo_community",
+  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]]: "acct_activity",
+  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: "acct_partner",
+  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: "acct_interest",
 };
 
 /** map template type document.title */

@@ -2,7 +2,7 @@ import request from "umi-request";
 
 export const getListQueryTemplate = async () => {
   const response = await request(`/tumaker/api/template/listQueryTemplate`, {
-    method: "get",
+    method: "get"
   });
 
   if (!response?.success) {
@@ -17,7 +17,7 @@ export const getExecuteFullTextQuery = async (params: {
 }) => {
   const response = await request(`/tumaker/api/template/executeFullTextQuery`, {
     method: "post",
-    params: params,
+    params: params
   });
 
   if (!response?.success) {
@@ -36,7 +36,8 @@ export const getExecuteQueryTemplate = async (params: {
 }) => {
   const response = await request(`/tumaker/api/template/executeQueryTemplate`, {
     method: "post",
-    data: params,
+    data: params
   });
+
   return response;
 };
