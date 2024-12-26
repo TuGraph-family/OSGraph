@@ -13,7 +13,7 @@ import { IOptions } from "../../interfaces";
 
 interface Props {
   title: string;
-  templateId: Record<string, any>;
+  templateId: string;
   onSearch?: (params: any) => void;
 }
 const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
