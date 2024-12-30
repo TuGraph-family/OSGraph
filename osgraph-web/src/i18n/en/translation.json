@@ -66,6 +66,7 @@
   "sure": "OK",
   "reset": "Reset",
   "layout": "Layout",
+  "forceLayout": "Force 布局",
   "params": {
     "start": "Start time",
     "end": "End time",

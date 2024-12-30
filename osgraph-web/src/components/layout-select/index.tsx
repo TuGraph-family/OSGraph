@@ -3,14 +3,14 @@ import style from "./index.module.less";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  setLayout: (layout: string) => void;
+  setLayout: (layout?: string) => void;
 }
-const LayouSelect: React.FC<Props> = ({ setLayout }) => {
+const LayoutSelect: React.FC<Props> = ({ setLayout }) => {
   const { t } = useTranslation();
   const LAYOUT_OPTIONS = [
     {
       img: "https://mdn.alipayobjects.com/huamei_qcdryc/afts/img/A*KgwCS5Fjk4MAAAAAAAAAAAAADgOBAQ/original",
-      title: `Force ${t("layout")}`,
+      title: `${t("forceLayout")}`,
       type: "force",
     },
   ];
@@ -35,8 +35,8 @@ const LayouSelect: React.FC<Props> = ({ setLayout }) => {
         </div>
       }
     >
-      <Button style={{ width: "auto" }}>{`Force ${t("layout")}`}</Button>
+      <Button style={{ width: "auto" }}>{`${t("layout")}`}</Button>
     </Popover>
   );
 };
-export default LayouSelect;
+export default LayoutSelect;
