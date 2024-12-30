@@ -1,6 +1,80 @@
 {
-  "home": "Home",
-  "graph": "Graph",
+  "home": {
+    "desc": "Explore GitHub graph data to gain insights into development behaviors and community ecosystems.",
+    "repository-placeholder": "Please enter the GitHub repository name",
+    "account-placeholder": "Please enter the GitHub account name",
+    "project": {
+      "title1": "Project Contribution Graph",
+      "desc1": "Discover core project contributors: Identify core contributors based on project development activities (Issues, PRs, Commits, CRs, etc.).",
+      "title2": "Project Ecosystem Graph",
+      "desc2": "Insight into project ecosystem partners: Extract inter-project development activities, organizations, and other related information to construct the core ecosystem relationships of the project.",
+      "title3": "Project Community Graph",
+      "desc3": "Analyze the distribution of the project community: Extract core developers' community distribution based on project development activities and developer organizations.",
+      "title4": "Developer Activity Graph",
+      "desc4": "Showcasing individual open-source contributions: Find core projects participated in based on developer development activities (Issues, PRs, Commits, CRs, etc.).",
+      "title5": "Open-source Partner Graph",
+      "desc5": "Finding open-source partners: Find other developers in the open-source community who collaborate closely with you.",
+      "title6": "Open-source Interest Graph",
+      "desc6": "Discover individual open-source interests: Analyze the developer's technical domain and interests based on the themes and tags of the projects participated in."
+    }
+  },
+  "graph": {
+    "type": {
+      "label1": "Project Contribution",
+      "label2": "Project Ecosystem",
+      "label3": "Project Community",
+      "label4": "Developer Activity",
+      "label5": "Open-Source Partner",
+      "label6": "Open-Source Interest"
+    },
+    "edge": {
+      "desc1": "Created Issues",
+      "desc2": "Created PRs",
+      "desc3": "Commits",
+      "desc4": "Code Reviews",
+      "desc5": "PRs",
+      "desc6": "Stars",
+      "desc7": "Issue Comments",
+      "desc8": "Joint Contributions",
+      "desc9": "Belongs To",
+      "desc10": "Collaborative Issues",
+      "desc11": "Collaborative PRs",
+      "desc12": "Collaborative Projects",
+      "desc13": "Co-Followed Projects",
+      "desc14": "Participated Projects"
+    },
+    "share": "Share",
+    "download": "Export"
+  },
+  "template": {
+    "REPO_CONTRIBUTE": "Project Contribution",
+    "REPO_ECOLOGY": "Project Ecosystem",
+    "REPO_COMMUNITY": "Project Community",
+    "ACCT_ACTIVITY": "Developer Activity",
+    "ACCT_PARTNER": "Open-Source Partner",
+    "ACCT_INTEREST": "Open-Source Interest"
+  },
+  "goHome": "Return to homepage",
   "search": "Search",
-  "404": "Page not found"
+  "404": "Page not found",
+  "copy": "copy",
+  "inGithub": "View in GitHub",
+  "historyAction": {
+    "undo": "UNDO",
+    "redo": "REDO"
+  },
+  "sure": "OK",
+  "reset": "Reset",
+  "layout": "Layout",
+  "forceLayout": "Force 布局",
+  "params": {
+    "start": "Start time",
+    "end": "End time",
+    "contrib": "Contrib Limit",
+    "repo": "Repo Limit",
+    "country": "Country Limit",
+    "org": "Org Limit",
+    "partner": "Partner Limit",
+    "topic": "Topic Limit"
+  }
 }
