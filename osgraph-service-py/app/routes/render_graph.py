@@ -113,9 +113,16 @@ def render_graph_with_node(data):
 
 @render_graph_bp.route("/<service>/<github_type>/<github_repo>/<repo_path>", methods=["GET"])
 def render_graph(service, github_type, github_repo, repo_path):
-    # service = request.args.get('service')
-    # if not service:
-    #     return jsonify({'error': 'Missing service parameter'}), 400
+    
+    if not service:
+        return jsonify({'error': 'Missing service parameter'}), 400
+    if not github_type:
+        return jsonify({'error': 'Missing github_type parameter'}), 400
+    if not github_repo:
+        return jsonify({'error': 'Missing github_repo parameter'}), 400
+    if not repo_path:
+        return jsonify({'error': 'Missing repo_path parameter'}), 400
+    
     index_key = 'GitHubRepo'
     if github_type == 'github-repo':
         index_key = 'GitHubRepo'
