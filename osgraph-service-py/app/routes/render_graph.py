@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-render_graph_bp = Blueprint("render_graph", __name__, url_prefix="/api/graph")
+render_graph_bp = Blueprint("render_graph", __name__, url_prefix="/png/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -111,18 +111,24 @@ def render_graph_with_node(data):
             return BytesIO(res.content), None      
 
 
-@render_graph_bp.route("/render", methods=["GET"])
-def render_graph():
-    service = request.args.get('service')
-    if not service:
-        return jsonify({'error': 'Missing service parameter'}), 400
+@render_graph_bp.route("/<service>/<github_type>/<github_repo>/<repo_path>", methods=["GET"])
+def render_graph(service, github_type, github_repo, repo_path):
+    # service = request.args.get('service')
+    # if not service:
+    #     return jsonify({'error': 'Missing service parameter'}), 400
+    index_key = 'GitHubRepo'
+    if github_type == 'github-repo':
+        index_key = 'GitHubRepo'
+    else:
+        index_key = 'GitHubUser'
+
 
     query_params = request.args.to_dict()
     query_params.pop('service', None)
     port = os.getenv('FLASK_PORT')
     base_url = f"http://localhost:{port}/api/graph/{service}"
     query_string = "&".join([f"{key}={value}" for key, value in query_params.items()])
-    target_url = f"{base_url}?{query_string}"
+    target_url = f"{base_url}?{index_key}={github_repo}/{repo_path}&{query_string}"
 
     graph_data = get_graph_data(target_url=target_url)
 
