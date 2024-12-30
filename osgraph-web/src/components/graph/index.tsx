@@ -37,7 +37,7 @@ import { getExecuteShareLinkQuery } from "../../services/result";
 import { graphDataTranslator } from "../../result/translator";
 import { GET_EDGE_DISPLAY_NAME_MAP } from "../../constants/data";
 import ReactDOM from "react-dom";
-import LayouSelect from "../layout-select";
+import LayoutSelect from "../layout-select";
 import GraphMenuItem from "../graph-menu-item";
 import { createRoot } from "react-dom/client";
 
@@ -181,9 +181,16 @@ export const GraphView = React.memo(
           },
           layout: {
             type: "force",
-            linkDistance: 300,
+            linkDistance: (_, source, target) => {
+
+              if (source?.data?.size === 56 && target?.data?.size === 56) {
+                return 1000;
+              }
+              return 300;
+            },
             preventOverlap: true,
             minMovement: 0.05,
+            nodeSize: 56,
           },
           behaviors: [
             "zoom-canvas",
@@ -208,7 +215,7 @@ export const GraphView = React.memo(
           transforms: [
             {
               type: "process-parallel-edges",
-              distance: 30,
+              distance: 20,
             },
           ],
           autoFit: "center",
@@ -292,6 +299,24 @@ export const GraphView = React.memo(
                       graphRef.current.updateData(
                         graphDataTranslator(mergeData)
                       );
+
+                      /** use d3 force */
+                      graphRef.current?.setOptions({
+                        layout: {
+                          type: "d3-force",
+                          x: {},
+                          y: {},
+                          link: {
+                            distance: 200,
+                          },
+                          collide: {
+                            radius: 36,
+                          },
+                          manyBody: {
+                            strength: -900,
+                          },
+                        }
+                      });
                       await graphRef.current.render();
                       setIsCanvasLoading(false);
                       setHistoryStatus({ undo: false, redo: true });
@@ -300,7 +325,13 @@ export const GraphView = React.memo(
                       history.redoStack = [];
                       updateGraphDataMapXY(graphRef.current);
                     }
-                  });
+                  })
+                  .catch(err => {
+                    console.log('更新失败：', err);
+                  })
+                  .finally(() => {
+                    setIsCanvasLoading(false);
+                  })
                 };
 
                 const getMenuItems = (type: string) => {
@@ -394,18 +425,20 @@ export const GraphView = React.memo(
                 formatUndoStack(history.undoStack);
               });
               history.on(HistoryEvent.REDO, async (event) => {
-                const finishNodeData = updateDataXY(
-                  history.undoStack[history.undoStack.length - 1]?.original
-                    ?.remove
-                );
-                graphRef.current?.updateData(finishNodeData);
-                await graphRef.current.draw();
+                // const updateRemoveNodeData = updateDataXY(
+                //   history.undoStack[history.undoStack.length - 1]?.original
+                //     ?.remove
+                // );
+
+                // graphRef.current?.updateData(updateRemoveNodeData);
+                await graphRef.current.render();
                 setHistoryStatus({
                   undo: false,
                   redo: history.redoStack?.length < 1,
                 });
               });
-              history.on(HistoryEvent.UNDO, () => {
+              history.on(HistoryEvent.UNDO, async () => {
+                await graphRef.current.render();
                 setHistoryStatus({
                   undo: history.undoStack?.length <= 1,
                   redo: false,

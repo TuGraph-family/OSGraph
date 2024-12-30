@@ -27,7 +27,7 @@ import {
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
-import LayouSelect from "../components/layout-select";
+import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -314,11 +314,8 @@ export default () => {
                   </Button>
                 </span>
               </div>
-              <LayouSelect
-                setLayout={(layout: string) => {
-                  graphRef.current?.setLayout({
-                    type: layout,
-                  });
+              <LayoutSelect
+                setLayout={() => {
                   graphRef.current?.layout();
                 }}
               />
