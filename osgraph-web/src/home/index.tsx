@@ -1,6 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ProjectSearch } from "../components";
+import Language from "../components/language";
+import { getUrlParams } from "../utils";
 import {
   ANTV,
   OSGRAPH_GITHUB,
@@ -23,6 +26,7 @@ const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);
   const [templateType, setTemplateType] = useState<string>("REPO_CONTRIBUTE");
   const isMobile = getIsMobile();
+  const { t, i18n } = useTranslation();
 
   const switchType = (value: number) => {
     if (value >= 980 && value <= 1580) {
@@ -49,6 +53,12 @@ const HomePage: React.FC = () => {
   const toGov = () => {
     window.open("https://beian.miit.gov.cn");
   };
+
+  useEffect(() => {
+    const lang = getUrlParams("lang") || "zh-CN";
+    i18n.changeLanguage(lang === "en-US" ? "en" : "zh");
+  }, []);
+
   useEffect(() => {
     adjustWidth();
     window.onscroll = function () {
@@ -78,8 +88,31 @@ const HomePage: React.FC = () => {
     }
   }, []);
 
+  const imgList = useMemo(() => {
+    return i18n.language === "en"
+      ? [
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9vxoSI3Rm0IAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*3CNASKuv-SkAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9KxVQIWeoMMAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*WHt9R5DepBYAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*nN72RLT2HXMAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*cIgUTpIp3AEAAAAAAAAAAAAADp_eAQ/original",
+        ]
+      : [
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original",
+          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original",
+        ];
+  }, [i18n.language]);
+
   return (
     <div className={styles["home"]}>
+      <div style={{ position: "absolute", top: 0, right: 0, zIndex: 99 }}>
+        <Language />
+      </div>
       <img
         className={styles["logo"]}
         src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*YzqCQbdW7nUAAAAAAAAAAAAADu3UAQ/original"
@@ -119,10 +152,7 @@ const HomePage: React.FC = () => {
             />
           </div>
           <div className={styles["text"]}>
-            <p>
-              探索GitHub开源图谱数据，洞察开发行为与社区生态。
-              如：贡献、伙伴、兴趣、社区、生态等...
-            </p>
+            <p>{t("home.desc")}</p>
             <div className={styles["white-strip"]} />
           </div>
         </div>
@@ -136,27 +166,17 @@ const HomePage: React.FC = () => {
                 src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
                 alt=""
               />
-              <p className={styles["info-title"]}>项目贡献图谱</p>
+              <p className={styles["info-title"]}>{t("home.project.title1")}</p>
             </div>
-            <p className={styles["project-parse"]}>
-              发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。
-            </p>
+            <p className={styles["project-parse"]}>{t("home.project.desc1")}</p>
           </div>
 
-          <img
-            className={styles["tuGraphImg-right"]}
-            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original"
-            alt=""
-          />
+          <img className={styles["tuGraphImg-right"]} src={imgList[0]} alt="" />
         </div>
       </div>
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
-          <img
-            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original"
-            alt=""
-            className={styles["tuGraphImg-left"]}
-          />
+          <img src={imgList[1]} alt="" className={styles["tuGraphImg-left"]} />
 
           <div className={styles["title-right"]} style={{ marginLeft: 60 }}>
             <div className={styles["project-info"]}>
@@ -164,11 +184,9 @@ const HomePage: React.FC = () => {
                 src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
                 alt=""
               />
-              <p className={styles["info-title"]}>项目生态图谱</p>
+              <p className={styles["info-title"]}>{t("home.project.title2")}</p>
             </div>
-            <p className={styles["project-parse"]}>
-              洞察项目生态伙伴：提取项目间的开发活动、组织等关联信息，构建项目核心生态关系。
-            </p>
+            <p className={styles["project-parse"]}>{t("home.project.desc2")}</p>
           </div>
         </div>
       </div>
@@ -180,27 +198,17 @@ const HomePage: React.FC = () => {
                 src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
                 alt=""
               />
-              <p className={styles["info-title"]}>项目社区图谱</p>
+              <p className={styles["info-title"]}>{t("home.project.title3")}</p>
             </div>
-            <p className={styles["project-parse"]}>
-              分析项目社区分布：根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。
-            </p>
+            <p className={styles["project-parse"]}>{t("home.project.desc3")}</p>
           </div>
 
-          <img
-            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original"
-            alt=""
-            className={styles["tuGraphImg-right"]}
-          />
+          <img src={imgList[2]} alt="" className={styles["tuGraphImg-right"]} />
         </div>
       </div>
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
-          <img
-            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original"
-            alt=""
-            className={styles["tuGraphImg-left"]}
-          />
+          <img src={imgList[3]} alt="" className={styles["tuGraphImg-left"]} />
 
           <div className={styles["title-right"]} style={{ marginLeft: 60 }}>
             <div className={styles["project-info"]}>
@@ -208,11 +216,9 @@ const HomePage: React.FC = () => {
                 src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
                 alt=""
               />
-              <p className={styles["info-title"]}>开发活动图谱</p>
+              <p className={styles["info-title"]}>{t("home.project.title4")}</p>
             </div>
-            <p className={styles["project-parse"]}>
-              展示个人开源贡献：根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。
-            </p>
+            <p className={styles["project-parse"]}>{t("home.project.desc4")}</p>
           </div>
         </div>
       </div>
@@ -224,23 +230,17 @@ const HomePage: React.FC = () => {
                 src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
                 alt=""
               />
-              <p className={styles["info-title"]}>开源伙伴图谱</p>
+              <p className={styles["info-title"]}>{t("home.project.title5")}</p>
             </div>
-            <p className={styles["project-parse"]}>
-              寻找个人开源伙伴：找到开发者在开源社区中，与之协作紧密的其他开发者。
-            </p>
+            <p className={styles["project-parse"]}>{t("home.project.desc5")}</p>
           </div>
-          <img
-            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original"
-            alt=""
-            className={styles["tuGraphImg-right"]}
-          />
+          <img src={imgList[4]} alt="" className={styles["tuGraphImg-right"]} />
         </div>
       </div>
       <div className={styles["tuGraph-project"]}>
         <div className={styles["project-body"]}>
           <img
-            src="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original"
+            src={imgList[5]}
             alt=""
             className={styles["tuGraphImg-left"]}
             style={{ width: 400 }}
@@ -252,11 +252,9 @@ const HomePage: React.FC = () => {
                 src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
                 alt=""
               />
-              <p className={styles["info-title"]}>开源兴趣图谱</p>
+              <p className={styles["info-title"]}>{t("home.project.title6")}</p>
             </div>
-            <p className={styles["project-parse"]}>
-              挖掘个人开源兴趣：根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。
-            </p>
+            <p className={styles["project-parse"]}>{t("home.project.desc6")}</p>
           </div>
         </div>
       </div>

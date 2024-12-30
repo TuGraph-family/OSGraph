@@ -1,12 +1,83 @@
 {
-  "home": "主页",
-  "graph": "图谱",
+  "home": {
+    "desc": "探索GitHub开源图谱数据，洞察开发行为与社区生态。 如：贡献、伙伴、兴趣、社区、生态等...",
+    "repository-placeholder": "请输入 GitHub 仓库名称",
+    "account-placeholder": "请输入 GitHub 账户名称",
+    "project": {
+      "title1": "项目贡献图谱",
+      "desc1": "发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。",
+      "title2": "项目生态图谱",
+      "desc2": "洞察项目生态伙伴：提取项目间的开发活动、组织等关联信息，构建项目核心生态关系。",
+      "title3": "项目社区图谱",
+      "desc3": "分析项目社区分布：根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。",
+      "title4": "开发活动图谱",
+      "desc4": "展示个人开源贡献：根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。",
+      "title5": "开源伙伴图谱",
+      "desc5": "寻找个人开源伙伴：找到开发者在开源社区中，与之协作紧密的其他开发者。",
+      "title6": "开源兴趣图谱",
+      "desc6": "挖掘个人开源兴趣：根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。"
+    }
+  },
+  "graph": {
+    "type": {
+      "label1": "项目贡献",
+      "label2": "项目生态",
+      "label3": "项目社区",
+      "label4": "开发活动",
+      "label5": "开源伙伴",
+      "label6": "开源兴趣"
+    },
+    "edge": {
+      "desc1": "创建 Issue",
+      "desc2": "创建 PR",
+      "desc3": "提交",
+      "desc4": "CR",
+      "desc5": "PR",
+      "desc6": "Star",
+      "desc7": "评论 Issue",
+      "desc8": "共建",
+      "desc9": "属于",
+      "desc10": "合作 Issue",
+      "desc11": "合作 PR",
+      "desc12": "合作项目",
+      "desc13": "共同关注",
+      "desc14": "参与项目"
+    },
+    "share": "分享",
+    "download": "导出"
+  },
+  "template": {
+    "REPO_CONTRIBUTE": "项目贡献",
+    "REPO_ECOLOGY": "项目生态",
+    "REPO_COMMUNITY": "项目社区",
+    "ACCT_ACTIVITY": "开发活动",
+    "ACCT_PARTNER": "开源伙伴",
+    "ACCT_INTEREST": "开源兴趣"
+  },
+  "goHome": "回到主页",
   "search": "查询",
   "404": "页面未找到",
-  "share": "分享",
-  "download": "导出",
   "back": "返回",
   "copy": "复制",
   "share link": "分享链接",
-  "copy success": "复制成功"
+  "copy success": "复制成功",
+  "inGithub": "前往 Github 查看",
+  "historyAction": {
+    "undo": "撤销",
+    "redo": "恢复"
+  },
+  "sure": "确定",
+  "reset": "重置",
+  "layout": "布局",
+  "forceLayout": "力导布局",
+  "params": {
+    "start": "开始时间",
+    "end": "结束时间",
+    "contrib": "贡献者数量",
+    "repo": "项目数量",
+    "country": "国家数量",
+    "org": "组织数量",
+    "partner": "伙伴数量",
+    "topic": "标签数据"
+  }
 }

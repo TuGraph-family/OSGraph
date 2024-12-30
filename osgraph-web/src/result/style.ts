@@ -39,4 +39,13 @@ export const GRAPH_STYLE = css`
   .graph-share {
     height: 100vh;
   }
+
+  .ant-spin-nested-loading,
+  .ant-spin-container {
+    height: 100%;
+  }
+
+  .ant-spin-spinning {
+    max-height: none !important;
+  }
 `;

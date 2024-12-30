@@ -1,0 +1,42 @@
+.layoutPopover {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  gap: 8px;
+
+
+  .layoutItem {
+    width: 110px;
+    height: 128px;
+    border: 1px solid #f2f2f2;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #1754c5;
+      box-shadow: 0 2px 8px #1654c52b;
+    }
+
+    img {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      height: 94px;
+      padding: 12px;
+      background-image: linear-gradient(179deg, #dee8ff80 1%, #dce7ff 96%);
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      opacity: .7;
+    }
+
+    .layoutItemText {
+      width: 110px;
+      height: 28px;
+      color: #6a6b71;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 28px;
+      text-align: center;
+    }
+  }
+}
