@@ -94,6 +94,7 @@ const ExtendParams: React.FC<Props> = ({
   return (
     <div onClick={stopPropagation}>
       <Popover
+        trigger={"click"}
         placement={placement}
         open={open}
         content={
@@ -114,6 +115,7 @@ const ExtendParams: React.FC<Props> = ({
             </div>
           </div>
         }
+        onOpenChange={(val) => setOpen(val)}
         getPopupContainer={() => popupContainer}
       >
         <Button onClick={() => setOpen(true)} type="text">
