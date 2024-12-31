@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-render_graph_bp = Blueprint("render_graph", __name__, url_prefix="/api/graph")
+render_graph_bp = Blueprint("render_graph", __name__, url_prefix="/png/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -86,7 +86,7 @@ def render_graph_with_node(data):
         
         return BytesIO(output), None
     else:
-        context = {"width": 500, "height": 500, "devicePixelRatio": 1}
+        context = {"width": 1000, "height": 600, "devicePixelRatio": 1}
         params = {
             # "assetId": asset_id,
             "config": {
@@ -111,18 +111,41 @@ def render_graph_with_node(data):
             return BytesIO(res.content), None      
 
 
-@render_graph_bp.route("/render", methods=["GET"])
-def render_graph():
-    service = request.args.get('service')
+@render_graph_bp.route("/<service>/<github_type>/<path:remaining_path>", methods=["GET"])
+def render_graph(service, github_type, remaining_path):
     if not service:
         return jsonify({'error': 'Missing service parameter'}), 400
+    if not github_type:
+        return jsonify({'error': 'Missing github_type parameter'}), 400
+    if not remaining_path:
+        return jsonify({'error': 'Missing remaining_path parameter'}), 400
+
+    index_key = 'GitHubRepo'
+    if github_type == 'github-repo':
+        parts = remaining_path.split('/', 1)
+        if len(parts) != 2:
+            return jsonify({'error': 'Invalid path for github-repo'}), 400
+        github_repo, repo_path = parts
+    elif github_type == 'github-user':
+        parts = remaining_path.split('/')
+        if len(parts) != 1:
+            return jsonify({'error': 'Invalid path for github-user'}), 400
+        github_repo = parts[0]
+        repo_path = ''
+        index_key = 'GitHubUser'
+    else:
+        return jsonify({'error': 'Invalid github_type'}), 400
+
 
     query_params = request.args.to_dict()
     query_params.pop('service', None)
     port = os.getenv('FLASK_PORT')
     base_url = f"http://localhost:{port}/api/graph/{service}"
     query_string = "&".join([f"{key}={value}" for key, value in query_params.items()])
-    target_url = f"{base_url}?{query_string}"
+    if repo_path:
+        target_url = f"{base_url}?{index_key}={github_repo}/{repo_path}&{query_string}"
+    else:
+        target_url = f"{base_url}?{index_key}={github_repo}&{query_string}"
 
     graph_data = get_graph_data(target_url=target_url)
 

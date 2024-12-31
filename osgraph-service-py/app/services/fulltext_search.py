@@ -20,5 +20,8 @@ class FulltextSearchService:
             return []
         query = {"match": {"name": keyword}}
         client = ElasticsearchClient()
-        result = client.search(index=index_name, query=query, size=10)
+        sort_by = None
+        if index_name == 'github_repo':
+            sort_by = "star:desc"
+        result = client.search(index=index_name, query=query, size=10, sort=sort_by)
         return result
