@@ -395,3 +395,7 @@ export const GRAPH_DOCUMENT_TITLE_MAP = {
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]:
     "OSGraph - Open-source Interest Graph",
 };
+export const GRAPH_QUERY_SOURCE_MAP: Record<string, string> = {
+  github_repo: "github-repo",
+  github_user: "github-user",
+};

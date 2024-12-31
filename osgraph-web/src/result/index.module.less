@@ -14,13 +14,14 @@
   bottom: 20px;
   right: 20px;
   width: 152px;
-  
+
   .os-graph {
     background-image: url('https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*IosYSI19QekAAAAAAAAAAAAADp_eAQ/original');
     width: 152px;
     height: 42px;
     background-size: contain;
     cursor: pointer;
+
     &:hover {
       opacity: 0.8;
     }
@@ -68,4 +69,30 @@
       background-image: url('https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*mg3aSp-aLkEAAAAAAAAAAAAADp_eAQ/original');
     }
   }
+}
+
+.shareItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  .shareItemLabel {
+    width: fit-content;
+  }
+
+  .shareItemContent {
+    margin: 0 8px;
+    width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: "#f6f6f6";
+    border-radius: 8px;
+    line-height: 40px;
+    padding: 0 8px;
+    background: #f6f6f6;
+  }
+
 }
