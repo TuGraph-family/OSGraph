@@ -69,6 +69,7 @@
   "sure": "确定",
   "reset": "重置",
   "layout": "布局",
+  "forceLayout": "力导布局",
   "params": {
     "start": "开始时间",
     "end": "结束时间",
