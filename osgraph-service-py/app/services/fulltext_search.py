@@ -18,7 +18,7 @@ class FulltextSearchService:
         keyword = data["keyword"]
         if not keyword:
             return []
-        query = {"match": {"name": keyword}}
+        query = {"match_phrase": {"name": keyword}}
         client = ElasticsearchClient()
         sort_by = None
         if index_name == 'github_repo':
