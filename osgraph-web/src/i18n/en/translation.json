@@ -77,5 +77,7 @@
     "org": "Org Limit",
     "partner": "Partner Limit",
     "topic": "Topic Limit"
-  }
+  },
+  "web": "Web",
+  "png": "Image"
 }

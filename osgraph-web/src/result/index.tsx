@@ -22,6 +22,8 @@ import {
   GRAPH_TEMPLATE_ENUM,
   GRAPH_DOCUMENT_TITLE_MAP,
   GRAPH_EXTEND_PARAMS_MAP,
+  GRAPH_TEMPLATE_TYPE_MAP,
+  GRAPH_QUERY_SOURCE_MAP,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
@@ -45,6 +47,7 @@ export default () => {
     locationState: Record<string, any>;
     isOpen: boolean;
     shareLink: string;
+    pngShareLink: string;
     isLoading: boolean;
     isErrorShareParams: boolean;
     renderMode: string;
@@ -66,6 +69,7 @@ export default () => {
       locationState: location || {},
       isOpen: false,
       shareLink: "",
+      pngShareLink: "",
       isLoading: false,
       isErrorShareParams: false,
       renderMode: initializeRenderMode(),
@@ -78,7 +82,14 @@ export default () => {
     redo: boolean;
   }>({ undo: true, redo: true });
 
-  const { locationState, isOpen, isLoading, shareLink, extendParams } = state;
+  const {
+    locationState,
+    isOpen,
+    isLoading,
+    shareLink,
+    extendParams,
+    pngShareLink,
+  } = state;
 
   const {
     data,
@@ -135,34 +146,66 @@ export default () => {
   const generateShareLink = (shareInfo: Record<string, any>) => {
     setState((draft) => {
       draft.locationState = shareInfo;
-      const { templateId, warehouseName } = shareInfo;
+      const { templateId, warehouseName, querySource } = shareInfo;
       const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
-
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}contribution-limit=${shareInfo?.["contribution-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
+        const search = `contribution-limit=${shareInfo?.["contribution-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
+        draft.shareLink = `${
+          window.location.origin
+        }/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
         const { topn } = shareInfo;
         draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
+        const search = `country-topn=${shareInfo["country-topn"]}&company-topn=${shareInfo["company-topn"]}&developer-topn=${shareInfo["developer-topn"]}`;
         /** repo community */
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}country-topn=${shareInfo["country-topn"]}&company-topn=${shareInfo["company-topn"]}&developer-topn=${shareInfo["developer-topn"]}`;
+        draft.shareLink = `${
+          window.location.origin
+        }/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
         const { topn } = shareInfo;
         draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
         const { topn } = shareInfo;
         draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
+        const search = `githubrepo-topn=${shareInfo["githubrepo-topn"]}&topic-topn=${shareInfo["topic-topn"]}`;
         /** acct interest */
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}githubrepo-topn=${shareInfo["githubrepo-topn"]}&topic-topn=${shareInfo["topic-topn"]}`;
+        draft.shareLink = `${
+          window.location.origin
+        }/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
       }
     });
   };
@@ -399,32 +442,27 @@ export default () => {
           });
         }}
       >
-        <div
-          style={{
-            background: "#f6f6f6",
-            borderRadius: 8,
-            padding: "0 8px",
-            width: 432,
-            height: 40,
-            lineHeight: "40px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              marginRight: 8,
-              width: "calc(100% - 65px)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {shareLink}
-          </div>
+        <div className={styles.shareItem}>
+          <div className={styles.shareItemLabel}>{t`web`}</div>
+          <div className={styles.shareItemContent}>{shareLink}</div>
           <CopyToClipboard
             text={shareLink}
+            onCopy={(_, result) => {
+              if (result) {
+                message.success(t`copySuccess`);
+              } else {
+                message.error("复制失败，请稍后再试");
+              }
+            }}
+          >
+            <Button type="primary">{t`copy`}</Button>
+          </CopyToClipboard>
+        </div>
+        <div className={styles.shareItem}>
+          <div className={styles.shareItemLabel}>{t`png`}</div>
+          <div className={styles.shareItemContent}>{pngShareLink}</div>
+          <CopyToClipboard
+            text={pngShareLink}
             onCopy={(_, result) => {
               if (result) {
                 message.success(t`copySuccess`);
