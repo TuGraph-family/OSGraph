@@ -10,10 +10,8 @@ import { useImmer } from "use-immer";
 import { GraphView, ProjectSearch } from "../components";
 import PageNotFound from "../404";
 import { OSGraph } from "../controller";
-import {
-  getExecuteShareQueryTemplate,
-  getExecuteShareLinkQuery,
-} from "../services/result";
+import { getExecuteShareQueryTemplate } from "../services/result";
+
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
@@ -24,11 +22,14 @@ import {
   GRAPH_TEMPLATE_ENUM,
   GRAPH_DOCUMENT_TITLE_MAP,
   GRAPH_EXTEND_PARAMS_MAP,
+  GRAPH_TEMPLATE_TYPE_MAP,
+  GRAPH_QUERY_SOURCE_MAP,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
+import { getExecuteShareLinkQuery } from "../services/result_new";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -46,6 +47,7 @@ export default () => {
     locationState: Record<string, any>;
     isOpen: boolean;
     shareLink: string;
+    pngShareLink: string;
     isLoading: boolean;
     isErrorShareParams: boolean;
     renderMode: string;
@@ -67,6 +69,7 @@ export default () => {
       locationState: location || {},
       isOpen: false,
       shareLink: "",
+      pngShareLink: "",
       isLoading: false,
       isErrorShareParams: false,
       renderMode: initializeRenderMode(),
@@ -79,7 +82,14 @@ export default () => {
     redo: boolean;
   }>({ undo: true, redo: true });
 
-  const { locationState, isOpen, isLoading, shareLink, extendParams } = state;
+  const {
+    locationState,
+    isOpen,
+    isLoading,
+    shareLink,
+    extendParams,
+    pngShareLink,
+  } = state;
 
   const {
     data,
@@ -136,37 +146,66 @@ export default () => {
   const generateShareLink = (shareInfo: Record<string, any>) => {
     setState((draft) => {
       draft.locationState = shareInfo;
-      const { templateId, warehouseName } = shareInfo;
+      const { templateId, warehouseName, querySource } = shareInfo;
       const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
-
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}contrib-limit=${top_n}`;
+        const search = `contribution-limit=${shareInfo?.["contribution-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
+        draft.shareLink = `${
+          window.location.origin
+        }/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
+        const { topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
+        const search = `country-topn=${shareInfo["country-topn"]}&company-topn=${shareInfo["company-topn"]}&developer-topn=${shareInfo["developer-topn"]}`;
         /** repo community */
-        const { country_topn, company_topn, developer_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
+        draft.shareLink = `${
+          window.location.origin
+        }/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
+        const { topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}partner-limit=${top_n}`;
+        const { topn } = shareInfo;
+        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
+        const search = `githubrepo-topn=${shareInfo["githubrepo-topn"]}&topic-topn=${shareInfo["topic-topn"]}`;
         /** acct interest */
-        const { repo_topn, topic_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
+        draft.shareLink = `${
+          window.location.origin
+        }/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
       }
     });
   };
@@ -394,7 +433,7 @@ export default () => {
       </div>
 
       <Modal
-        title={t`share`}
+        title={t`graph.share`}
         open={isOpen}
         footer={null}
         onCancel={() => {
@@ -403,35 +442,30 @@ export default () => {
           });
         }}
       >
-        <div
-          style={{
-            background: "#f6f6f6",
-            borderRadius: 8,
-            padding: "0 8px",
-            width: 432,
-            height: 40,
-            lineHeight: "40px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              marginRight: 8,
-              width: "calc(100% - 65px)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {shareLink}
-          </div>
+        <div className={styles.shareItem}>
+          <div className={styles.shareItemLabel}>{t`web`}</div>
+          <div className={styles.shareItemContent}>{shareLink}</div>
           <CopyToClipboard
             text={shareLink}
             onCopy={(_, result) => {
               if (result) {
-                message.success(t`copy success`);
+                message.success(t`copySuccess`);
+              } else {
+                message.error("复制失败，请稍后再试");
+              }
+            }}
+          >
+            <Button type="primary">{t`copy`}</Button>
+          </CopyToClipboard>
+        </div>
+        <div className={styles.shareItem}>
+          <div className={styles.shareItemLabel}>{t`png`}</div>
+          <div className={styles.shareItemContent}>{pngShareLink}</div>
+          <CopyToClipboard
+            text={pngShareLink}
+            onCopy={(_, result) => {
+              if (result) {
+                message.success(t`copySuccess`);
               } else {
                 message.error("复制失败，请稍后再试");
               }
