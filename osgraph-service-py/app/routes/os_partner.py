@@ -7,7 +7,7 @@ from app.managers.os_partner import OSPartnerManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-os_partner_bp = Blueprint("os_partner", __name__, url_prefix="/api/graph")
+os_partner_bp = Blueprint("os_partner", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -30,8 +30,8 @@ class OSPartnerController:
 controller = OSPartnerController()
 
 
-@os_partner_bp.route("/os-partner", methods=["GET"])
-def get_os_partner():
+@os_partner_bp.route("/os-partner/<platform>", methods=["GET"])
+def get_os_partner(platform):
     data = request.args.to_dict()
-    response = controller.get_partner_graph(data)
+    response = controller.get_partner_graph(data, platform)
     return ResponseHandler.jsonify_response(response)

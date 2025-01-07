@@ -7,7 +7,7 @@ from app.managers.graph_list import GraphListManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-graph_list_bp = Blueprint("graph_list", __name__, url_prefix="/api/graph")
+graph_list_bp = Blueprint("graph_list", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 

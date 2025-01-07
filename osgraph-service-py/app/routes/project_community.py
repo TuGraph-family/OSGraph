@@ -7,7 +7,7 @@ from app.managers.project_community import ProjectCommunityManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-project_community_bp = Blueprint("project_community", __name__, url_prefix="/api/graph")
+project_community_bp = Blueprint("project_community", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -30,8 +30,8 @@ class ProjectCommunityController:
 controller = ProjectCommunityController()
 
 
-@project_community_bp.route("/project-community", methods=["GET"])
-def get_project_community():
+@project_community_bp.route("/project-community/<platform>", methods=["GET"])
+def get_project_community(platform):
     data = request.args.to_dict()
-    response = controller.get_community_graph(data)
+    response = controller.get_community_graph(data, platform)
     return ResponseHandler.jsonify_response(response)

@@ -23,9 +23,9 @@ class DevelopActivitiesServiceConfig(ServiceConfig):
         super().__init__(
             name="开发活动",
             comment="这是一个开发活动图谱",
-            inputTypes=["GitHubUser"],
+            inputTypes=["user"],
             filterKeys=[
-                FilterKey(key="topn", type="int", default=50, required=False),
+                FilterKey(key="repo-limit", type="int", default=10, required=False),
             ],
         )
 
@@ -36,10 +36,10 @@ class DevelopActivitiesService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_user: str = validated_data["GitHubUser"]
-        topn: int = validated_data["topn"] | 50
+        user: str = validated_data["user"]
+        topn: int = validated_data["top_n"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_user}}
+        query = {"match": {"name": user}}
         res = es.search(index="github_user", query=query, size=1)
         if len(res):
             develop_id = res[0]["id"]

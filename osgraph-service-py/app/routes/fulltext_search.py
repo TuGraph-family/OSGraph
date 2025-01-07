@@ -7,7 +7,7 @@ from app.managers.fulltext_search import FulltextSearchManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-fulltext_search_bp = Blueprint("fulltext_search", __name__, url_prefix="/api/graph")
+fulltext_search_bp = Blueprint("fulltext_search", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -30,8 +30,8 @@ class FulltextSearchController:
 controller = FulltextSearchController()
 
 
-@fulltext_search_bp.route("/fulltext-search", methods=["GET"])
-def get_os_interest():
+@fulltext_search_bp.route("/fulltext-search/<platform>", methods=["GET"])
+def get_os_interest(platform):
     data = request.args.to_dict()
-    response = controller.search(data)
+    response = controller.search(data, platform)
     return ResponseHandler.jsonify_response(response)

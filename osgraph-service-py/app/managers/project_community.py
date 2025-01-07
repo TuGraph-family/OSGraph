@@ -6,6 +6,7 @@ from typing import Any, Dict, Union
 from app.models.graph_view import (
     Belong,
     Country,
+    Company,
     Graph,
     PullRequestAction,
     Repo,
@@ -44,7 +45,7 @@ class ProjectCommunityManager:
                     )
                     graph.insert_entity(country)
                 if start_node["type"] == "company":
-                    company = Repo(
+                    company = Company(
                         id=start_node["id"], name=start_node["properties"]["name"]
                     )
                     graph.insert_entity(company)
@@ -55,13 +56,13 @@ class ProjectCommunityManager:
                 if end_node["type"] == "github_repo":
                     repo = Repo(id=end_node["id"], name=end_node["properties"]["name"])
                     graph.insert_entity(repo)
-                if start_node["type"] == "country":
+                if end_node["type"] == "country":
                     country = Country(
                         id=end_node["id"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(country)
-                if start_node["type"] == "company":
-                    company = Repo(
+                if end_node["type"] == "company":
+                    company = Company(
                         id=end_node["id"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(company)

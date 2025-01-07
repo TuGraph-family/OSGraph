@@ -7,7 +7,7 @@ from app.managers.os_interest import OSInterestManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-os_interest_bp = Blueprint("os_interest", __name__, url_prefix="/api/graph")
+os_interest_bp = Blueprint("os_interest", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -33,11 +33,11 @@ class OSInterestController:
 controller = OSInterestController()
 
 
-@os_interest_bp.route("/os-interest", methods=["GET"])
-def get_os_interest():
+@os_interest_bp.route("/os-interest/<platform>", methods=["GET"])
+def get_os_interest(platform):
     """
     获取项目贡献的图谱
     """
     data = request.args.to_dict()
-    response = controller.get_interest_graph(data)
+    response = controller.get_interest_graph(data, platform)
     return ResponseHandler.jsonify_response(response)

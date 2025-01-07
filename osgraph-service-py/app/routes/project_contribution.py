@@ -8,7 +8,7 @@ from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
 project_contribution_bp = Blueprint(
-    "project_contribution", __name__, url_prefix="/api/graph"
+    "project_contribution", __name__, url_prefix="/api/graphs"
 )
 logger = logging.getLogger(__name__)
 
@@ -32,8 +32,8 @@ class ProjectContributionController:
 controller = ProjectContributionController()
 
 
-@project_contribution_bp.route("/project-contribution", methods=["GET"])
-def get_project_contribution():
+@project_contribution_bp.route("/project-contribution/<platform>", methods=["GET"])
+def get_project_contribution(platform):
     data = request.args.to_dict()
     response = controller.get_contribution_graph(data)
     return ResponseHandler.jsonify_response(response)

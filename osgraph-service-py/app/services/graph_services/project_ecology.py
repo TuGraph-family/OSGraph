@@ -23,9 +23,9 @@ class ProjectEcologyServiceConfig(ServiceConfig):
         super().__init__(
             name="项目生态",
             comment="这是一个获取项目项目生态的图谱",
-            inputTypes=["GitHubRepo"],
+            inputTypes=["repo"],
             filterKeys=[
-                FilterKey(key="topn", type="int", default=50, required=False),
+                FilterKey(key="repo-limit", type="int", default=10, required=False),
             ],
         )
 
@@ -37,7 +37,7 @@ class ProjectEcologyService(BaseService):
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
         github_repo: str = validated_data["GitHubRepo"]
-        top_n: int = validated_data["topn"]
+        top_n: int = validated_data["top_n"]
         es = ElasticsearchClient()
         query = {"match": {"name": github_repo}}
         res = es.search(index="github_repo", query=query, size=1)

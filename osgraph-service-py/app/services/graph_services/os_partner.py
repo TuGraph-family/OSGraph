@@ -23,9 +23,9 @@ class OSPartnerServiceConfig(ServiceConfig):
         super().__init__(
             name="开源伙伴",
             comment="这是一个获取开源伙伴的图谱",
-            inputTypes=["GitHubUser"],
+            inputTypes=["user"],
             filterKeys=[
-                FilterKey(key="topn", type="int", default=50, required=False),
+                FilterKey(key="user-limit", type="int", default=10, required=False),
             ],
         )
 
@@ -37,7 +37,7 @@ class OSPartnerService(BaseService):
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
         github_user: str = validated_data["GitHubUser"]
-        topn: int = validated_data["topn"]
+        topn: int = validated_data["top_n"]
         es = ElasticsearchClient()
         query = {"match": {"name": github_user}}
         res = es.search(index="github_user", query=query, size=1)

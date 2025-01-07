@@ -23,7 +23,7 @@ class ProjectContributionServiceConfig(ServiceConfig):
         super().__init__(
             name="项目贡献",
             comment="这是一个获取项目贡献的图谱",
-            inputTypes=["GitHubRepo"],
+            inputTypes=["repo"],
             filterKeys=[
                 FilterKey(
                     key="start-time",
@@ -38,7 +38,7 @@ class ProjectContributionServiceConfig(ServiceConfig):
                     required=False,
                 ),
                 FilterKey(
-                    key="contribution-limit", type="int", default=50, required=False
+                    key="repo-limit", type="int", default=10, required=False
                 ),
             ],
         )
@@ -51,9 +51,9 @@ class ProjectContributionService(BaseService):
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
         github_repo: str = validated_data["GitHubRepo"]
-        start_time: int = validated_data["start-time"] or get_default_start_time()
-        end_time: int = validated_data["end-time"] or get_default_end_time()
-        contribution_limit: int = validated_data["contribution-limit"]
+        start_time: int = validated_data["start_timestamp"] or get_default_start_time()
+        end_time: int = validated_data["end_timestamp"] or get_default_end_time()
+        contribution_limit: int = validated_data["top_n"]
         es = ElasticsearchClient()
         query = {"match": {"name": github_repo}}
         res = es.search(index="github_repo", query=query, size=1)

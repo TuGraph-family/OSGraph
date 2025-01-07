@@ -24,11 +24,11 @@ class OSInterestServiceConfig(ServiceConfig):
         super().__init__(
             name="开源兴趣",
             comment="这是一张开源兴趣图谱",
-            inputTypes=["GitHubUser"],
+            inputTypes=["user"],
             filterKeys=[
-                FilterKey(key="topic-topn", type="int", default=50, required=False),
+                FilterKey(key="topic-limit", type="int", default=10, required=False),
                 FilterKey(
-                    key="githubrepo-topn", type="int", default=50, required=False
+                    key="repo-limit", type="int", default=10, required=False
                 ),
             ],
         )
@@ -41,8 +41,8 @@ class OSInterestService(BaseService):
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
         github_user: str = validated_data["GitHubUser"]
-        topic_topn: int = validated_data["topic-topn"]
-        repo_topn: int = validated_data["githubrepo-topn"]
+        topic_topn: int = validated_data["topic_topn"]
+        repo_topn: int = validated_data["repo_topn"]
         es = ElasticsearchClient()
         query = {"match": {"name": github_user}}
         res = es.search(index="github_user", query=query, size=1)

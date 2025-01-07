@@ -16,11 +16,11 @@ class ProjectCommunityServiceConfig(ServiceConfig):
         super().__init__(
             name="项目社区",
             comment="这是一个项目社区图谱",
-            inputTypes=["GitHubRepo"],
+            inputTypes=["repo"],
             filterKeys=[
-                FilterKey(key="company-topn", type="int", default=50, required=False),
-                FilterKey(key="country-topn", type="int", default=50, required=False),
-                FilterKey(key="developer-topn", type="int", default=50, required=False),
+                FilterKey(key="company-limit", type="int", default=3, required=False),
+                FilterKey(key="country-limit", type="int", default=3, required=False),
+                FilterKey(key="user-limit", type="int", default=10, required=False),
             ],
         )
 
@@ -32,9 +32,9 @@ class ProjectCommunityService(BaseService):
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
         github_repo: str = validated_data["GitHubRepo"]
-        company_topn: int = validated_data["company-topn"]
-        country_topn: int = validated_data["country-topn"]
-        developer_topn: int = validated_data["developer-topn"]
+        company_topn: int = validated_data["company_topn"]
+        country_topn: int = validated_data["country_topn"]
+        developer_topn: int = validated_data["developer_topn"]
         es = ElasticsearchClient()
         query = {"match": {"name": github_repo}}
         res = es.search(index="github_repo", query=query, size=1)
@@ -48,5 +48,6 @@ class ProjectCommunityService(BaseService):
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
+            print(cypher)
             result = self.graphClient.run(cypher)
             return result

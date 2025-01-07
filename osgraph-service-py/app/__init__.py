@@ -12,6 +12,7 @@ from app.services import register_all_services
 
 from .utils.custom_exceptions import InvalidUsage
 from .utils.logger import setup_logger
+from .utils.user_repo_converter import UsernameRepoConverter
 
 load_dotenv()
 
@@ -21,6 +22,7 @@ def create_app(
 ) -> Flask:
     static_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../web")
     app = Flask(__name__,static_folder=static_folder_path)
+    app.url_map.converters['userrepopath'] = UsernameRepoConverter
     @app.route('/')
     def serve_index():
         return send_from_directory(app.static_folder, 'index.html')
