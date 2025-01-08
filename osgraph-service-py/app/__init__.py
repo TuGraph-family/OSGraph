@@ -22,7 +22,6 @@ def create_app(
 ) -> Flask:
     static_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../web")
     app = Flask(__name__,static_folder=static_folder_path)
-    app.url_map.converters['userrepopath'] = UsernameRepoConverter
     @app.route('/')
     def serve_index():
         return send_from_directory(app.static_folder, 'index.html')

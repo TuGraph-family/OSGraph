@@ -36,11 +36,13 @@ class DevelopActivitiesService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        user: str = validated_data["user"]
-        topn: int = validated_data["top_n"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        topn: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": user}}
-        res = es.search(index="github_user", query=query, size=1)
+        query = {"match_phrase": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             develop_id = res[0]["id"]
             cypher = (

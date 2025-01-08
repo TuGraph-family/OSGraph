@@ -32,14 +32,11 @@ class DevelopActivitiesController:
 controller = DevelopActivitiesController()
 
 
-@develop_activities_bp.route("/develop-activities/<platform>/<userrepopath:remaining_path>", methods=["GET"])
+@develop_activities_bp.route("/develop-activities/<platform>/<path:remaining_path>", methods=["GET"])
 def get_project_activities(platform, remaining_path):
     logger.info(f"Received request for platform: {platform}, remaining_path: {remaining_path}")
     data = request.args.to_dict()
-    username = remaining_path['username']
-    repo = remaining_path['repo']
-    full_repo = f"{username}/{repo}" if repo else username
-    data['platform'] = platform
-    data['full_repo'] = full_repo
+    data["platform"]=platform
+    data["path"]=remaining_path
     response = controller.get_activities_graph(data)
     return ResponseHandler.jsonify_response(response)

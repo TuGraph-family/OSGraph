@@ -82,10 +82,13 @@ class BaseService(ABC):
 
     def validate_params(self, data: Dict[str, Any]) -> Dict[str, Any]:
         validated_filters: Dict[str, Any] = {}
-        for input_type in self.inputTypes:
-            if input_type not in data:
-                raise InvalidUsage(f"Missing necessary parameter: {input_type}")
-            validated_filters[input_type] = data[input_type]
+        if 'path' not in data:
+            raise InvalidUsage(f"Missing necessary parameter: path")
+        validated_filters['path'] = data['path']
+
+        if 'platform' not in data:
+                raise InvalidUsage(f"Missing necessary parameter: platform")
+        validated_filters['platform'] = data['platform']   
         for filter_key in self.filterKeys:
             if filter_key.key not in data:
                 if filter_key.required:
