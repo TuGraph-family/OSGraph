@@ -32,8 +32,10 @@ class ProjectContributionController:
 controller = ProjectContributionController()
 
 
-@project_contribution_bp.route("/project-contribution/<platform>", methods=["GET"])
-def get_project_contribution(platform):
+@project_contribution_bp.route("/project-contribution/<platform>/<path:remaining_path>", methods=["GET"])
+def get_project_contribution(platform, remaining_path):
     data = request.args.to_dict()
+    data["platform"]=platform
+    data["path"]=remaining_path
     response = controller.get_contribution_graph(data)
     return ResponseHandler.jsonify_response(response)

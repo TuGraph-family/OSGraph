@@ -33,11 +33,10 @@ class OSInterestController:
 controller = OSInterestController()
 
 
-@os_interest_bp.route("/os-interest/<platform>", methods=["GET"])
-def get_os_interest(platform):
-    """
-    获取项目贡献的图谱
-    """
+@os_interest_bp.route("/os-interest/<platform>/<path:remaining_path>", methods=["GET"])
+def get_os_interest(platform, remaining_path):
     data = request.args.to_dict()
-    response = controller.get_interest_graph(data, platform)
+    data["platform"]=platform
+    data["path"]=remaining_path
+    response = controller.get_interest_graph(data)
     return ResponseHandler.jsonify_response(response)

@@ -40,18 +40,20 @@ class OSInterestService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_user: str = validated_data["GitHubUser"]
-        topic_topn: int = validated_data["topic_topn"]
-        repo_topn: int = validated_data["repo_topn"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        topic_limit: int = validated_data["topic-limit"]
+        repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_user}}
-        res = es.search(index="github_user", query=query, size=1)
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
             params_dict = {
                 "developer_id": user_id,
-                "topic_topn": topic_topn,
-                "repo_topn": repo_topn,
+                "topic_topn": topic_limit,
+                "repo_topn": repo_limit,
             }
             params = json.dumps(params_dict)
             cypher = (

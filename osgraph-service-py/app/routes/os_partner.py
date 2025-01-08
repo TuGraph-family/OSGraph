@@ -30,8 +30,10 @@ class OSPartnerController:
 controller = OSPartnerController()
 
 
-@os_partner_bp.route("/os-partner/<platform>", methods=["GET"])
-def get_os_partner(platform):
+@os_partner_bp.route("/os-partner/<platform>/<path:remaining_path>", methods=["GET"])
+def get_os_partner(platform, remaining_path):
     data = request.args.to_dict()
-    response = controller.get_partner_graph(data, platform)
+    data["platform"]=platform
+    data["path"]=remaining_path
+    response = controller.get_partner_graph(data)
     return ResponseHandler.jsonify_response(response)

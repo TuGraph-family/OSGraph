@@ -30,8 +30,8 @@ class FulltextSearchController:
 controller = FulltextSearchController()
 
 
-@fulltext_search_bp.route("/fulltext-search/<platform>", methods=["GET"])
-def get_os_interest(platform):
+@fulltext_search_bp.route("/fulltext-search", methods=["GET"])
+def get_os_interest():
     data = request.args.to_dict()
-    response = controller.search(data, platform)
+    response = controller.search(data)
     return ResponseHandler.jsonify_response(response)

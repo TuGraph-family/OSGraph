@@ -30,8 +30,10 @@ class ProjectEcologyController:
 controller = ProjectEcologyController()
 
 
-@project_ecology_bp.route("/project-ecology", methods=["GET"])
-def get_project_ecology(): 
+@project_ecology_bp.route("/project-ecology/<platform>/<path:remaining_path>", methods=["GET"])
+def get_project_ecology(platform, remaining_path):
     data = request.args.to_dict()
+    data["platform"]=platform
+    data["path"]=remaining_path
     response = controller.get_ecology_graph(data)
     return ResponseHandler.jsonify_response(response)

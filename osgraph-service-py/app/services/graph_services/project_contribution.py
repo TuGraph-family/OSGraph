@@ -50,19 +50,21 @@ class ProjectContributionService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_repo: str = validated_data["GitHubRepo"]
-        start_time: int = validated_data["start_timestamp"] or get_default_start_time()
-        end_time: int = validated_data["end_timestamp"] or get_default_end_time()
-        contribution_limit: int = validated_data["top_n"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        start_time: int = validated_data["start-time"] or get_default_start_time()
+        end_time: int = validated_data["end-time"] or get_default_end_time()
+        repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_repo}}
-        res = es.search(index="github_repo", query=query, size=1)
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             cypher = (
                 f"CALL osgraph.get_repo_contribution('{{"
                 f'"repo_id":{repo_id},"start_timestamp":{start_time},'
-                f'"end_timestamp":{end_time},"top_n":{contribution_limit}'
+                f'"end_timestamp":{end_time},"top_n":{repo_limit}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )

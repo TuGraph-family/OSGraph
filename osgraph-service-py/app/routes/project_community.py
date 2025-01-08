@@ -30,8 +30,10 @@ class ProjectCommunityController:
 controller = ProjectCommunityController()
 
 
-@project_community_bp.route("/project-community/<platform>", methods=["GET"])
-def get_project_community(platform):
+@project_community_bp.route("/project-community/<platform>/<path:remaining_path>", methods=["GET"])
+def get_project_community(platform, remaining_path):
     data = request.args.to_dict()
-    response = controller.get_community_graph(data, platform)
+    data["platform"]=platform
+    data["path"]=remaining_path
+    response = controller.get_community_graph(data)
     return ResponseHandler.jsonify_response(response)

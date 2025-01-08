@@ -34,7 +34,6 @@ controller = DevelopActivitiesController()
 
 @develop_activities_bp.route("/develop-activities/<platform>/<path:remaining_path>", methods=["GET"])
 def get_project_activities(platform, remaining_path):
-    logger.info(f"Received request for platform: {platform}, remaining_path: {remaining_path}")
     data = request.args.to_dict()
     data["platform"]=platform
     data["path"]=remaining_path

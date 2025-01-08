@@ -31,20 +31,22 @@ class ProjectCommunityService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_repo: str = validated_data["GitHubRepo"]
-        company_topn: int = validated_data["company_topn"]
-        country_topn: int = validated_data["country_topn"]
-        developer_topn: int = validated_data["developer_topn"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        company_limit: int = validated_data["company-limit"]
+        country_limit: int = validated_data["country-limit"]
+        developer_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_repo}}
-        res = es.search(index="github_repo", query=query, size=1)
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             
             cypher = (
                 f"CALL osgraph.get_repo_developers_profile('{{"
-                f'"repo_id":{repo_id},"company_topn":{company_topn},'
-                f'"country_topn":{country_topn},"developer_topn":{developer_topn}'
+                f'"repo_id":{repo_id},"company_topn":{company_limit},'
+                f'"country_topn":{country_limit},"developer_topn":{developer_limit}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )

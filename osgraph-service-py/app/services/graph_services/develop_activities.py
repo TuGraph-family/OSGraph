@@ -25,7 +25,7 @@ class DevelopActivitiesServiceConfig(ServiceConfig):
             comment="这是一个开发活动图谱",
             inputTypes=["user"],
             filterKeys=[
-                FilterKey(key="repo-limit", type="int", default=10, required=False),
+                FilterKey(key="user-limit", type="int", default=10, required=False),
             ],
         )
 
@@ -39,7 +39,7 @@ class DevelopActivitiesService(BaseService):
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
         platform: str = validated_data["platform"]
-        topn: int = validated_data["repo-limit"]
+        user_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
         query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
@@ -47,7 +47,7 @@ class DevelopActivitiesService(BaseService):
             develop_id = res[0]["id"]
             cypher = (
                 f"CALL osgraph.get_developer_contribution('{{"
-                f'"developer_id":{develop_id},"top_n":{topn}'
+                f'"developer_id":{develop_id},"top_n":{user_limit}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )

@@ -36,16 +36,18 @@ class OSPartnerService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_user: str = validated_data["GitHubUser"]
-        topn: int = validated_data["top_n"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        user_limi: int = validated_data["user-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_user}}
-        res = es.search(index="github_user", query=query, size=1)
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
             cypher = (
                 f"CALL osgraph.get_developer_by_developer('{{"
-                f'"developer_id":{user_id},"top_n":{topn}'
+                f'"developer_id":{user_id},"top_n":{user_limi}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
