@@ -111,31 +111,31 @@ def render_graph_with_node(data):
             return BytesIO(res.content), None      
 
 
-@render_graph_bp.route("/<graph>/<platform>", methods=["GET"])
+@render_graph_bp.route("/<graph>/<platform>/<path:remaining_path>", methods=["GET"])
 
-def render_graph(graph, platform):
+def render_graph(graph, platform, remaining_path):
     if not graph:
         return jsonify({'error': 'Missing graph parameter'}), 400
     if not platform:
         return jsonify({'error': 'Missing platform parameter'}), 400
+    if not remaining_path:
+        return jsonify({'error': 'Missing path parameter'}), 400
     
     query_params = request.args.to_dict()
     query_params.pop('service', None)
     port = os.getenv('FLASK_PORT')
-    base_url = f"http://localhost:{port}/api/graphs/{graph}/{platform}"
+    base_url = f"http://localhost:{port}/api/graphs/{graph}/{platform}/{remaining_path}"
     query_string = "&".join([f"{key}={value}" for key, value in query_params.items()])
-    # if repo_path:
-    #     target_url = f"{base_url}?{index_key}={github_repo}/{repo_path}&{query_string}"
-    # else:
-    #     target_url = f"{base_url}?{index_key}={github_repo}&{query_string}"
+    target_url = f"{base_url}?{query_string}"
 
-    # graph_data = get_graph_data(target_url=target_url)
 
-    # output, error = render_graph_with_node(graph_data)
-    # if error:
-    #     return jsonify({'error': 'Failed to render graph', 'details': error}), 500
+    graph_data = get_graph_data(target_url=target_url)
 
-    # return send_file(output, mimetype="image/png")
+    output, error = render_graph_with_node(graph_data)
+    if error:
+        return jsonify({'error': 'Failed to render graph', 'details': error}), 500
+
+    return send_file(output, mimetype="image/png")
  
     
 
