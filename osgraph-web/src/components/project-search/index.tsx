@@ -142,7 +142,7 @@ export const ProjectSearch: React.FC<{
       });
     }
     setState((draft) => {
-      draft.querySource = item.data.querySource;
+      draft.querySource = `github_${item.data.input_types}`;
       draft.templateParameterList = item.data.templateParameterList;
       draft.templateId = item.data.id;
       draft.projectValue = value;

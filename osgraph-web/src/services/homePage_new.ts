@@ -33,7 +33,7 @@ function parseStringToObjects(inputStr: string) {
 }
 
 export const getListQueryTemplate = async () => {
-  const response = await request(`/api/graph/list`, {
+  const response = await request(`/api/graphs/list`, {
     method: "get",
   });
 
@@ -97,7 +97,7 @@ export const getExecuteFullTextQuery = async (params: {
   keyword: string;
   indexName: string;
 }) => {
-  const response = await request(`/api/graph/fulltext-search`, {
+  const response = await request(`/api/graphs/fulltext-search`, {
     method: "get",
     params: params,
   });
@@ -132,59 +132,47 @@ export const getExecuteQueryTemplate = async (params: {
       +params.templateId as keyof typeof GRAPH_TEMPLATE_ID_MAP
     ];
   if (templateName === "项目贡献") {
-    url = "/api/graph/project-contribution";
-    args = {
-      GitHubRepo: params.value,
-    };
+    url = `/api/graphs/project-contribution/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
   if (templateName === "项目社区") {
-    url = "/api/graph/project-community";
-    args = {
-      GitHubRepo: params.value,
-    };
+    url = `/api/graphs/project-community/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "项目生态") {
-    url = "/api/graph/project-ecology";
-    args = {
-      GitHubRepo: params.value,
-    };
+    url = `/api/graphs/project-ecology/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "开发活动") {
-    url = "/api/graph/develop-activities";
-    args = {
-      GitHubUser: params.value,
-    };
+    url = `/api/graphs/develop-activities/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "开源伙伴") {
-    url = "/api/graph/os-partner";
-    args = {
-      GitHubUser: params.value,
-    };
+    url = `/api/graphs/os-partner/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "开源兴趣") {
-    url = "/api/graph/os-interest";
-    args = {
-      GitHubUser: params.value,
-    };
+    url = `/api/graphs/os-interest/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });

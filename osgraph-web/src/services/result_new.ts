@@ -7,13 +7,9 @@ export const getExecuteShareLinkQuery = async (query: {
   extendsStr: string;
 }) => {
   const { templateType, path, extendsStr } = query;
-  const key =
-    templateType?.split("-")[0] === "project" ? "GitHubRepo" : "GitHubUser";
 
   const response = await request(
-    `/api/graph/${templateType}?${key}=${encodeURIComponent(
-      path
-    )}&${extendsStr}`,
+    `/api/graphs/${templateType}/github/${path}?${extendsStr}`,
     {
       method: "get",
     }

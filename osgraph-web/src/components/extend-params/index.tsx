@@ -40,7 +40,7 @@ const ExtendParams: React.FC<Props> = ({
             required={false}
             rules={[{ required: true, message: "请输入" }]}
           >
-            <InputNumber  style={{width: 'auto'}} min={0} />
+            <InputNumber style={{ width: "auto" }} min={3} max={50} />
           </Item>
         );
       case "date":
