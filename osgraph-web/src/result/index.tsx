@@ -23,7 +23,6 @@ import {
   GRAPH_DOCUMENT_TITLE_MAP,
   GRAPH_EXTEND_PARAMS_MAP,
   GRAPH_TEMPLATE_TYPE_MAP,
-  GRAPH_QUERY_SOURCE_MAP,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
