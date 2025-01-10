@@ -17,6 +17,9 @@
     ```json
     pip install poetry
     ```
++ Indestall Node.js
+
+     Download：[https://nodejs.org/en/download](https://nodejs.org/en/download)
 
 + Install Docker Image
    - Pull image
@@ -50,6 +53,15 @@
 
     ```powershell
     cp .env.template .env
+    ```
+
++ Build Web
+
+    ```powershell
+    cd osgraph-web
+    npm install 
+    npm run build
+    cp ./dist/*  ../osgraph-service/web
     ```
 
 + Start

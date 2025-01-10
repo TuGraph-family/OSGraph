@@ -19,6 +19,10 @@
 pip install poetry
 ```
 
++ 安装node环境，版本20+
+
+     下载地址：[https://nodejs.org/en/download](https://nodejs.org/en/download)
+
 + 安装docker 镜像
    - 拉取镜像
 
@@ -51,6 +55,15 @@ pip install poetry
 
     ```powershell
     cp .env.template .env
+    ```
+
++ 构建前端
+
+    ```powershell
+    cd osgraph-web
+    npm install 
+    npm run build
+    cp ./dist/*  ../osgraph-service/web
     ```
 
 + 启动服务
