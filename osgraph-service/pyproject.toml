@@ -9,7 +9,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 flask = "^3.0.3"
 python-dotenv = "^1.0.1"
 neo4j = "^5.26.0"

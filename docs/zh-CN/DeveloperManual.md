@@ -1,81 +1,8 @@
 ## 介绍
 **OSGraph (Open Source Graph)** 默认提供了6张开源数据图谱供大家体验，包含项目类图谱3个（贡献、生态、社区）、开发类3个（活动、伙伴、兴趣）。如果这6张图谱不能满足您的需求，您也可以根据此文档，定制属于您自己的图谱。
 
-## 本地部署
-### 环境准备
-+ 安装docker 软件：
-    - Mac：[https://docs.docker.com/desktop/setup/install/mac-install/](https://docs.docker.com/desktop/setup/install/mac-install/)
-    - Windows：[https://docs.docker.com/desktop/setup/install/windows-install/](https://docs.docker.com/desktop/setup/install/windows-install/)
-    - Linux：[https://docs.docker.com/desktop/setup/install/linux/](https://docs.docker.com/desktop/setup/install/linux/)
-+ 安装Python环境，版本3.12+：
-    - Mac：[https://www.python.org/downloads/macos/](https://www.python.org/downloads/macos/)
-    - Windows：[https://www.python.org/downloads/windows/](https://www.python.org/downloads/windows/)
-    - Linux：[https://www.python.org/downloads/source/](https://www.python.org/downloads/source/)
-+ 安装Peotry
-
-> `Poetry`是一个 Python 的包管理工具, 确保你的系统中已经安装了 Python 和 pip,然后，在命令行中输入以下命令来安装 Poetry。
-
-```json
-pip install poetry
-```
-
-+ 安装node环境，版本20+
-
-     下载地址：[https://nodejs.org/en/download](https://nodejs.org/en/download)
-
-+ 安装docker 镜像
-   - 拉取镜像
-
-    ```json
-    docker pull tugraph/tugraph-db-osgraph:4.4.0
-    ```
-
-    - 启动容器
-
-    ```json
-    docker run -d -p 7687:7687 -p 7070:7070 -p 9200:9200 --name tugraph tugraph/tugraph-db-osgraph:4.4.0  lgraph_server -d start
-    ```
-
-### 启动本地服务
-+ 拉取代码
-
-    ```powershell
-    git clone https://github.com/TuGraph-family/OSGraph.git
-    ```
-
-+ 安装依赖
-
-    ```powershell
-    cd OSGraph
-    cd OSGraph/osgraph-service-py
-    poetry install
-    ```
-
-+ 配置变量
-
-    ```powershell
-    cp .env.template .env
-    ```
-
-+ 构建前端
-
-    ```powershell
-    cd osgraph-web
-    npm install 
-    npm run build
-    cp -rf ./dist/*  ../osgraph-service/web
-    ```
-
-+ 启动服务
-
-    ```powershell
-    poetry run python run.py
-    ```
-
-### 访问页面
-+ 通过浏览器打开页面：[http://localhost:8000/](http://localhost:8000/)
-
-
+## 本地启动
+请选参考[快速开始](./QuickStart.md)文档完成本地OSGraph服务启动测试。
 
 ## 项目结构
 ![画板](https://intranetproxy.alipay.com/skylark/lark/0/2024/jpeg/345921/1734589934374-34b01288-1861-4741-890d-11b37d1b294e.jpeg)
