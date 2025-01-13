@@ -1,646 +1,232 @@
-## 介绍
+## 1. 介绍
 **OSGraph (Open Source Graph)** 默认提供了6张开源数据图谱供大家体验，包含项目类图谱3个（贡献、生态、社区）、开发类3个（活动、伙伴、兴趣）。如果这6张图谱不能满足您的需求，您也可以根据此文档，定制属于您自己的图谱。
 
-## 本地启动
+## 2. 本地启动
 请选参考[快速开始](./QuickStart.md)文档完成本地OSGraph服务启动测试。
 
-## 项目结构
-![画板](https://intranetproxy.alipay.com/skylark/lark/0/2024/jpeg/345921/1734589934374-34b01288-1861-4741-890d-11b37d1b294e.jpeg)
+## 3. 项目结构
+
+* 启动文件：osgraph-service/run.py
+* 初始化入口：osgraph-service/app/__init__.py
+* 路由（API）：osgraph-service/app/routes
+* 业务视图：osgraph-service/app/managers
+* 业务服务：osgraph-service/app/service
+* 数据库连接：osgraph-service/app/dal
 
 
+## 4. 开发详解
 
-## 开发详解
-### 数据库中的图结构
-+ 模型视图
+### 4.1 接口
 
-![](https://intranetproxy.alipay.com/skylark/lark/0/2025/png/345921/1736413397357-b96f1eff-569f-4b5d-ae28-aa2136984937.png)
+#### 4.1.1 规范
 
-+ 模型类
+* 标准结构：
+![](../img/api-str.png)
+
+* API 示例：
+    “项目贡献”图谱：
+    https://osgraph.com/api/graphs/project-contribution/github/TuGraph-family/tugraph-site?start-time=1&end-time=1733717926&repo-limit=10
+
+#### 4.1.2 开发接口
+
+* 在osgraph-service/app/routes目录中创建接口文件。
+
+* 开发接口内容，并指定调用相关manager
+
+```Python
+# url_prefix
+os_interest_bp = Blueprint("os_interest", __name__, url_prefix="/api/graphs")
+logger = logging.getLogger(__name__)
+
+# api
+@os_interest_bp.route("/os-interest/<platform>/<path:remaining_path>", methods=["GET"])
+def get_os_interest(platform, remaining_path):
+    data = request.args.to_dict()
+    data["platform"]=platform
+    data["path"]=remaining_path
+    response = controller.get_interest_graph(data)
+```
+
+### 4.2 视图
+
+#### 4.2.1 视图模型
+
+点模型
+| 类名 | 属性 | 描述 |
+| --- | --- | --- |
+| `Vertex` | `id` | 顶点的唯一标识符 |
+|  | `name` | 顶点的名称 |
+|  | `comment` (可选) | 顶点的注释 |
+|  | `source` (可选) | 顶点的来源 |
+|  | `size` (可选) | 顶点的大小 |
+|  | `vertex_type` | 顶点的类型（类名） |
+|  | `to_dict` | 将顶点转换为字典的方法 |
+
+
+| 子类 | 继承自 |
+| --- | --- |
+| `User` | `Vertex` |
+| `Repo` | `Vertex` |
+| `Orgnization` | `Vertex` |
+| `Country` | `Vertex` |
+| `Company` | `Vertex` |
+| `Topic` | `Vertex` |
+| `Contibution` | `Vertex` |
+| `PR` | `Contibution` |
+| `Issue` | `Contibution` |
+| `Comment` | `Contibution` |
+| `CodeReview` | `Comment` |
+| `Commit` | `Contibution` |
+
+边模型
+| 类名 | 属性 | 描述 |
+| --- | --- | --- |
+| `Edge` | `source` | 边的源节点 |
+|  | `target` | 边的目标节点 |
+|  | `id` | 边的唯一标识符 |
+|  | `name` | 边的名称 |
+|  | `name_en` | 边的英文名称 |
+|  | `direction` (默认: "out") | 边的方向（"both", "out", "in"） |
+|  | `comment` (可选) | 边的注释 |
+|  | `weight` (可选) | 边的权重 |
+|  | `count` (可选) | 边的数量 |
+|  | `edge_type` | 边的类型（类名） |
+|  | `to_dict` | 将边转换为字典的方法 |
+
+| 子类 | 继承自 | 默认值 |
+| --- | --- | --- |
+| `Create` | `Edge` | `name="创建", name_en="Create"` |
+| `CreatePR` | `Edge` | `name="创建 PR", name_en="Create PR"` |
+| `CreateIssue` | `Edge` | `name="创建 Issue", name_en="Create Issue"` |
+| `CreateCommit` | `Edge` | `name="创建 Commit", name_en="Create Commit"` |
+| `CreateComment` | `Edge` | `name="创建 Comment", name_en="Create Comment"` |
+| `CreateCR` | `Edge` | `name="创建 CR", name_en="Create CR"` |
+| `CodeReviewAction` | `Edge` | `name="CR", name_en="CR"` |
+| `Belong` | `Edge` | `name="属于", name_en="Belong"` |
+| `Star` | `Edge` | `name="Star", name_en="Star"` |
+| `PullRequestAction` | `Edge` | `name="PR", name_en="PR"` |
+| `Push` | `Edge` | `name="推送", name_en="Push"` |
+| `OpenPR` | `Edge` | `name="推送 PR", name_en="Open PR"` |
+| `CommitAction` | `Edge` | `name="提交", name_en="Commite"` |
+| `CommentIssue` | `Edge` | `name="评论 Issue", name_en="Comment Issue"` |
+| `CommonIssue` | `Edge` | `name="合作 Issue", name_en="Common Issue"` |
+| `CommonPR` | `Edge` | `name="合作 PR", name_en="Common PR"` |
+| `CommonStar` | `Edge` | `name="共同关注", name_en="Common Star"` |
+| `CommonRepo` | `Edge` | `name="合作项目", name_en="Common Repo"` |
+| `CommonDevelop` | `Edge` | `name="共建", name_en="Common Develop"` |
+| `ContributeRepo` | `Edge` | `name="贡献项目", name_en="Contribute Repo"` |
+
+#### 4.2.2 构建视图
+
+* 在osgraph-service/app/managers目录中创建文件。
+
+* 调用相关服务，获取数据，构建视图
 
 ```python
-import os
-from dataclasses import dataclass
-from typing import Any, Optional
-
-from dotenv import load_dotenv
-
-load_dotenv()
-
-graph_name = os.getenv("TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME")
-
-
-class Vertex:
-    label: str
-    primary: str
-    type: str = "vertex"
-    _props: Optional[Any] = None
-
-    def __init__(self, label: str, primary: str):
-        self.label = label
-        self.primary = primary
-
-    @property
-    def props(self) -> Any:
-        return self._props
-
-    def __repr__(self):
-        return (
-            f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
-            f"type={self.type}, props={self.props})"
-        )
-
-
-class Edge:
-    label: str
-    type: str = "edge"
-    source: Any
-    target: Any
-    _props: Optional[Any] = None
-
-    def __init__(self, label: str, source: Any, target: Any):
-        self.label = label
-        self.source = source
-        self.target = target
-
-    @property
-    def props(self) -> Any:
-        return self._props
-
-    def __repr__(self):
-        return (
-            f"{self.__class__.__name__}(label={self.label}, primary={self.primary}, "
-            f"type={self.type}, source={self.source}, "
-            f"target={self.target}, props={self.props})"
-        )
-
-
-@dataclass
-class GitHubUserProps:
-    id: Optional[int] = None
-    name: Optional[str] = None
-    company: Optional[str] = None
-    country: Optional[str] = None
-
-
-class GitHubUser(Vertex):
-    def __init__(self, props: GitHubUserProps):
-        if not isinstance(props, GitHubUserProps):
-            raise ValueError("props must be an instance of GitHubUserProps.")
-        super().__init__(label="github_user", primary="id")
-        self._props = props
-
-    def __repr__(self):
-        return (
-            f"{self.__class__.__name__}("
-            f"label={self.label}, "
-            f"primary={self.primary}, "
-            f"props={self._props})"
-        )
-
-
-@dataclass
-class IssueProps:
-    id: Optional[int] = None
-    state: Optional[str] = None
-    created_at: Optional[int] = None
-    closed_at: Optional[int] = None
-
-
-class Issue(Vertex):
-    def __init__(self, props: Optional[IssueProps] = None):
-        if props is None:
-            props = IssueProps()
-        if not isinstance(props, IssueProps):
-            raise ValueError("props must be an instance of IssueProps.")
-        super().__init__(label="issue", primary="id")
-        self._props = props
-
-
-@dataclass
-class PullRequestProps:
-    id: Optional[int] = None
-    merged: Optional[bool] = None
-    created_at: Optional[int] = None
-    closed_at: Optional[int] = None
-    deletions: Optional[int] = None
-    changed_files: Optional[int] = None
-    additions: Optional[int] = None
-
-
-class PullRequest(Vertex):
-    def __init__(self, props: Optional[PullRequestProps] = None):
-        if props is None:
-            props = PullRequestProps()
-        if not isinstance(props, PullRequestProps):
-            raise ValueError("props must be an instance of PullRequestProps.")
-        super().__init__(label="pr", primary="id")
-        self._props = props
-
-
-@dataclass
-class LanguageProps:
-    name: Optional[str] = None
-
-
-class Language(Vertex):
-    def __init__(self, props: Optional[LanguageProps] = None):
-        if props is None:
-            props = LanguageProps()
-        if not isinstance(props, LanguageProps):
-            raise ValueError("props must be an instance of LanguageProps.")
-        super().__init__(label="language", primary="name")
-        self._props = props
-
-
-@dataclass
-class GitHubRepoProps:
-    id: Optional[int] = None
-    name: Optional[str] = None
-    star: Optional[int] = None
-    opened_pr: Optional[int] = None
-    opened_issue: Optional[int] = None
-    merged_pr: Optional[int] = None
-    fork: Optional[int] = None
-    commits: Optional[int] = None
-    comments: Optional[int] = None
-    code_deletions: Optional[int] = None
-    code_changed_files: Optional[int] = None
-    code_additions: Optional[int] = None
-    closed_issue: Optional[int] = None
-
-
-class GitHubRepo(Vertex):
-    def __init__(self, props: Optional[GitHubRepoProps] = None):
-        if props is None:
-            props = GitHubRepoProps()
-        if not isinstance(props, GitHubRepoProps):
-            raise ValueError("props must be an instance of GitHubRepoProps.")
-        super().__init__(label="github_repo", primary="id")
-        self._props = props
-
-
-@dataclass
-class LicenseProps:
-    name: Optional[str] = None
-
-
-class License(Vertex):
-    def __init__(self, props: Optional[LicenseProps] = None):
-        if props is None:
-            props = LicenseProps()
-        if not isinstance(props, LicenseProps):
-            raise ValueError("props must be an instance of LicenseProps.")
-        super().__init__(label="license", primary="name")
-        self._props = props
-
-
-@dataclass
-class TopicProps:
-    name: Optional[str] = None
-
-
-class Topic(Vertex):
-    def __init__(self, props: Optional[TopicProps] = None):
-        if props is None:
-            props = TopicProps()
-        if not isinstance(props, TopicProps):
-            raise ValueError("props must be an instance of TopicProps.")
-        super().__init__(label="topic", primary="name")
-        self._props = props
-
-
-@dataclass
-class GitHubOrganizationProps:
-    id: Optional[int] = None
-    name: Optional[str] = None
-
-
-class GitHubOrganization(Vertex):
-    def __init__(self, props: Optional[GitHubOrganizationProps] = None):
-        if props is None:
-            props = GitHubOrganizationProps()
-        if not isinstance(props, GitHubOrganizationProps):
-            raise ValueError("props must be an instance of GitHubOrganizationProps.")
-        super().__init__(label="github_organization", primary="id")
-        self._props = props
-
-
-@dataclass
-class PushProps:
-    commits: Optional[int] = None
-    created_at: Optional[int] = None
-
-
-class Push(Edge):
-    def __init__(self, source, target, props: Optional[PushProps] = None):
-        if props is None:
-            props = PushProps()
-        if not isinstance(props, PushProps):
-            raise ValueError("props must be an instance of PushProps.")
-        super().__init__(label="push", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class ForkProps:
-    created_at: Optional[int] = None
-
-
-class Fork(Edge):
-    def __init__(self, source, target, props: Optional[ForkProps] = None):
-        if props is None:
-            props = ForkProps()
-        if not isinstance(props, ForkProps):
-            raise ValueError("props must be an instance of ForkProps.")
-        super().__init__(label="fork", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class StarProps:
-    created_at: Optional[int] = None
-
-
-class Star(Edge):
-    def __init__(self, source, target, props: Optional[StarProps] = None):
-        if props is None:
-            props = StarProps()
-        if not isinstance(props, StarProps):
-            raise ValueError("props must be an instance of StarProps.")
-        super().__init__(label="star", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class ReviewPrProps:
-    created_at: Optional[int] = None
-
-
-class ReviewPr(Edge):
-    def __init__(self, source, target, props: Optional[ReviewPrProps] = None):
-        if props is None:
-            props = ReviewPrProps()
-        if not isinstance(props, ReviewPrProps):
-            raise ValueError("props must be an instance of ReviewPrProps.")
-        super().__init__(label="review_pr", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class CommentPrProps:
-    created_at: Optional[int] = None
-
-
-class CommentPr(Edge):
-    def __init__(self, source, target, props: Optional[CommentPrProps] = None):
-        if props is None:
-            props = CommentPrProps()
-        if not isinstance(props, CommentPrProps):
-            raise ValueError("props must be an instance of CommentPrProps.")
-        super().__init__(label="comment_pr", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class ClosePrProps:
-    created_at: Optional[int] = None
-
-
-class ClosePr(Edge):
-    def __init__(self, source, target, props: Optional[ClosePrProps] = None):
-        if props is None:
-            props = ClosePrProps()
-        if not isinstance(props, ClosePrProps):
-            raise ValueError("props must be an instance of ClosePrProps.")
-        super().__init__(label="close_pr", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class OpenPrProps:
-    created_at: Optional[int] = None
-
-
-class OpenPr(Edge):
-    def __init__(self, source, target, props: Optional[OpenPrProps] = None):
-        if props is None:
-            props = OpenPrProps()
-        if not isinstance(props, OpenPrProps):
-            raise ValueError("props must be an instance of OpenPrProps.")
-        super().__init__(label="open_pr", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class CommentIssueProps:
-    created_at: Optional[int] = None
-
-
-class CommentIssue(Edge):
-    def __init__(self, source, target, props: Optional[CommentIssueProps] = None):
-        if props is None:
-            props = CommentIssueProps()
-        if not isinstance(props, CommentIssueProps):
-            raise ValueError("props must be an instance of CommentIssueProps.")
-        super().__init__(label="comment_issue", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class CloseIssueProps:
-    created_at: Optional[int] = None
-
-
-class CloseIssue(Edge):
-    def __init__(self, source, target, props: Optional[CloseIssueProps] = None):
-        if props is None:
-            props = CloseIssueProps()
-        if not isinstance(props, CloseIssueProps):
-            raise ValueError("props must be an instance of CloseIssueProps.")
-        super().__init__(label="close_issue", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class OpenIssueProps:
-    created_at: Optional[int] = None
-
-
-class OpenIssue(Edge):
-    def __init__(self, source, target, props: Optional[OpenIssueProps] = None):
-        if props is None:
-            props = OpenIssueProps()
-        if not isinstance(props, OpenIssueProps):
-            raise ValueError("props must be an instance of OpenIssueProps.")
-        super().__init__(label="open_issue", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class HasPrProps:
-    created_at: Optional[int] = None
-
-
-class HasPr(Edge):
-    def __init__(self, source, target, props: Optional[HasPrProps] = None):
-        if props is None:
-            props = HasPrProps()
-        if not isinstance(props, HasPrProps):
-            raise ValueError("props must be an instance of HasPrProps.")
-        super().__init__(label="has_pr", source=source, target=target)
-        self._props = props
-
-
-@dataclass
-class HasIssueProps:
-    created_at: Optional[int] = None
-
-
-class HasIssue(Edge):
-    def __init__(self, source, target, props: Optional[HasIssueProps] = None):
-        if props is None:
-            props = HasIssueProps()
-        if not isinstance(props, HasIssueProps):
-            raise ValueError("props must be an instance of HasIssueProps.")
-        super().__init__(label="has_issue", source=source, target=target)
-        self._props = props
-
-
-class UseLang(Edge):
-    def __init__(self, source, target):
-        super().__init__(label="use_lang", source=source, target=target)
-        self._props = None
-
-
-class HasTopic(Edge):
-    def __init__(self, source, target):
-        super().__init__(label="has_topic", source=source, target=target)
-        self._props = None
-
-
-class UseLicense(Edge):
-    def __init__(self, source, target):
-        super().__init__(label="use_license", source=source, target=target)
-        self._props = None
-
+# 调用服务并获取数据
+service = OSInterestService()
+result = service.execute(data=data)
 ```
 
 
-
-### 开发graph service
-+ 在services/graph_services 目录中创建属于自己
-+ 示例：project_community.py
-    - 创建ProjectCommunityServiceConfig类：用来定义这个服务的名称，描述，输入参数，过滤条件
-        * name：string，切要确保不能与其他服务的名称相同
-        * comment：string
-        * inputTypes：List[string] 
-        * filterKeys: List[FilterKey] 如果没有过滤调教可以为空数组
-    - 将配置ProjectCommunityServiceConfig注入到service/__init__.py
-
 ```python
-# app/services/__init__.py
+# 解析数据，构建视图
+graph = Graph()
+if start_node["type"] == "github_user":
+    user = User(id=start_node["id"], name=start_node["properties"]["name"])
+    graph.insert_entity(user)
+if relationship["type"] == "repo":
+    contribute_repo = ContributeRepo(
+        source=relationship["src"],
+        target=relationship["dst"],
+        id=relationship["id"],
+        count=relationship["properties"]["count"],
+    )
+    graph.insert_relationship(contribute_repo)
+```
 
-from flask import current_app
-from app.services.graph_services.project_community import ProjectCommunityServiceConfig
+
+### 4.3 图服务
+
+
+#### 4.3.1 开发服务
+
+* 在osgraph-service/app/services/graph_services目录中创建对应服务文件
+
+* 定义服务参数
+
+```Python
+class OSInterestServiceConfig(ServiceConfig):
+    def __init__(self):
+        super().__init__(
+            name="开源兴趣",
+            comment="这是一张开源兴趣图谱",
+            inputTypes=["GitHubUser"],
+            filterKeys=[
+                FilterKey(key="topic-topn", type="int", default=50, required=False),
+                FilterKey(
+                    key="githubrepo-topn", type="int", default=50, required=False
+                ),
+            ],
+        )
+```
+
+* 注册服务
+
+```Python
+from app.services.graph_services.os_interest import OSInterestServiceConfig
 
 SERVICE_CONFIGS = [
-    ProjectContributionServiceConfig(),
-    ProjectEcologyServiceConfig(),
-    ProjectCommunityServiceConfig(),
-    DevelopActivitiesServiceConfig(),
-    OSPartnerServiceConfig(),
-    OSInterestServiceConfig(),
+    OSInterestServiceConfig()
 ]
-
 def register_all_services():
-    """
-    遍历所有的服务配置，并在应用启动时自动注册。
-    """
     with current_app.app_context():
         for config in SERVICE_CONFIGS:
             config.register_service()
-
 ```
 
-- 创建ProjectCommunityService类
-- 编辑execute函数，根据自己需求编写服务数据请求逻辑。
-- 数据请求可通过两种方式：
-- OGM查询：
-    - 示例：查询10个中国开发者
 
-```python
-from app.models.default_graph import GitHubUser, GitHubUserProps
 
-from app.dal.graph.tugraph import GraphClient
 
-graphClient = GraphClient(
-    host=TUGRAPHDB_HOST,
-    port=TUGRAPHDB_PORT,
-    user=TUGRAPHDB_USER,
-    password=TUGRAPHDB_PASSWORD,
-    graph_name=TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME
-)
-user = GitHubUser(props:GitHubUserProps(country='china'))
-graphClient.get_vertex(user,limit=10)
-```
+* 编写execute函数，并调用数dal层，获取数据
 
-* Cypher查询
-    * 示例：查询10个中国开发者
-
-```python
-from app.dal.graph.tugraph import GraphClient
-graphClient = GraphClient(
-    host=TUGRAPHDB_HOST,
-    port=TUGRAPHDB_PORT,
-    user=TUGRAPHDB_USER,
-    password=TUGRAPHDB_PASSWORD,
-    graph_name=TUGRAPHDB_OSGRAPH_GITHUB_GRAPH_NAME
-)
-cypher = 'MATCH (n:github_user) WHRER n.country = "china" RETURN n LIMIT 10'
-graphClient.run(cypher)
-```
-
-```python
-import os
-from datetime import datetime, timedelta
-from typing import Any, Dict
-from dotenv import load_dotenv
-from app.dal.search.es import ElasticsearchClient
-from app.services.graph_services.base import BaseService, FilterKey, ServiceConfig
-
-load_dotenv()
-
-class ProjectCommunityServiceConfig(ServiceConfig):
+```Python
+class OSInterestService(BaseService):
     def __init__(self):
-        super().__init__(
-            name="项目社区",
-            comment="这是一个项目社区图谱",
-            inputTypes=["GitHubRepo"],
-            filterKeys=[
-                FilterKey(key="company-topn", type="int", default=50, required=False),
-                FilterKey(key="country-topn", type="int", default=50, required=False),
-                FilterKey(key="developer-topn", type="int", default=50, required=False),
-            ],
-        )
-
-
-class ProjectCommunityService(BaseService):
-    def __init__(self):
-        super().__init__(ProjectCommunityServiceConfig())
+        super().__init__(OSInterestServiceConfig())
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_repo: str = validated_data["GitHubRepo"]
-        company_topn: int = validated_data["company-topn"]
-        country_topn: int = validated_data["country-topn"]
-        developer_topn: int = validated_data["developer-topn"]
-        es = ElasticsearchClient()
-        query = {"match": {"name": github_repo}}
-        res = es.search(index="github_repo", query=query, size=1)
-        if len(res):
-            repo_id = res[0]["id"]
-            
-            cypher = (
-                f"CALL osgraph.get_repo_developers_profile('{{"
-                f'"repo_id":{repo_id},"company_topn":{company_topn},'
-                f'"country_topn":{country_topn},"developer_topn":{developer_topn}'
-                f"}}') YIELD start_node, relationship, end_node "
-                "return start_node, relationship, end_node"
-            )
-            result = self.graphClient.run(cypher)
-            return result
-
+        cpyher = ''
+        result = self.graphClient.run(cypher)
+        return result
 ```
 
-### 开发 graph manager
-+ 引入要在视图上显示的对象，系统对通用视图对象进行了封装，如果内置的对象不能满足你的需求，你也可以自定义。
 
-> ps：视图模型定义文件 models/graph_view.py
+### 4.4 图数据库层
 
-```python
-from app.models.graph_view import (
-    Belong,
-    Country,
-    Star,
-    User
-)
-```
+### 4.4.1 数据结构
 
-+ 将数服务层请求回来的数据，进行处理。
+![](../img/os-schema.png)
 
-```python
-# app/manager/project_community.py
-import json
-import os
-from typing import Any, Dict, Union
+详情可通过：[TuGraph建模页面查看](http://localhost:7070/#/Workbench/CreateLabel)
 
-from app.models.graph_view import (
-    Belong,
-    Country,
-    Graph,
-    PullRequestAction,
-    Repo,
-    Star,
-    User,
-)
-from app.services.graph_services.project_community import ProjectCommunityService
+## 5. Demo
 
+### 5.1 需求
+构建一个"组织或用户关注仓库"的图谱
 
-class ProjectCommunityManager:
-    def __init__(self) -> None:
-        pass
-    def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
-        service = ProjectCommunityService()
-        graph = Graph()
-        result = service.execute(data=data)
-        if result:
-            for data in result:
-                start_node = json.loads(data["start_node"])
-                relationship = json.loads(data["relationship"])
-                end_node = json.loads(data["end_node"])
-                if start_node["type"] == "github_user":
-                    user = User(
-                        id=start_node["id"], name=start_node["properties"]["name"]
-                    )
-                    graph.insert_entity(user)
-                if relationship["type"] == "PR":
-                    pr = PullRequestAction(
-                        sid=relationship["src"],
-                        tid=relationship["dst"],
-                        id=relationship["id"],
-                        count=relationship["properties"]["count"],
-                    )
-                    graph.insert_relationship(pr)
-            
-            return graph.to_dict()
-        return None
-```
-
-### 开发路由接口
-+ 接口结构如下：
-    - 协议://IP:PORT/api/graphs/<图服务名称>/<平台>/<组织名称/仓库名称 或 用户名称>
-+ 定义 controller类型，调用manager
-+ 定义 route 及对应的 url
+### 5.2 开发接口
 
 ```python
-import logging
-from typing import Any, Dict
 
-from flask import Blueprint, request
-
-from app.managers.project_community import ProjectCommunityManager
-from app.utils.custom_exceptions import InvalidUsage
-from app.utils.response_handler import ResponseHandler
-
-project_community_bp = Blueprint("project_community", __name__, url_prefix="/api/graphs")
-logger = logging.getLogger(__name__)
-
-
-class ProjectCommunityController:
+org_repo_bp = Blueprint("org_repo", __name__, url_prefix="/api/graphs")
+class OrganizationRepoController:
     def __init__(self):
-        self.manager = ProjectCommunityManager()
+        self.manager = OrgRepoManager()
 
-    def get_community_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def get_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
+
         try:
             graph = self.manager.get_graph(data)
             return ResponseHandler.success(graph)
@@ -650,33 +236,114 @@ class ProjectCommunityController:
         except Exception:
             logger.exception("Internal server error")
             return ResponseHandler.error("Internal server error", 500)
-controller = ProjectCommunityController()
-@project_community_bp.route("/project-community/<platform>/<path:remaining_path>", methods=["GET"])
-def get_project_community():
-    data = request.args.to_dict()
-    response = controller.get_community_graph(data)
-    return ResponseHandler.jsonify_response(response)
+controller = OrganizationRepoController()
 
+@org_repo_bp.route("/organization-repo/<platform>/<path:remaining_path>", methods=["GET"])
+def get_org_repo(platform, remaining_path):
+    data = request.args.to_dict()
+    data["platform"]=platform
+    data["path"]=remaining_path
+    response = controller.get_graph(data)
+    return ResponseHandler.jsonify_response(response)
 ```
 
-### 验证
-默认使用GET 请求，可以通过浏览器对自定的服务进行验证。
+### 5.3 定义manager
 
-+ 验证自定义服务是否成功注入
-    - 在浏览器地址栏输入：http://localhost:8000/api/graph/list
-    - 响应结果：
+```Python
+class OrgRepoManager:
+    def __init__(self) -> None:
+        pass
+
+    def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
+        service = OrgRepoService()
+        graph = Graph()
+        result = service.execute(data=data)
+        for path in result:
+            start_node = path.get('start')
+            end_node =path.get('end')
+            user = User(id=start_node.get('properties')['id'],name=start_node.get('properties')['name'])
+            repo = Repo(id=end_node.get('properties')['id'],name=start_node.get('properties')['name'])
+            graph.insert_entity(user)
+            graph.insert_entity(repo)
+            edges = path.get('relationships')
+            for edge in edges:
+                star_edge = Star(source=user,target=repo,id=edge.get('element_id'))
+                graph.insert_relationship(star_edge)
+        return graph.to_dict()
+```
+
+### 5.4 开发 service
+
+
+* 定义参数
+
+```python
+class OrgRepoServiceConfig(ServiceConfig):
+    def __init__(self):
+        super().__init__(
+            name="组织或用户关注仓库",
+            comment="这是一个组织（用户）关注仓库的图谱",
+            inputTypes=["user"],
+            filterKeys=[
+                FilterKey(key="repo-limit", type="int", default=10, required=False),
+            ],
+        )
+```
+
+
+* 定义服务
+
+```python
+class OrgRepoService(BaseService):
+    def __init__(self):
+        super().__init__(OrgRepoServiceConfig())
+    def execute(self, data: Dict[str, Any]) -> Any:
+        validated_data = self.validate_params(data)
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        repo_limit: int = validated_data["repo-limit"]
+        es = ElasticsearchClient()
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
+        
+        if len(res):
+            org_id = res[0]["id"]
+            user_porps = GitHubUserProps(id=org_id)
+            github_user = GitHubUser(user_porps)
+            github_repo = GitHubRepo(GitHubRepoProps())
+            star_edge = Star(source=github_user,target=github_repo)
+            result = self.graphClient.get_edge(edge_instance=star_edge,deep=1,limit=repo_limit)
+            return result
+```
+
+* 注册图谱服务
+
+```python
+# app/services/__init__.py
+from app.services.graph_services.org_repo import OrgRepoServiceConfig
+SERVICE_CONFIGS = [
+    OrgRepoServiceConfig()
+]
+```
+
+### 5.5 验证
+
+#### 5.5.1 验证图谱注册
+
+* 浏览器输入URL：http://localhost:8000/api/graphs/list
+
+* 返回结果
 
 ```json
 {
   "data": [
     {
-      "comment": "这是一个项目社区图谱",
-      "filter_keys": "",
-      "input_types": "GitHubRepo",
-      "name": "项目社区"
-    },
-    
-    # ....
+      "comment": "这是一个组织（用户）关注仓库的图谱",
+      "filter_keys": "key:repo-limit,type:int,default:10,required:False",
+      "input_types": "user",
+      "name": "组织或用户关注仓库"
+    }
   ],
   "error": null,
   "message": "Success",
@@ -684,9 +351,37 @@ def get_project_community():
 }
 ```
 
-出现以上的响应结果，并且列表中有自定义的服务，证明注入成功。
 
-+ 验证自定义的服务请求：在浏览器地址输入您定义服务请求URL及参数，查看是否返回预期的数据结果。
+#### 5.5.2 验证图谱查询
+
+* 浏览器输入URL：http://localhost:8000/api/graphs/organization-repo/github/nikolay?repo-limit=10
+
+* 返回结果
+
+```json
+{
+  "data": {
+    "edges": [],
+    "nodes": [],
+    "summary": ""
+  },
+  "error": null,
+  "message": "Success",
+  "status": 0
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 贡献
 如果您愿意将您开发服务在开源社区分享，就可以向我们的代码仓库提交PR，审核通过后，我们会将您的服务上线到我们官网服务，让更多的开源用户可以在线使用。
