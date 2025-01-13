@@ -63,7 +63,7 @@ pip install poetry
     cd osgraph-web
     npm install 
     npm run build
-    cp ./dist/*  ../osgraph-service/web
+    cp -rf ./dist/*  ../osgraph-service/web
     ```
 
 + 启动服务

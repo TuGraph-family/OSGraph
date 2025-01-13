@@ -4,6 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["KingSkyLi <15566300566@163.com>"]
 readme = "README.md"
+packages = [
+    { include = "app" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -37,7 +40,7 @@ target-version = ["py311"]
 [tool.isort]
 profile = "black"
 line_length = 88
-known_first_party = ["osgraph-service-py"]
+known_first_party = ["osgraph-service"]
 default_section = "THIRDPARTY"
 
 

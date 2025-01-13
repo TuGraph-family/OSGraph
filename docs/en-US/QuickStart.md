@@ -56,6 +56,15 @@ If you want to quickly use the OSGraph product, you can visit the website: https
     cp .env.template .env
     ```
 
++ Build Web
+
+    ```powershell
+    cd osgraph-web
+    npm install 
+    npm run build
+    cp -rf ./dist/*  ../osgraph-service/web
+    ```
+
 + Start
 
     ```powershell

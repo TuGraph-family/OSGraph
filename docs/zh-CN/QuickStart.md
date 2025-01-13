@@ -56,6 +56,15 @@
     cp .env.template .env
     ```
 
++ 构建前端
+
+    ```powershell
+    cd osgraph-web
+    npm install 
+    npm run build
+    cp -rf ./dist/*  ../osgraph-service/web
+    ```
+
 + 启动服务
 
     ```powershell
