@@ -13,10 +13,9 @@ conda create -n osgraph 'python=3.10'
 conda activate osgraph
 ```
 
-安装Poetry包管理工具：
-```
-pip install poetry
-```
+### 2. 准备Node环境(>= 20.12.2)
+安装官方提供的Nodejs
+* Download：[https://nodejs.org/en/download](https://nodejs.org/en/download)
 
 ### 2. 准备TuGraph数据库
 
