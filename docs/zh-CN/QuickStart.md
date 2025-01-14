@@ -15,9 +15,9 @@ conda activate osgraph
 
 ### 2. 准备Node环境(>= 20.12.2)
 安装官方提供的Nodejs
-* Download：[https://nodejs.org/en/download](https://nodejs.org/en/download)
+* 下载地址：[https://nodejs.org/en/download](https://nodejs.org/en/download)
 
-### 2. 准备TuGraph数据库
+### 3. 准备TuGraph数据库
 
 安装Docker软件：
 * Mac：[https://docs.docker.com/desktop/setup/install/mac-install/](https://docs.docker.com/desktop/setup/install/mac-install/)
@@ -30,7 +30,7 @@ docker pull tugraph/tugraph-db-osgraph:4.4.0
 docker run -d -p 7687:7687 -p 7070:7070 -p 9200:9200 --name tugraph tugraph/tugraph-db-osgraph:4.4.0
 ```
 
-### 3. 本地启动OSGraph
+### 4. 本地启动OSGraph
 
 拉取代码：
 ```bash
@@ -38,7 +38,6 @@ git clone https://github.com/TuGraph-family/OSGraph.git
 ```
 
 构建代码：
-
 ```bash
 cd OSGraph
 bash ./bin/build.sh

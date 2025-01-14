@@ -1,77 +1,53 @@
-## Introduction
-**OSGraph (Open Source Graph)** is an open-source graph relationship insight tool that leverages the GitHub open-source data graph to provide analysis and insights into developer behavior and project community ecosystems. It offers a simple and intuitive view of open-source data for developers, project owners, open-source evangelists, and community managers, helping you and your projects create unique open-source profiles, find suitable development partners, and uncover deep community value.
+## Quick Start
 
-## Online Usage
-If you want to quickly use the OSGraph product, you can visit the website: https://osgraph.com/ for a quick experience. The product provides six open-source data graphs by default for users to explore, including three project-related graphs (Contributions, Ecosystem, Community) and three developer-related graphs (Activity, Partners, Interests).
+### 1. Prepare Python Environment (>= 3.10)
 
-## Local Deployment
-### Environment Preparation
-+ Install Docker:
-    - Mac：[https://docs.docker.com/desktop/setup/install/mac-install/](https://docs.docker.com/desktop/setup/install/mac-install/)
-    - Windows：[https://docs.docker.com/desktop/setup/install/windows-install/](https://docs.docker.com/desktop/setup/install/windows-install/)
-    - Linux：[https://docs.docker.com/desktop/setup/install/linux/](https://docs.docker.com/desktop/setup/install/linux/)
-+ Install Python，version 3.12+:
-    - Mac：[https://www.python.org/downloads/macos/](https://www.python.org/downloads/macos/)
-    - Windows：[https://www.python.org/downloads/windows/](https://www.python.org/downloads/windows/)
-    - Linux：[https://www.python.org/downloads/source/](https://www.python.org/downloads/source/)
+Install the official Python package:
+* Mac：[https://www.python.org/downloads/macos/](https://www.python.org/downloads/macos/)
+* Windows：[https://www.python.org/downloads/windows/](https://www.python.org/downloads/windows/)
+* Linux：[https://www.python.org/downloads/source/](https://www.python.org/downloads/source/)
 
-+ Install Peotry
+Or use tools like conda to initialize the Python environment:
+```bash
+conda create -n osgraph 'python=3.10'
+conda activate osgraph
+```
 
-    ```json
-    pip install poetry
-    ```
+### 2. Prepare Node Environment (>= 20.12.2)
+Install the official Node.js package:
+* Download: [https://nodejs.org/en/download](https://nodejs.org/en/download)
 
-+ Install Docker image
+### 3. Prepare TuGraph Database
 
-    - Pull image
+Install Docker software:
+* Mac：[https://docs.docker.com/desktop/setup/install/mac-install/](https://docs.docker.com/desktop/setup/install/mac-install/)
+* Windows：[https://docs.docker.com/desktop/setup/install/windows-install/](https://docs.docker.com/desktop/setup/install/windows-install/)
+* Linux：[https://docs.docker.com/desktop/setup/install/linux/](https://docs.docker.com/desktop/setup/install/linux/)
 
-    ```json
-    docker pull tugraph/tugraph-db-osgraph:4.4.0
-    ```
+Pull the OSGraph-specific TuGraph image and start it:
+```bash
+docker pull tugraph/tugraph-db-osgraph:4.4.0
+docker run -d -p 7687:7687 -p 7070:7070 -p 9200:9200 --name tugraph tugraph/tugraph-db-osgraph:4.4.0
+```
 
-    - Start
+### 4. Start OSGraph
 
-    ```json
-    docker run -d -p 7687:7687 -p 7070:7070 -p 9200:9200 --name tugraph tugraph/tugraph-db-osgraph:4.4.0
-    ```
+Clone the code:
+```bash
+git clone https://github.com/TuGraph-family/OSGraph.git
+```
 
-### Start Service 
-+ Pull
+Build the code:
+```bash
+cd OSGraph
+bash ./bin/build.sh
+```
 
-    ```powershell
-    git clone https://github.com/TuGraph-family/OSGraph.git
-    ```
+Start the service:
+```bash
+cd OSGraph
+bash ./bin/start.sh
+```
 
-+ Install
-
-    ```powershell
-    cd OSGraph
-    cd OSGraph/osgraph-service-py
-    poetry install
-    ```
-
-+ Env
-
-    ```powershell
-    cp .env.template .env
-    ```
-
-+ Build Web
-
-    ```powershell
-    cd osgraph-web
-    npm install 
-    npm run build
-    cp -rf ./dist/*  ../osgraph-service/web
-    ```
-
-+ Start
-
-    ```powershell
-    poetry run python run.py
-    ```
-
-
-### Accessing the Page
-+ Open the page in a web browser: [http://localhost:8000/](http://localhost:8000/)
-
+Access the web page:
+Open the page in your browser: [http://localhost:8000/](http://localhost:8000/)
