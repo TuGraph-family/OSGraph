@@ -1,3 +1,5 @@
+# 开发手册
+
 ## 1. 介绍
 **OSGraph (Open Source Graph)** 默认提供了6张开源数据图谱供大家体验，包含项目类图谱3个（贡献、生态、社区）、开发类3个（活动、伙伴、兴趣）。如果这6张图谱不能满足您的需求，您也可以根据此文档，定制属于您自己的图谱。
 
@@ -9,7 +11,7 @@
 * 入口点：`osgraph-service/server.py`
 * 接口层：`osgraph-service/app/routes`
 * 业务层：`osgraph-service/app/managers`
-* 服务层：`osgraph-service/app/service`
+* 服务层：`osgraph-service/app/services`
 * 数据层：`osgraph-service/app/dal`
 
 ## 4. 开发详解
@@ -22,12 +24,12 @@
 
 | 类型  | URL示例                                          |
 |-----|------------------------------------------------|
-| API | /api/graphs/:graph/:platform/org/repo?:params* | 
-| 页面  | /graphs/:graph/:platform/org/repo?:params*     | 
-| 图片  | /png/graphs/:graph/:platform/org/repo?:params* | 
+| API | /api/graphs/:graph/:platform/org/repo?:param* | 
+| 页面  | /graphs/:graph/:platform/org/repo?:param*     | 
+| 图片  | /png/graphs/:graph/:platform/org/repo?:param* | 
 
 如API的规范化格式为：
-![](../img/api-str.png)
+![](../img/api-fmt.jpg)
 
 如TuGraph DB “项目贡献”图谱URL：
 ```
@@ -299,61 +301,11 @@ SERVICE_CONFIGS = [
 
 ### 5.5 验证
 
-#### 5.5.1 验证图谱注册
-
-* 浏览器输入URL：http://localhost:8000/api/graphs/list
-
-* 返回结果
-
-```json
-{
-  "data": [
-    // ...
-  ],
-  "error": null,
-  "message": "Success",
-  "status": 0
-}
-```
+访问测试URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/:user-name?lang-limit=3
 
 
-#### 5.5.2 验证图谱查询
-
-* 浏览器输入URL：http://localhost:8000/api/graphs/dev-lang/github/:user-name?repo-limit=10
-
-* 返回结果
-
-```json
-{
-  "data": {
-    "edges": [
-        // ...
-    ],
-    "nodes": [
-        // ...
-    ],
-    "summary": ""
-  },
-  "error": null,
-  "message": "Success",
-  "status": 0
-}
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 贡献
-如果您愿意将您开发服务在开源社区分享，就可以向我们的代码仓库提交PR，审核通过后，我们会将您的服务上线到我们官网服务，让更多的开源用户可以在线使用。
+## 6. 贡献
+如果您愿意将您开发的图谱服务在社区分享，可以向我们的代码仓库提交PR。版本发布后，我们会将您的服务上线到我们官网，让更多的开源用户可以在线使用。
 
 
 

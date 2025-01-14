@@ -19,7 +19,7 @@ Please refer to the [Quick Start ](QuickStart.md) document to complete the local
 #### 4.1.1 Specifications
 
 * Standard Structure:
-![](../img/api-str.png)
+![](../img/api-fmt.jpg)
 
 * API Example:
     "Project Contribution" Graph:
