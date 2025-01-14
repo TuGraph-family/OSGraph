@@ -16,11 +16,11 @@
 
 **[https://osgraph.com](https://osgraph.com)**
 
-You can refer to [Graph Demo](docs/en/demo.md) for product experience.
+You can refer to [Graph Demo](docs/en-US/demo.md) for product experience.
 
 ## QuickStart
-Startup and test on local machine: [Quick Start](docs/en/quick-start.md)
-Customize your own graph (DIY): [Developer Manual](docs/en/developer-manual.md)
+Startup and test on local machine: [Quick Start](docs/en-US/quick-start.md)
+Customize your own graph (DIY): [Developer Manual](docs/en-US/developer-manual.md)
 
 ## Plans
 
