@@ -33,4 +33,4 @@ cp -rf ./dist/* ../osgraph-service/web || { echo "Failed to copy dist contents";
 # 11. Remove the dist directory
 rm -rf ./dist || { echo "Failed to remove dist directory"; exit 1; }
 
-echo "All steps completed successfully!"
+echo "Build successfully!"

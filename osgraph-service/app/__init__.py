@@ -92,15 +92,11 @@ def initialize_system_graph(app: Flask):
 
     try:
         system_graph = client.get_graph()
-        if system_graph:
-            app.logger.info("system_graph 图已存在")
-        else:
+        if not system_graph:
             client.create_graph()
-            app.logger.info("system_graph 图已创建")
+            app.logger.info("System metadata graph is created")
         graph_service = client.get_label("vertex", "graph_service")
-        if graph_service:
-            app.logger.info("graph_service Label 已存在")
-        else:
+        if not graph_service:
             label = GraphLabel(
                 label=GraphService.label,
                 primary=GraphService.primary,
@@ -116,8 +112,10 @@ def initialize_system_graph(app: Flask):
                 ],
             )
             client.create_label(label)
-            app.logger.info("graph_service Label 已创建")
+
+        app.logger.info(f"OSGraph server started success, "
+                        f"please visit http://127.0.0.1:{os.getenv('FLASK_PORT')}")
     except Exception as e:
-        app.logger.error(f"初始化 system_graph 失败: {str(e)}")
+        app.logger.error(f"System metadata graph create failed: {str(e)}")
     finally:
         client.close()

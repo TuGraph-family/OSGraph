@@ -59,7 +59,6 @@ class GraphClient:
     def close(self):
         if self.driver:
             self.driver.close()
-            current_app.logger.info("TuGraph connection closed.")
 
     # 创建 Label
     def create_label(self, label: GraphLabel):

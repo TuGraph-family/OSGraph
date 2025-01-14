@@ -1,14 +1,20 @@
-# run.py
+# server.py
 import os
 
+import flask
 from dotenv import load_dotenv
 
 from app import create_app
 from config import DevelopmentConfig, ProductionConfig
 
+flask.cli.show_server_banner = lambda *args: None
+
 load_dotenv()
 
-config_mapping = {"development": DevelopmentConfig, "production": ProductionConfig}
+config_mapping = {
+    "development": DevelopmentConfig,
+    "production": ProductionConfig
+}
 
 config_name = os.getenv("FLASK_ENV", "production")
 
@@ -20,9 +26,3 @@ port = os.getenv('FLASK_PORT')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port, debug=app.config.get("DEBUG", False))
-
-# if __name__ == "__main__":
-#     base_dir = os.path.dirname(os.path.abspath(__file__))
-#     cert_path = os.path.join(base_dir, "certs/cert.pem")
-#     key_path = os.path.join(base_dir, "certs/key.pem")
-#     app.run(host="0.0.0.0",port=8000, ssl_context=(cert_path, key_path))
