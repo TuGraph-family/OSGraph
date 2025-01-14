@@ -19,7 +19,9 @@
 You can refer to [Graph Demo](docs/en-US/demo.md) for product experience.
 
 ## QuickStart
+
 Startup and test on local machine: [Quick Start](docs/en-US/quick-start.md)
+
 Customize your own graph (DIY): [Developer Manual](docs/en-US/developer-manual.md)
 
 ## Plans

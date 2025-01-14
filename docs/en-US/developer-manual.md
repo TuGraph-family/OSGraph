@@ -22,8 +22,10 @@ Please refer to the [Quick Start ](QuickStart.md) document to complete the local
 ![](../img/api-fmt.jpg)
 
 * API Example:
-    "Project Contribution" Graph:
-    https://osgraph.com/api/graphs/project-contribution/github/TuGraph-family/tugraph-site?start-time=1&end-time=1733717926&repo-limit=10
+
+"Project Contribution" Graph:
+
+https://osgraph.com/api/graphs/project-contribution/github/TuGraph-family/tugraph-site?start-time=1&end-time=1733717926&repo-limit=10
 
 #### 4.1.2 Developing APIs
 Create an API file in the osgraph-service/app/routes directory.
