@@ -190,7 +190,7 @@ OSGraph底层图数据结构定义为：
 ### 5.2 开发DevLangController
 
 ```python
-org_repo_bp = Blueprint("org_repo", __name__, url_prefix="/api/graphs")
+dev_lang_bp = Blueprint("dev_lang", __name__, url_prefix="/api/graphs")
 class DevLangController:
     def __init__(self):
         self.manager = DevLangManager()
@@ -201,7 +201,7 @@ class DevLangController:
 
 controller = DevLangController()
 
-@org_repo_bp.route("/dev-lang/<platform>/<path:remaining_path>", methods=["GET"])
+@dev_lang_bp.route("/dev-lang/<platform>/<path:remaining_path>", methods=["GET"])
 def get_org_repo(platform, remaining_path):
     ...
     response = controller.get_graph(data)
@@ -222,17 +222,17 @@ class DevLangManager:
             user_node = push_edge.get('start')
             for lang_edge in lang_results:
                 lang_names.append(lang_edge.get('end').get('properties')['name'])
-
-        lang_names = [item[0] for item in Counter(lang_names).most_common(lang_limit)]
+        if len(lang_names):
+            language_names = [item[0] for item in Counter(lang_names).most_common(lang_limit)]
         
-        for lang_name in lang_names:
-            user = User(id=user_node.get('properties')['id'], name=user_node.get('properties')['name'])
-            dev_lang = DevLang(id=lang_name, name=lang_name)
-            graph.insert_entity(user)
-            graph.insert_entity(dev_lang)
-            has_edge = Has(source=user, target=dev_lang)
-            graph.insert_relationship(has_edge)
-        return graph.to_dict()
+            for lang_name in language_names:
+                user = User(id=user_node.get('properties')['id'], name=user_node.get('properties')['name'])
+                dev_lang = DevLang(id=lang_name, name=lang_name)
+                graph.insert_entity(user)
+                graph.insert_entity(dev_lang)
+                use_edge = Use(source=user, target=dev_lang, id=uuid())
+                graph.insert_relationship(use_edge)
+            return graph.to_dict()
 ```
 
 ### 5.4 开发DevLangService
@@ -278,7 +278,8 @@ class DevLangService(BaseService):
             
             results = []
             for push in push_results:
-                repo = push.get('end')
+                end_node = push.get('end')
+                repo = GitHubRepo(GitHubRepoProps(id=end_node['properties']['id']))
                 lang = Language(LanguageProps())
                 use_lang_edge = UseLang(source=repo, target=lang)
                 lang_results = self.graphClient.get_edge(edge_instance=use_lang_edge, deep=1, limit=lang_limit)
@@ -292,7 +293,7 @@ class DevLangService(BaseService):
 ```python
 SERVICE_CONFIGS = [
     ...
-    DevLangService()
+    DevLangServiceConfig()
 ]
 ```
 
@@ -307,12 +308,7 @@ SERVICE_CONFIGS = [
 ```json
 {
   "data": [
-    {
-      "comment": "这是一个组织（用户）关注仓库的图谱",
-      "filter_keys": "key:repo-limit,type:int,default:10,required:False",
-      "input_types": "user",
-      "name": "组织或用户关注仓库"
-    }
+    // ...
   ],
   "error": null,
   "message": "Success",
@@ -323,15 +319,19 @@ SERVICE_CONFIGS = [
 
 #### 5.5.2 验证图谱查询
 
-* 浏览器输入URL：http://localhost:8000/api/graphs/organization-repo/github/nikolay?repo-limit=10
+* 浏览器输入URL：http://localhost:8000/api/graphs/dev-lang/github/:user-name?repo-limit=10
 
 * 返回结果
 
 ```json
 {
   "data": {
-    "edges": [],
-    "nodes": [],
+    "edges": [
+        // ...
+    ],
+    "nodes": [
+        // ...
+    ],
     "summary": ""
   },
   "error": null,
