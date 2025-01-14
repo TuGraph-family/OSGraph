@@ -13,7 +13,6 @@
 * 业务服务：osgraph-service/app/service
 * 数据库连接：osgraph-service/app/dal
 
-
 ## 4. 开发详解
 
 ### 4.1 接口
@@ -205,7 +204,7 @@ class OSInterestService(BaseService):
 
 ### 4.4 图数据库层
 
-### 4.4.1 数据结构
+#### 4.4.1 数据结构
 
 ![](../img/os-schema.png)
 
@@ -273,7 +272,6 @@ class OrgRepoManager:
 ```
 
 ### 5.4 开发 service
-
 
 * 定义参数
 
