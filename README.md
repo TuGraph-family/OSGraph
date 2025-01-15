@@ -1,60 +1,58 @@
 ![](docs/img/logo.png)
 
-> 🌐️ 中文 | [English](README-en.md)
+> 🌐️ English | [中文](README-cn.md)
 
-**OSGraph (Open Source Graph)** 是一个开源图谱关系洞察工具，基于GitHub开源数据全域图谱，实现开发者行为、项目社区生态的分析洞察。可以为开发者、项目Owner、开源布道师、社区运营等提供简洁直观的开源数据视图，帮助你和你的项目制作专属的开源名片、寻求契合的开发伙伴、挖掘深度的社区价值。
+**OSGraph (Open Source Graph)** is an open-source graph-based analytics tool that leverages the comprehensive graph of GitHub open-source data to provide insights into developer behavior and project community ecosystems. It offers developers, project owners, DevRel advocate, and community operators a clear and intuitive view of open-source data, helping you and your project to create a personalized open-source business card, find compatible development partners, and unearth deep community value.
 
 ![](docs/img/graphs.png)
 
-> **OSGraph v2.0 新特性！！！**
-> 1. 服务端重构完成，全面拥抱Python技术栈。
-> 2. 图谱支持多跳扩展，无限下钻洞察开源数据。
-> 3. 图谱支持`png`图片链接，一键嵌入Markdown。
-> 4. 更轻松的图谱扩展定制，直接打通生产服务。
+> **OSGraph v2.0 New Features !!!**
+> 1. Backend service refactored completed, fully embracing the Python stack.
+> 2. Support multi-hop graph expansion, enabling unlimited drill-down insights into open-source data.
+> 3. Support `png` url of graph, enabling one-click embedding in Markdown.
+> 4. Easier graph customization, directly connecting to production.
 
-
-## 产品地址
+## Website
 
 **[https://osgraph.com](https://osgraph.com)**
 
-在这里你可以参考[图谱示例](docs/zh-CN/demo.md)进行产品体验。
+You can refer to [Graph Demo](docs/en-US/demo.md) for product experience.
 
+## QuickStart
 
-## 快速开始
+Startup and test on local machine: [Quick Start](docs/en-US/quick-start.md)
 
-本地启动测试请参考：[快速开始](docs/zh-CN/quick-start.md)
+Customize your own graph (DIY): [Developer Manual](docs/en-US/developer-manual.md)
 
-如果你希望定制自己专有的图谱，可以参考：[开发手册](docs/zh-CN/developer-manual.md)
+## Plans
 
+OSGraph will be enhanced with more exciting graphs and features:
 
-## 未来规划
-
-未来将会有更多有趣的图谱和功能加入到OSGraph：
-
-* 画布交互优化，多图操作更加便捷。
-* 多人多项目联合分析，图谱一键可达。
-* 更丰富的数据展示与多维分析。
-* 构建自然语言交互能力，让洞察更智能。
-* 更丰富的底图数据扩展和特征增强。
+* Canvas interaction optimization for more convenient multi-graph operations.
+* Multi-user and multi-project joint analysis with one-click graph access. 
+* Richer data visualization and multi-dimensional analysis.
+* Building LUI (Language User Interface) for intelligent insights.
+* More graph data and graph feature enhancement.
 * ...
 
+We welcome everyone to submit Issues for active discussions, offering product suggestions, and feedback on user experience.
 
-欢迎大家提交Issue积极讨论，提供产品建议、反馈体验问题。
+## Contribution
 
+You can reference [Contributing](community/CONTRIBUTING.md) document and submit GitHub Issues/PRs to provide feedback and suggest improvements for OSGraph, or you can join the TuGraph community group and communicate with us directly through the contact information provided below.
 
+## Contacts
 
-##  参与贡献
+![](docs/img/contacts-en.png)
 
-您可以直接提交GitHub Issue/PR对OSGraph反馈建议与功能改进，也可以通过下面的联系方式加入TuGraph社区群与我们直接沟通交流。
+## Acknowledgments
 
+A heartfelt thanks to the organizations [X-Lab](https://github.com/X-lab2017?language=shell), [AntV](https://antv.antgroup.com/), and [TuGraph](https://www.tugraph.tech/) for their strong support of this project!
 
-## 联系我们
+Also, thanks to all the individual developers who have contributed to this repository, which are listed below.
 
-![](docs/img/contacts-cn.png)
+<a href="https://github.com/TuGraph-family/osgraph/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=TuGraph-family/osgraph" />
+</a>
 
-
-
-## 致谢
-
-感谢 [X-Lab](https://github.com/X-lab2017?language=shell)、[AntV](https://antv.antgroup.com/)、[TuGraph](https://www.tugraph.tech/) 组织对本项目的大力支持！
-
+Made with [contrib.rocks](https://contrib.rocks).
