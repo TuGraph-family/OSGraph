@@ -303,6 +303,88 @@ SERVICE_CONFIGS = [
 
 访问测试URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/:user-name?lang-limit=3
 
+响应结果：
+```json
+{
+  "data": {
+    "edges": [
+      {
+        "direction": "out",
+        "edgeType": "Use",
+        "id": "a49f81ef-fa48-4666-9819-7be4befbb762",
+        "name": "使用",
+        "name_en": "Use",
+        "source": {
+            "id": 2311313,
+            "name": "fanzhidongyzby",
+        },
+        "target": {
+            "id": "Java",
+            "name": "Java"
+        }
+      },
+      {
+        "direction": "out",
+        "edgeType": "Use",
+        "id": "32275d2c-febb-43ba-bc31-95f5bdc1fe30",
+        "name": "使用",
+        "name_en": "Use",
+        "source": {
+            "id": 2311313,
+            "name": "fanzhidongyzby",
+        },
+        "target": {
+            "id": "TypeScript",
+            "name": "TypeScript",
+        },
+        "weight": null
+      },
+      {
+        "direction": "out",
+        "edgeType": "Use",
+        "id": "b6bb8d08-260d-4be9-88f5-e189d1d49774",
+        "name": "使用",
+        "name_en": "Use",
+        "source": {
+            "id": 2311313,
+            "name": "fanzhidongyzby",
+        },
+        "target": {
+            "id": "Rust",
+            "name": "Rust",
+        }
+      }
+    ],
+    "nodes": [
+      {
+        "id": 2311313,
+        "name": "fanzhidongyzby",
+        "nodeType": "User",
+      },
+      {
+        "id": "Java",
+        "name": "Java",
+        "nodeType": "DevLang",
+      },
+      {
+        "id": "TypeScript",
+        "name": "TypeScript",
+        "nodeType": "DevLang",
+      },
+      {
+        "id": "Rust",
+        "name": "Rust",
+        "nodeType": "DevLang",
+      }
+    ],
+    "summary": ""
+  },
+  "error": null,
+  "message": "Success",
+  "status": 0
+}
+```
+
 
 ## 6. 贡献
 如果您愿意将您开发的图谱服务在社区分享，可以向我们的代码仓库提交PR。版本发布后，我们会将您的服务上线到我们官网，让更多的开源用户可以在线使用。

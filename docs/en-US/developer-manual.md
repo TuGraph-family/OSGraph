@@ -303,5 +303,87 @@ SERVICE_CONFIGS = [
 Test the URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/:user-name?lang-limit=3
 
 
+Response Result：
+```
+{
+  "data": {
+    "edges": [
+      {
+        "direction": "out",
+        "edgeType": "Use",
+        "id": "a49f81ef-fa48-4666-9819-7be4befbb762",
+        "name": "使用",
+        "name_en": "Use",
+        "source": {
+            "id": 2311313,
+            "name": "fanzhidongyzby",
+        },
+        "target": {
+            "id": "Java",
+            "name": "Java"
+        }
+      },
+      {
+        "direction": "out",
+        "edgeType": "Use",
+        "id": "32275d2c-febb-43ba-bc31-95f5bdc1fe30",
+        "name": "使用",
+        "name_en": "Use",
+        "source": {
+            "id": 2311313,
+            "name": "fanzhidongyzby",
+        },
+        "target": {
+            "id": "TypeScript",
+            "name": "TypeScript",
+        },
+        "weight": null
+      },
+      {
+        "direction": "out",
+        "edgeType": "Use",
+        "id": "b6bb8d08-260d-4be9-88f5-e189d1d49774",
+        "name": "使用",
+        "name_en": "Use",
+        "source": {
+            "id": 2311313,
+            "name": "fanzhidongyzby",
+        },
+        "target": {
+            "id": "Rust",
+            "name": "Rust",
+        }
+      }
+    ],
+    "nodes": [
+      {
+        "id": 2311313,
+        "name": "fanzhidongyzby",
+        "nodeType": "User",
+      },
+      {
+        "id": "Java",
+        "name": "Java",
+        "nodeType": "DevLang",
+      },
+      {
+        "id": "TypeScript",
+        "name": "TypeScript",
+        "nodeType": "DevLang",
+      },
+      {
+        "id": "Rust",
+        "name": "Rust",
+        "nodeType": "DevLang",
+      }
+    ],
+    "summary": ""
+  },
+  "error": null,
+  "message": "Success",
+  "status": 0
+}
+```
+
 ## 6. Contribution
 If you'd like to share your developed graph service with the community, feel free to submit a pull request to our repository. After the version is released, we will publish your service on our official website, enabling more open-source users to use it online.
