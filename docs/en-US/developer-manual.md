@@ -225,14 +225,14 @@ class DevLangManager:
             for lang_edge in lang_results:
                 lang_names.append(lang_edge.get('end').get('properties')['name'])
         if len(lang_names):
-            language_names = [item[0] for item in Counter(lang_names).most_common(lang_limit)]
+            language_names = [item[0] for item in Counter(lang_names).most_common(int(lang_limit))]
         
             for lang_name in language_names:
                 user = User(id=user_node.get('properties')['id'], name=user_node.get('properties')['name'])
                 dev_lang = DevLang(id=lang_name, name=lang_name)
                 graph.insert_entity(user)
                 graph.insert_entity(dev_lang)
-                use_edge = Use(source=user, target=dev_lang, id=uuid())
+                use_edge = Use(source=user, target=dev_lang, id=uuid4())
                 graph.insert_relationship(use_edge)
             return graph.to_dict()
 ```
