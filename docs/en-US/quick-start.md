@@ -35,3 +35,6 @@ bash ./bin/start.sh
 Access the page: 
 Open the page in your browser: [http://localhost:8000/](http://localhost:8000/)
 
+## 4. Customize OSGraph
+
+Customize open source graphs you interest according to the [Developer Manual](./developer-manual.md)

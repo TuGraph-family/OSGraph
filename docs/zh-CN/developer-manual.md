@@ -301,7 +301,7 @@ SERVICE_CONFIGS = [
 
 ### 5.5 验证
 
-访问测试URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/:user-name?lang-limit=3
+访问测试URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/fanzhidongyzby?lang-limit=3
 
 响应结果：
 ```json
@@ -387,7 +387,7 @@ SERVICE_CONFIGS = [
 
 
 ## 6. 贡献
-如果您愿意将您开发的图谱服务在社区分享，可以向我们的代码仓库提交PR。版本发布后，我们会将您的服务上线到我们官网，让更多的开源用户可以在线使用。
+如果您愿意将您开发的图谱服务在社区分享，可以向我们的代码仓库提交PR。版本发布后，我们会将您的服务上线到我们官网，让更多的开源用户可以在线使用。详细请参考[贡献手册](../../community/CONTRIBUTING.md)。
 
 
 

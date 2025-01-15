@@ -35,3 +35,6 @@ bash ./bin/start.sh
 页面访问：
 通过浏览器打开页面：[http://localhost:8000/](http://localhost:8000/)
 
+## 4. 定制OSGraph
+
+请参考[开发手册](./developer-manual.md)定制自己感兴趣的开源图谱。

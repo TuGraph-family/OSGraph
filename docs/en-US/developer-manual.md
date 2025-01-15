@@ -300,7 +300,7 @@ SERVICE_CONFIGS = [
 
 ### 5.5 Validation
 
-Test the URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/:user-name?lang-limit=3
+Test the URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/fanzhidongyzby?lang-limit=3
 
 
 Response Result：
@@ -386,4 +386,4 @@ Response Result：
 ```
 
 ## 6. Contribution
-If you'd like to share your developed graph service with the community, feel free to submit a pull request to our repository. After the version is released, we will publish your service on our official website, enabling more open-source users to use it online.
+If you'd like to share your developed graph service with the community, feel free to submit a pull request to our repository. After the version is released, we will publish your service on our official website, enabling more open-source users to use it online. Reference to [Contributing](../../community/CONTRIBUTING.md) document for more details.
