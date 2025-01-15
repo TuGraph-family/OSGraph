@@ -1,0 +1,75 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+    <!-- Vertex (Base Class) -->
+    <rect x="350" y="20" width="100" height="40" fill="white" stroke="black"/>
+    <text x="400" y="45" text-anchor="middle" font-family="Arial">Vertex</text>
+    
+    <!-- First Level Children -->
+    <!-- User -->
+    <rect x="50" y="150" width="100" height="40" fill="white" stroke="black"/>
+    <text x="100" y="175" text-anchor="middle" font-family="Arial">User</text>
+    <line x1="100" y1="150" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Repo -->
+    <rect x="170" y="150" width="100" height="40" fill="white" stroke="black"/>
+    <text x="220" y="175" text-anchor="middle" font-family="Arial">Repo</text>
+    <line x1="220" y1="150" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Organization -->
+    <rect x="290" y="150" width="100" height="40" fill="white" stroke="black"/>
+    <text x="340" y="175" text-anchor="middle" font-family="Arial">Organization</text>
+    <line x1="340" y1="150" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Country -->
+    <rect x="410" y="150" width="100" height="40" fill="white" stroke="black"/>
+    <text x="460" y="175" text-anchor="middle" font-family="Arial">Country</text>
+    <line x1="460" y1="150" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Company -->
+    <rect x="530" y="150" width="100" height="40" fill="white" stroke="black"/>
+    <text x="580" y="175" text-anchor="middle" font-family="Arial">Company</text>
+    <line x1="580" y1="150" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Topic -->
+    <rect x="650" y="150" width="100" height="40" fill="white" stroke="black"/>
+    <text x="700" y="175" text-anchor="middle" font-family="Arial">Topic</text>
+    <line x1="700" y1="150" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+
+    <!-- Contribution -->
+    <rect x="350" y="250" width="100" height="40" fill="white" stroke="black"/>
+    <text x="400" y="275" text-anchor="middle" font-family="Arial">Contribution</text>
+    <line x1="400" y1="250" x2="400" y2="60" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Second Level Children (inherit from Contribution) -->
+    <!-- PR -->
+    <rect x="170" y="350" width="100" height="40" fill="white" stroke="black"/>
+    <text x="220" y="375" text-anchor="middle" font-family="Arial">PR</text>
+    <line x1="220" y1="350" x2="400" y2="290" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Issue -->
+    <rect x="290" y="350" width="100" height="40" fill="white" stroke="black"/>
+    <text x="340" y="375" text-anchor="middle" font-family="Arial">Issue</text>
+    <line x1="340" y1="350" x2="400" y2="290" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Comment -->
+    <rect x="410" y="350" width="100" height="40" fill="white" stroke="black"/>
+    <text x="460" y="375" text-anchor="middle" font-family="Arial">Comment</text>
+    <line x1="460" y1="350" x2="400" y2="290" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Commit -->
+    <rect x="530" y="350" width="100" height="40" fill="white" stroke="black"/>
+    <text x="580" y="375" text-anchor="middle" font-family="Arial">Commit</text>
+    <line x1="580" y1="350" x2="400" y2="290" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Third Level Child (inherits from Comment) -->
+    <!-- CodeReview -->
+    <rect x="410" y="450" width="100" height="40" fill="white" stroke="black"/>
+    <text x="460" y="475" text-anchor="middle" font-family="Arial">CodeReview</text>
+    <line x1="460" y1="450" x2="460" y2="390" stroke="black" marker-end="url(#arrowhead)"/>
+    
+    <!-- Arrow Marker Definition -->
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="black"/>
+        </marker>
+    </defs>
+</svg>
