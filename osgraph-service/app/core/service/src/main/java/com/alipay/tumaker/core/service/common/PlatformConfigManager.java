@@ -5,18 +5,18 @@ package com.alipay.tumaker.core.service.common;
  */
 public interface PlatformConfigManager {
     /**
-     *获取es 服务地址
+     *Get es service address
      */
     String getEsServerUrl();
 
     /**
-     * 获取es 服务账号
+     * Get es service account
      * @return
      */
     String getEsServerUsername();
 
     /**
-     * 获取es 服务密码
+     * Get es service password
      * @return
      */
     String getEsServerPassword();

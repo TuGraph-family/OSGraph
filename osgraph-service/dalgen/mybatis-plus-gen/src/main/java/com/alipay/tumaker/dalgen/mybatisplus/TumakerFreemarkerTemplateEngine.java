@@ -18,10 +18,10 @@ import java.util.Map;
  */
 public class TumakerFreemarkerTemplateEngine extends FreemarkerTemplateEngine {
     /**
-     * 渲染对象 MAP 信息
+     * Render object MAP information
      *
-     * @param config    配置信息
-     * @param tableInfo 表信息对象
+     * @param config    Configuration information
+     * @param tableInfo table information object
      * @return ignore
      */
     @NotNull
@@ -46,10 +46,10 @@ public class TumakerFreemarkerTemplateEngine extends FreemarkerTemplateEngine {
         objectMap.put("swagger", globalConfig.isSwagger());
         objectMap.put("springdoc", globalConfig.isSpringdoc());
         objectMap.put("date", globalConfig.getCommentDate());
-        // 启用 schema 处理逻辑
+        // Enable schema processing logic
         String schemaName = "";
         if (strategyConfig.isEnableSchema()) {
-            // 存在 schemaName 设置拼接 . 组合表名
+            // There is a schemaName setting for splicing. Combined table name
             schemaName = config.getDataSourceConfig().getSchemaName();
             if (StringUtils.isNotBlank(schemaName)) {
                 schemaName += ".";
@@ -65,10 +65,10 @@ public class TumakerFreemarkerTemplateEngine extends FreemarkerTemplateEngine {
 
 
     /**
-     * 输出实体文件
+     * Output entity file
      *
-     * @param tableInfo 表信息
-     * @param objectMap 渲染数据
+     * @param tableInfo Table information
+     * @param objectMap render data
      * @since 3.5.0
      */
     protected void outputEntity(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
@@ -89,10 +89,10 @@ public class TumakerFreemarkerTemplateEngine extends FreemarkerTemplateEngine {
     }
 
     /**
-     * 输出Mapper文件(含xml和Abstract.xml)
+     * Output Mapper file (including xml and Abstract.xml)
      *
-     * @param tableInfo 表信息
-     * @param objectMap 渲染数据
+     * @param tableInfo Table information
+     * @param objectMap render data
      * @since 3.5.0
      */
     protected void outputMapper(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
@@ -135,14 +135,14 @@ public class TumakerFreemarkerTemplateEngine extends FreemarkerTemplateEngine {
     }
 
     protected void outputService(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-        // 屏蔽service
+        // Block service
     }
 
     protected void outputController(@NotNull TableInfo tableInfo, @NotNull Map<String, Object> objectMap) {
-        // 屏蔽controller
+        // Block controller
     }
 
     public void open() {
-        // 屏蔽生成代码后代码目录
+        // Block the code directory after generating code
     }
 }

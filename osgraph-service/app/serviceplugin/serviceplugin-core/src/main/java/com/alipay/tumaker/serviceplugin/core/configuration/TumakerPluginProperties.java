@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * tumaker 插件配置类
+ * tumaker Plug-in configuration class
  */
 @ConfigurationProperties(prefix = TumakerPluginProperties.TUMAKER_PLUGIN_PROP_PREFIX)
 @Data

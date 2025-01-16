@@ -6,31 +6,31 @@ package com.alipay.tumaker.core.model.tumaker.graphquerytemplate;
  */
 public enum TemplateTypeEnum {
     /**
-     * 项目贡献
+     * Project contribution
      */
     REPO_CONTRIBUTE,
     /**
-     * 项目生态
+     * Project ecology
      */
     REPO_ECOLOGY,
     /**
-     * 项目社区
+     * project community
      */
     REPO_COMMUNITY,
     /**
-     * 开发活动
+     * development activities
      */
     ACCT_ACTIVITY,
     /**
-     * 开源伙伴
+     * Open source partners
      */
     ACCT_PARTNER,
     /**
-     * 开源兴趣
+     * Open source interest
      */
     ACCT_INTEREST,
     /**
-     * 未知
+     * unknown
      */
     UNKNOWN,
     ;

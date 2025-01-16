@@ -43,7 +43,7 @@ public class MysqlDatasourceConfig {
         factoryBean.setMapperLocations(
                 new PathMatchingResourcePatternResolver().getResources(mysqlMapperLocations)
         );
-        //向Mybatis过滤器链中添加拦截器，分页插件
+        //Add interceptors and paging plugins to the Mybatis filter chain
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         factoryBean.setPlugins(interceptor);

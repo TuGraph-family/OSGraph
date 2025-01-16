@@ -5,7 +5,7 @@ package com.alipay.tumaker.common.util.errorcode;
  * @version
  */
 public enum TumakerErrorCodeEnum {
-    /********************公共错误码********************/
+    /********************Public error code********************/
 
     /**
      * 请求参数错误

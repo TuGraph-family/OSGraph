@@ -60,24 +60,24 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
     private final static MyCache TEMPLATE_QUERY_CACHE = new MyCache();
 
     /**
-     * 查询默认点语句
+     * Query the default point statement
      */
     private static final String DEFAULT_TUGRAPH_DB_NODE_GQL = "MATCH (n:%s {id:%s}) RETURN n";
     /**
-     * 开发者id
+     * developer id
      */
     private static final String DEVELOPER_ID_PARAMETER_NAME = "developer_id";
     /**
-     * 仓库id
+     * warehouse id
      */
     private static final String REPO_ID_PARAMETER_NAME = "repo_id";
 
     /**
-     * 模版查询缓存key
+     * Template query cache key
      */
     private static final String TEMPLATE_QUERY_CACHE_KEY = "TQC_%s_%s";
     /**
-     * 设置缓存超时时间
+     * Set cache timeout
      */
     private static final Long TEMPLATE_QUERY_CACHE_EXPIRE = 60*60*24L;
 
@@ -88,14 +88,14 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
         if (result.whetherFailed()) {
             return Result.failed(result);
         }
-        // 查询模版
+        // Query template
         Result<QueryTemplateVO> templateResult = tuMakerQueryTemplateDataManager.queryTemplateById(request.getTemplateId());
         if (templateResult.whetherFailed()) {
             return Result.failed(templateResult);
         }
         QueryTemplateVO queryTemplateVO = templateResult.getData();
 
-        // 根据图id查询图项目
+        // Query graph items based on graph id
         Result<GraphProjectVO> projectResult = queryTuMakerProjectById(request.getGraphId());
         if (projectResult.whetherFailed()) {
             return Result.failed(projectResult);
@@ -103,7 +103,7 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
         GraphProjectVO graphProjectVO = projectResult.getData();
         String nodeId = findNodeId(queryTemplateVO, request.getTemplateParameterList());
 
-        // 查询缓存
+        // Query cache
         String cacheKey = String.format(TEMPLATE_QUERY_CACHE_KEY, request.getTemplateId(), nodeId);
         Object o = TEMPLATE_QUERY_CACHE.get(cacheKey);
         if (o instanceof AggregatedResultVO) {
@@ -127,7 +127,7 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
             return Result.failed(TugraphDBErrorCodeEnum.getTugraphDbErrorCode(dbQueryResult.getCode()), dbQueryResult.getErrorMsg(), null);
         }
         aggregatedResultVO = dbQueryResult.getData();
-        // 图谱数据为空，默认返回该节点数据
+        // The graph data is empty, and the node data is returned by default.
         if (aggregatedResultVO.getNodes() == null || aggregatedResultVO.getNodes().length == 0) {
             String gql = String.format(DEFAULT_TUGRAPH_DB_NODE_GQL, queryTemplateVO.getQuerySource().name().toLowerCase(Locale.ROOT), nodeId);
             TuQueryExecuteRequest tuQueryExecuteRequest = new TuQueryExecuteRequest();
@@ -145,10 +145,10 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
         aggregatedResultVO.setGraphId(request.getGraphId().toString());
         aggregatedResultVO.setEngineType(ExecuteEngineEnum.TU_GRAPH_DB.name());
 
-        // 切分数据
+        // Slice data
         sliceGraphData(aggregatedResultVO, request.getLimit());
 
-        // 设置缓存
+        // Set up cache
         TEMPLATE_QUERY_CACHE.put(cacheKey, aggregatedResultVO, TEMPLATE_QUERY_CACHE_EXPIRE, TimeUnit.SECONDS);
         return Result.success(aggregatedResultVO);
     }
@@ -167,7 +167,7 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
 
     @Override
     public Result<AggregatedResultVO> executeShareQueryTemplate(Long templateId, String paramsStr) {
-        // 查询模版
+        // Query template
         Result<QueryTemplateVO> templateResult = tuMakerQueryTemplateDataManager.queryTemplateById(templateId);
         if (templateResult.whetherFailed()) {
             return Result.failed(templateResult);
@@ -209,11 +209,11 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
     }
 
     private Result<GraphProjectVO> queryTuMakerProjectById(Long graphId) {
-        // todo: xc 目前仅一个项目，后续迁移之后补全
+        // todo: xc currently only has one project, it will be completed after subsequent migration
         return Result.success(new GraphProjectVO(graphId, dbConfig.getDbName()));
     }
 
-    //对返回结果切片
+    //Slice the returned results
     private void sliceGraphData(AggregatedResultVO aggregatedResultVO, Long limit) {
         if (limit == null || limit <= 0) {
             return;
@@ -229,9 +229,9 @@ public class TuMakerTemplateManagerImpl implements TuMakerTemplateManager {
             nodeList = nodeList.stream().limit(limit).collect(Collectors.toList());
         }
 
-        //获取nodes的所有id
+        //Get all ids of nodes
         Set<String> nodeSet = nodeList.stream().map(Node::getId).collect(Collectors.toSet());
-        //若边的起点、终点都在nodeSet中，则保留该边
+        //If the starting point and end point of an edge are both in nodeSet, the edge is retained.
         List<Edge> edgesList = Arrays.stream(edges).filter(o -> (nodeSet.contains(o.getSource()) && nodeSet.contains(o.getTarget()))).collect(Collectors.toList());
 
         Node[] sliceNodes = new Node[nodeList.size()];

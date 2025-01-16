@@ -4,28 +4,28 @@ package com.alipay.tumaker.devops.core.model.sigma;
  * @author Created by XiangChen
  * @date 2024/4/23 18:54
  *
- * pod的腾挪等级，
+ * The movement level of the pod,
  * 参照规范：https://developer.alipay.com/wiki/rules/dev_kb/dev?slug=al3t55
  */
 public enum MigrationLevelEnum {
     /**
-     * 3 天，3天强制删除，需要审批后才能接入
+     * 3 days, forced deletion in 3 days, need approval before access
      */
     L1,
     /**
-     * 4小时，ODPS，8小时强制删除，需要审批后才能接入
+     * 4 hours, ODPS, 8 hours forced deletion, need approval before access
      */
     L2,
     /**
-     *  1小时，数据库、Tair、Spanner、部分离线任务等，2小时强制删除
+     *  1 hour, database, Tair, Spanner, some offline tasks, etc., forced deletion in 2 hours
      */
     L3,
     /**
-     * 20分钟，SOFA/SOFABoot 等在线应用，40分钟强制删除
+     * 20 minutes, SOFA/SOFABoot and other online applications, 40 minutes forced deletion
      */
     L4,
     /**
-     * 1分钟，FaaS 应用，2分钟强制删除
+     * 1 minute, FaaS application, 2 minutes forced deletion
      */
     L5,
     ;

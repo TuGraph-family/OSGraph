@@ -14,19 +14,19 @@ import java.util.List;
 public interface TuMakerTemplateManager {
 
     /**
-     * 执行查询模板
+     * Execute query template
      * @param tuMakerExecuteTemplateRequest
      * @return
      */
     Result<AggregatedResultVO> executeQueryTemplate(TuMakerExecuteTemplateRequest tuMakerExecuteTemplateRequest);
 
     /**
-     * 执行全文查询
+     * Perform full text query
      */
     Result<List<FullTextQueryGithubRepoVO>> executeFullTextQuery(String keyword, String indexName);
 
     /**
-     * 执行分享查询模版
+     * Execute shared query template
      * @param templateId
      * @param params
      * @return

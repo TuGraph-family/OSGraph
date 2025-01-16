@@ -8,7 +8,7 @@ import java.util.Enumeration;
 
 public class CommonUtil {
     /**
-     * 获取本机ip地址源码
+     * Get the source code of the local IP address
      */
     public static String getLocalAddress() {
         try {

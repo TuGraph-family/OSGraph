@@ -8,18 +8,18 @@ import java.util.List;
 /**
  * @author Created by XiangChen
  * @date 2024/3/19 16:48
- * 图查询模版数据管理接口
+ * Graph query template data management interface
  */
 public interface TuMakerQueryTemplateDataManager {
 
     /**
-     * 查询模版列表
+     * Query template list
      * @return
      */
     Result<List<QueryTemplateVO>> listQueryTemplate();
 
     /**
-     * 根据id查询模版详情
+     * Query template details based on id
      * @param templateId
      * @return
      */

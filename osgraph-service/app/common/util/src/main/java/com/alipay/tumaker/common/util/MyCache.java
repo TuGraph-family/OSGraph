@@ -10,9 +10,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @date 2024/4/26 15:37
  */
 public class MyCache {
-    //键值对集合
+    //collection of key-value pairs
     public final Map<String, Entity> hashMap;
-    //定时器线程池，用于清除过期缓存
+    //Timer thread pool for clearing expired cache
     private static final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(
             1, new PlatformThreadFactory(MyCache.class.getName()));
     private final ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
@@ -22,15 +22,15 @@ public class MyCache {
     }
 
     /**
-     * 添加缓存，永久
+     * Add cache, permanently
      *
-     * @param key  键
-     * @param data 值
+     * @param key  key
+     * @param data value
      */
     public void putForever(String key, Object data) {
         try {
             reentrantReadWriteLock.writeLock().lock();
-            //不设置过期时间
+            //No expiration time set
             hashMap.put(key, new Entity(data, null));
         } finally {
             reentrantReadWriteLock.writeLock().unlock();
@@ -38,21 +38,21 @@ public class MyCache {
     }
 
     /**
-     * 添加缓存，有过期时间
+     * Add cache with expiration time
      *
-     * @param key    键
-     * @param data   值
-     * @param expire 过期时间
-     * @param timeUnit  时间单位
+     * @param key    key
+     * @param data   value
+     * @param expire Expiration time
+     * @param timeUnit  time unit
      */
     public void put(String key, Object data, long expire, TimeUnit timeUnit) {
-        //清除原键值对
+        //Clear original key-value pairs
         remove(key);
-        //设置过期时间
+        //Set expiration time
         Future future = executorService.schedule(new Runnable() {
             @Override
             public void run() {
-                //过期后清除该键值对
+                //Clear the key-value pair after expiration
                 try {
                     reentrantReadWriteLock.writeLock().lock();
                     Object object = hashMap.remove(key);
@@ -70,9 +70,9 @@ public class MyCache {
     }
 
     /**
-     * 读取缓存
+     * read cache
      *
-     * @param key 键
+     * @param key key
      * @return Object
      */
     public Object get(String key) {
@@ -87,10 +87,10 @@ public class MyCache {
     }
 
     /**
-     * 读取缓存
+     * read cache
      *
-     * @param key 键
-     * @param clazz 值类型
+     * @param key key
+     * @param clazz value type
      * @return  T
      */
     public  <T> T get(String key, Class<T> clazz) {
@@ -98,9 +98,9 @@ public class MyCache {
     }
 
     /**
-     * 清除缓存
+     * clear cache
      *
-     * @param key 键
+     * @param key key
      * @return Object
      */
     public Object remove(String key) {
@@ -108,7 +108,7 @@ public class MyCache {
         if (entity == null) {
             return null;
         }
-        //清除原键值对定时器
+        //Clear the original key-value pair timer
         Future future = entity.getFuture();
         if (future != null) {
             future.cancel(true);
@@ -140,7 +140,7 @@ public class MyCache {
     }
 
     /**
-     * 查询当前缓存的键值对数量
+     * Query the number of currently cached key-value pairs
      *
      * @return size
      */
@@ -157,7 +157,7 @@ public class MyCache {
         Entity entity;
         try {
             reentrantReadWriteLock.writeLock().lock();
-            //清除原缓存数据
+            //Clear original cached data
             entity = hashMap.remove(key);
         } finally {
             reentrantReadWriteLock.writeLock().unlock();
@@ -166,12 +166,12 @@ public class MyCache {
     }
 
     /**
-     * 缓存实体类
+     * Caching entity classes
      */
     private static class Entity {
-        //键值对的value
+        //The value of the key-value pair
         private Object value;
-        //定时器Future
+        //TimerFuture
         private Future future;
 
         public Entity(Object value, Future future) {
@@ -180,7 +180,7 @@ public class MyCache {
         }
 
         /**
-         * 获取值
+         * Get value
          *
          * @return Object
          */
@@ -189,7 +189,7 @@ public class MyCache {
         }
 
         /**
-         * 获取Future对象
+         * Get Future object
          *
          * @return Future
          */

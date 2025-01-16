@@ -19,27 +19,27 @@ import java.util.List;
 public class TuMakerExecuteTemplateRequest {
 
     /**
-     * 模版id
+     * template id
      */
     private Long templateId;
 
     /**
-     * 参数化列表
+     * Parameterized list
      */
     private List<TemplateParameterRequest> templateParameterList = new LinkedList<>();
 
     /**
-     * graphId 图id - 预留字段，可不传
+     * graphId graph id - reserved field, can not be passed
      */
     private Long graphId = 0L;
 
     /**
-     * limit - 预留字段，可不传
+     * limit - Reserved fields, do not need to be passed
      */
     private Long limit = 100L;
 
     /**
-     * 执行引擎 - 默认tugraph-db
+     * Execution engine - default tugraph-db
      */
     private ExecuteEngineEnum engineType = ExecuteEngineEnum.TU_GRAPH_DB;
 

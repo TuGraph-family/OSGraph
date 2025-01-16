@@ -10,15 +10,15 @@ import lombok.Data;
 public class TemplateParameterRequest {
 
     /**
-     * 参数名
+     * Parameter name
      */
     private String parameterName;
     /**
-     * 参数值
+     * Parameter value
      */
     private String parameterValue;
     /**
-     * 参数类型
+     * Parameter type
      */
     private ValueTypeEnum valueType = ValueTypeEnum.UNKNOWN;
 

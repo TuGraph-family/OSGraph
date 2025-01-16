@@ -12,7 +12,7 @@ import java.util.List;
 public class SigmaSpec {
 
     /**
-     * 容器列表,默认只创建一个container
+     * Container list, only one container is created by default
      */
     private List<SigmaContainer> containers;
 

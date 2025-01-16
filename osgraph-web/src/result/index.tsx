@@ -52,7 +52,7 @@ export default () => {
     renderMode: string;
     extendParams: Record<string, any>;
   }>(() => {
-    /** 用于初始化渲染模式 */
+    /** Used to initialize rendering mode */
     const initializeRenderMode: () => string = () => {
       const params = new URLSearchParams(location.search);
       const renderMode = params.get("render-mode");
@@ -234,7 +234,7 @@ export default () => {
     }
   }, [shareId, shareParams]);
 
-  /** 主页跳转注入 State 的查询逻辑 */
+  /** Homepage jump injects State query logic */
   useEffect(() => {
     if (location.state) {
       generateShareLink(location.state);
@@ -382,7 +382,7 @@ export default () => {
           </div>
         )}
         <Spin spinning={isLoading}>
-          {/* 分享页没有搜索栏，画布高度需要区分 */}
+          {/* There is no search bar on the sharing page, and the height of the canvas needs to be differentiated */}
           <div className={`${isShare ? "graph-share" : "graph"}`}>
             <GraphView
               data={data}
@@ -395,7 +395,7 @@ export default () => {
             />
           </div>
         </Spin>
-        {/* 水印 */}
+        {/* watermark */}
         <div className={styles["graph-waterfall"]} ref={powerByRef}>
           <div
             className={styles["os-graph"]}

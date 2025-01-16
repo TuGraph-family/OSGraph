@@ -8,34 +8,34 @@ import java.util.List;
 import java.util.Map;
 
 /***
- * 图分析结果
+ * Graph analysis results
  * @author junhaohu.hjh
  * version : AggregatedResultVO.java, v 0.1
  */
 @Data
 public class AggregatedResultVO {
     /**
-     * 图谱id
+     * Map id
      */
     private String graphId;
     /**
-     * 点数据
+     * point data
      */
     private Node[] nodes;
     /**
-     * 边数据
+     * edge data
      */
     private Edge[] edges;
     /**
-     * 查询结果集
+     * Query result set
      */
     private List<Map<String, Object>> resultSet;
     /**
-     * 执行引擎
+     * execution engine
      */
     private String engineType;
     /**
-     * 执行语句
+     * Execute statement
      */
     private String executeStatement;
 }

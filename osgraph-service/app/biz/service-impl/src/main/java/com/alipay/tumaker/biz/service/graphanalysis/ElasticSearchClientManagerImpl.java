@@ -54,11 +54,11 @@ public class ElasticSearchClientManagerImpl implements ElasticSearchClientManage
         String esServerPassword = platformConfigManager.getEsServerPassword();
         log.info("serverUrl={}", serverUrl);
 
-        // es 8.9 初始化链接
+        // es 8.9 initialization link
         /*RestClient restClient = RestClient
                 .builder(HttpHost.create(serverUrl))
                 .build();*/
-        //加认证
+        // Add certification
 /*        RestClient restClient=RestClient
                 .builder(HttpHost.create(serverUrl))
                 .setDefaultHeaders(new Header[]{
@@ -90,7 +90,7 @@ public class ElasticSearchClientManagerImpl implements ElasticSearchClientManage
         MatchPhraseQuery matchPhraseQuery = new MatchPhraseQuery.Builder()
                 .field(esIndexBodyNameTag).query(searchKeyMap.get(esIndexBodyNameTag)).slop(10).build();
 
-        // 添加排序条件，按 "sort_field" 字段升序排序
+        // Add sorting conditions to sort by "sort_field" field in ascending order
         List<SortOptions> sortOptionsList = new ArrayList<>();
         SortOptions sortOptions = new SortOptions.Builder()
                 .field(f -> f.field(esIndexBodyStarTag).order(SortOrder.Desc))
@@ -100,7 +100,7 @@ public class ElasticSearchClientManagerImpl implements ElasticSearchClientManage
 
         SearchRequest searchRequest;
         try {
-            // 创建一个匹配所有文档的搜索请求
+            // Create a search request that matches all documents
             if(indexNameEnum == FullTextIndexNameEnum.github_repo) {
                  searchRequest = new SearchRequest.Builder()
                         .index(indexNameEnum.getIndexName())
@@ -115,11 +115,11 @@ public class ElasticSearchClientManagerImpl implements ElasticSearchClientManage
             }
 
 
-            // 执行搜索请求
+            // Execute search request
             log.info("start esclient search");
 
             SearchResponse<FullTextQueryGithubRepoVO> searchResponse = this.esClient.search(searchRequest, FullTextQueryGithubRepoVO.class);
-            //输出结果
+            // Output results
             for(Hit hit: searchResponse.hits().hits()){
                 FullTextQueryGithubRepoVO fullTextQueryVO = (FullTextQueryGithubRepoVO) hit.source();
                 fullTextQueryVOList.add(fullTextQueryVO);

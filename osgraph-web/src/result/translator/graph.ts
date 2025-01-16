@@ -72,7 +72,7 @@ const graphTranslator = () => {
   const transUrlSearchParams = (search: string, templateType: string) => {
     const searchObj: Record<string, any> = {};
     const params = new URLSearchParams(search);
-    /** 根据不同的 templateType 需要做不同的限制 */
+    /** Different restrictions are required according to different templateTypes */
     for (const [key, value] of params) {
       if (GRAPH_EXTEND_PARAMS_MAP[templateType + key]) {
         searchObj[GRAPH_EXTEND_PARAMS_MAP[templateType + key]] =
@@ -82,12 +82,12 @@ const graphTranslator = () => {
       }
     }
 
-    /** 单独处理 contrib-repo，添加预处理参数 */
+    /** Process contrib-repo separately and add preprocessing parameters */
     if (
       templateType === GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]
     ) {
       const LastYearTimestamps = getLast10YearsTimestampsInSeconds();
-      /** 等到扩展参数阶段，开放用户自定义参数的功能 */
+      /** Wait until the extended parameter stage to open the function of user-defined parameters. */
       const startDate = params.get("start");
       const endDate = params.get("end");
       let startTimestamp = LastYearTimestamps.startTimestamp;

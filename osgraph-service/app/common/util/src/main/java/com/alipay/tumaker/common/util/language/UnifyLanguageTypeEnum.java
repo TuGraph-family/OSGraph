@@ -8,11 +8,11 @@ public enum UnifyLanguageTypeEnum {
     CHINESE("Chinese","中文"),
     ENGLISH("English","英文");
     /**
-     * 语言type
+     * Language type
      */
     private final String languageType;
     /**
-     * 错误码英文解释
+     * English explanation of error code
      */
     private final String chineseDesc;
 

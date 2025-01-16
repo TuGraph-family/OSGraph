@@ -12,47 +12,47 @@ import java.util.List;
 @Data
 public class QueryTemplateVO {
     /**
-     * 模版id
+     * template id
      */
     private Long id;
 
     /**
-     * 查询模版
+     * Query template
      */
     private String template;
 
     /**
-     * 模版名称
+     * Template name
      */
     private String templateName;
 
     /**
-     * 模版类型
+     * template type
      */
     private TemplateTypeEnum templateType;
 
     /**
-     * 参数化列表
+     * Parameterized list
      */
     private List<TemplateParameterRequest> templateParameterList;
 
     /**
-     * 模版说明
+     * Template description
      */
     private String templateDesc;
 
     /**
-     * 语言类型
+     * language type
      */
     private String languageType;
 
     /**
-     * 模版查询类型
+     * Template query type
      */
     private TemplateQueryTypeEnum queryType;
 
     /**
-     * 模版查询数据源
+     * Template query data source
      */
     private FullTextIndexNameEnum querySource;
 }

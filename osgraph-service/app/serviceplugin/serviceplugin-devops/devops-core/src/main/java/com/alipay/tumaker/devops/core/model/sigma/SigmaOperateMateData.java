@@ -15,16 +15,16 @@ import java.util.Map;
 public class SigmaOperateMateData {
 
     /**
-     * 注解
+     * annotation
      */
     private final Map<String, String> annotations = new HashMap<>();
 
     /**
-     * app名称
+     * app name
      */
     private String appName;
     /**
-     * 状态
+     * state
      */
     private PodStatusEnum status;
 

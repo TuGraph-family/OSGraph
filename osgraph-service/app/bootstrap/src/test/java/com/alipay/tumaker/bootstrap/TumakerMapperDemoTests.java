@@ -32,7 +32,7 @@ class TumakerMapperDemoTests {
 
 	@Test
 	public void mapperDemo(){
-		// 数据插入
+		// Data insertion
 		PersonLDO insertPersonLDO1 = new PersonLDO();
 		insertPersonLDO1.setName("张三");
 		insertPersonLDO1.setRole(Byte.valueOf("1"));
@@ -43,21 +43,21 @@ class TumakerMapperDemoTests {
 		System.out.println(insertPersonLDO1.getId());
 		System.out.println(insertPersonLDO2.getId());
 
-		// 数据查询1
+		// Data query1
 		//QueryWrapper<PersonLDO> personLDOQueryWrapper = new QueryWrapper<>(PersonLDO.class);
 		QueryWrapper<PersonLDO> personLDOQueryWrapper = Wrappers.query(PersonLDO.class);
 		personLDOQueryWrapper.eq("id", insertPersonLDO1.getId());
 		PersonLDO personLDO1 = personLMapper.selectOne(personLDOQueryWrapper);
 		System.out.println("personLDO1:" + personLDO1);
 
-		// 数据查询2
+		// Data query2
 		//LambdaQueryWrapper<PersonLDO> personLDOLambdaQueryWrapper = new LambdaQueryWrapper<>(PersonLDO.class);
 		LambdaQueryWrapper<PersonLDO> personLDOLambdaQueryWrapper = Wrappers.lambdaQuery(PersonLDO.class);
 		personLDOLambdaQueryWrapper.eq(PersonLDO::getId, insertPersonLDO2.getId());
 		PersonLDO personLDO2 = personLMapper.selectOne(personLDOLambdaQueryWrapper);
 		System.out.println("personLDO2:" + personLDO2);
 
-		// 数据查询3
+		// Data query3
 		//LambdaQueryChainWrapper<PersonLDO> personLDOLambdaQueryChainWrapper1 = new LambdaQueryChainWrapper<>(PersonLDO.class);
 		//LambdaQueryChainWrapper<PersonLDO> personLDOLambdaQueryChainWrapper = ChainWrappers.lambdaQueryChain(personLMapper);
 		LambdaQueryChainWrapper<PersonLDO> personLDOLambdaQueryChainWrapper = ChainWrappers.lambdaQueryChain(PersonLDO.class);
@@ -65,8 +65,8 @@ class TumakerMapperDemoTests {
 		PersonLDO personLDO3 = personLDOLambdaQueryChainWrapper.one();
 		System.out.println("personLDO3:" + personLDO3);
 
-		// 数据查询4 分页查询
-		//new Page<>(第几页, 一页取多少条数据)
+		// Data query 4 paging query
+		//new Page<>(Which page, how many pieces of data to fetch from one page?)
 		LambdaQueryWrapper<PersonLDO> personLDOLambdaQueryWrapper4 = Wrappers.lambdaQuery(PersonLDO.class);
 		personLDOLambdaQueryWrapper4.eq(PersonLDO::getId, insertPersonLDO1.getId());
 		personLDOLambdaQueryWrapper4.or().eq(PersonLDO::getId, insertPersonLDO2.getId());
@@ -74,45 +74,45 @@ class TumakerMapperDemoTests {
 		List<PersonLDO> records4 = personLDOPage4.getRecords();
 		System.out.println("personLDO4:" + personLDOPage4.getTotal());
 
-		// 数据查询5 分页查询
-		//new Page<>(第几页, 一页取多少条数据)
+		// Data query 5 paging query
+		//new Page<>(Which page, how many pieces of data to fetch from one page?)
 		LambdaQueryChainWrapper<PersonLDO> personLDOLambdaQueryChainWrapper5 = ChainWrappers.lambdaQueryChain(PersonLDO.class);
 		Page<PersonLDO> personLDO5 = personLDOLambdaQueryChainWrapper5.page(new Page<>(1, 20));
 		List<PersonLDO> records5 = personLDO5.getRecords();
 		System.out.println("personLDO5:" + personLDO5.getTotal());
 
-		// 数据更新1
+		// Data update1
 		PersonLDO updatePersonLDO1 = new PersonLDO();
 		updatePersonLDO1.setId(insertPersonLDO1.getId());
 		UpdateWrapper<PersonLDO> update = Wrappers.update(updatePersonLDO1);
 		update.set("name", "张三2");
 		personLMapper.update(update);
 
-		// 数据更新2
+		// Data update2
 		UpdateWrapper<PersonLDO> update2 = Wrappers.update();
 		update2.eq("id", insertPersonLDO1.getId());
 		PersonLDO updatePersonLDO2 = new PersonLDO();
 		updatePersonLDO2.setName("张三3");
 		personLMapper.update(updatePersonLDO2, update2);
 
-		// 数据更新3
+		// Data update3
 		LambdaUpdateWrapper<PersonLDO> personLDOLambdaUpdateWrapper3 = Wrappers.lambdaUpdate(PersonLDO.class);
 		personLDOLambdaUpdateWrapper3.setEntity(updatePersonLDO1);
 		personLDOLambdaUpdateWrapper3.set(PersonLDO::getName, "张三4");
 		personLMapper.update(personLDOLambdaUpdateWrapper3);
 
-		// 数据更新3
+		// Data update3
 		LambdaUpdateWrapper<PersonLDO> personLDOLambdaUpdateWrapper4 = Wrappers.lambdaUpdate(PersonLDO.class);
 		personLDOLambdaUpdateWrapper4.eq(PersonLDO::getId, insertPersonLDO2.getId());
 		personLDOLambdaUpdateWrapper4.set(PersonLDO::getName, "张三4");
 		personLMapper.update(personLDOLambdaUpdateWrapper4);
 
-		// 数据删除 1
+		// Data deletion 1
 		PersonLDO deletePersonLDO = new PersonLDO();
 		deletePersonLDO.setId(insertPersonLDO1.getId());
 		personLMapper.deleteById(deletePersonLDO);
 
-		// 数据删除 2
+		// Data deletion 2
 		LambdaQueryWrapper<PersonLDO> personLDOLambdaQueryWrapper1 = Wrappers.lambdaQuery(PersonLDO.class);
 		personLDOLambdaQueryWrapper1.eq(PersonLDO::getId, insertPersonLDO2.getId());
 		personLMapper.delete(personLDOLambdaQueryWrapper1);

@@ -1,31 +1,31 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 
-// 从标准输入读取数据
+// Read data from standard input
 async function getInputData() {
-    return new Promise((resolve, reject) => {
-        let input = '';
-        process.stdin.on('data', chunk => {
-            input += chunk;
-        });
-        process.stdin.on('end', () => {
-            try {
-                resolve(JSON.parse(input));
-            } catch (err) {
-                reject(err);
-            }
-        });
-        process.stdin.on('error', err => {
-            reject(err);
-        });
+  return new Promise((resolve, reject) => {
+    let input = "";
+    process.stdin.on("data", (chunk) => {
+      input += chunk;
     });
+    process.stdin.on("end", () => {
+      try {
+        resolve(JSON.parse(input));
+      } catch (err) {
+        reject(err);
+      }
+    });
+    process.stdin.on("error", (err) => {
+      reject(err);
+    });
+  });
 }
 
 async function renderGraph(data) {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
 
-    // 生成 HTML 内容
-    const htmlContent = `
+  // Generate HTML content
+  const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -73,24 +73,26 @@ async function renderGraph(data) {
     </html>
     `;
 
-    // 设置页面内容
-    await page.setContent(htmlContent);
-    await page.waitForFunction('window.layoutCompleted === true', { timeout: 5000 });
+  // Set page content
+  await page.setContent(htmlContent);
+  await page.waitForFunction("window.layoutCompleted === true", {
+    timeout: 5000,
+  });
 
-    // 截图并保存到 Buffer
-    const screenshotBuffer = await page.screenshot({ encoding: 'binary' });
-    await browser.close();
+  // Take a screenshot and save it to Buffer
+  const screenshotBuffer = await page.screenshot({ encoding: "binary" });
+  await browser.close();
 
-    // 将 Buffer 写入标准输出
-    process.stdout.write(screenshotBuffer);
+  // Write Buffer to standard output
+  process.stdout.write(screenshotBuffer);
 }
 
 (async () => {
-    try {
-        const inputData = await getInputData();
-        await renderGraph(inputData);
-    } catch (err) {
-        console.error('Error rendering graph:', err);
-        process.exit(1);
-    }
+  try {
+    const inputData = await getInputData();
+    await renderGraph(inputData);
+  } catch (err) {
+    console.error("Error rendering graph:", err);
+    process.exit(1);
+  }
 })();

@@ -6,28 +6,28 @@ import lombok.Data;
 import java.util.Map;
 
 /**
- * 模版查询请求参数
+ * Template query request parameters
  */
 @Data
 public class TuQueryTemplateExecuteRequest {
 
     /**
-     * 查询语句,模版查询，参数占位符${{parameterName}}
+     * Query statement, template query, parameter placeholder ${{parameterName}}
      */
     private String gql;
 
     /**
-     * 查询参数
+     * query parameters
      */
     private Map<String, Object> parameters;
 
     /**
-     * 语言类型
+     * language type
      */
     private GraphLanguageTypeEnum languageType;
 
     /**
-     * 图名称
+     * Picture name
      */
     private String graphName;
 

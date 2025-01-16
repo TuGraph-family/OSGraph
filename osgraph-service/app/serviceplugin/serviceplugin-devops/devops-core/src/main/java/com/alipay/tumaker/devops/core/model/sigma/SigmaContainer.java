@@ -11,18 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 public class SigmaContainer {
 
     /**
-     * 名称
+     * name
      */
     private String name;
 
-    // 允许修改的字段 start //
+    // Fields allowed to be modified start //
     /**
-     * 容器image
+     * containerimage
      */
     private String image;
 
     /**
-     * 容器的env
+     * Container env
      */
     private String env;
 
@@ -32,13 +32,13 @@ public class SigmaContainer {
     private String command;
 
     /**
-     * 启动参数
+     * Startup parameters
      */
     private String args;
-    // 允许修改的字段 end //
+    // Fields allowed to be modified end //
 
     /**
-     * 资源规格
+     * Resource specification
      */
     private SigmaSpecResource resource;
 

@@ -3,16 +3,16 @@ package com.alipay.tumaker.spi.core.model.constants;
 
 public enum SpiResultCodeEnum {
     /**
-     * 操作成功
+     * Operation successful
      */
     SUCCESS("SUCCESS", "操作成功"),
     /**
-     * 操作中
+     * In operation
      */
     RUNNING("RUNNING", "操作中"),
 
     /**
-     * 执行 cmdAgent 命令错误
+     * Error executing cmdAgent command
      */
     CmdAgentexecuteError("CmdAgentexecuteError","cmdAgent 执行命令失败");
 

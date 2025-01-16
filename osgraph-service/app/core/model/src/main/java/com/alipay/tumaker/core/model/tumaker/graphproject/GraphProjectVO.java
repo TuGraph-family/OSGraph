@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 public class GraphProjectVO {
 
     /**
-     * 图项目id
+     * Figure item id
      */
     private Long graphId;
 
     /**
-     * 图项目名称
+     * Figure project name
      */
     private String graphName;
 }

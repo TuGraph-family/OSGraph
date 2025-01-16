@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 查询模版表
+ * Query template table
  * </p>
  *
  * @author dalgen-mybatisplus
@@ -19,48 +19,48 @@ public class TumakerQueryTemplateDO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键
+     * primary key
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 查询模版
+     * Query template
      */
     private String template;
 
     /**
-     * 查询模版
+     * Query template
      */
     private String templateParameter;
 
     /**
-     * 模版名称
+     * Template name
      */
     private String templateName;
 
     /**
-     * 模版类型
+     * template type
      */
     private String templateType;
 
     /**
-     * 模版说明
+     * Template description
      */
     private String templateDesc;
 
     /**
-     * 语言类型
+     * language type
      */
     private String languageType;
 
     /**
-     * 查询类型-语句模版/函数模版
+     * Query type-statement template/function template
      */
     private String templateQueryType;
 
     /**
-     * 查询数据源
+     * Query data source
      */
     private String querySource;
 

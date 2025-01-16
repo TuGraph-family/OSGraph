@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * 查询模版表 Mapper 接口
+ * Query template table Mapper interface
  * </p>
  *
  * @author dalgen-mybatisplus

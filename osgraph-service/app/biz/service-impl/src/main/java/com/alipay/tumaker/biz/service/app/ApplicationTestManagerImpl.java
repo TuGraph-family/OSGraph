@@ -28,7 +28,7 @@ public class ApplicationTestManagerImpl implements ApplicationTestManager{
     public PersonLPageDto getPersonLPage(int index, int pageSize) {
         QueryWrapper<PersonLDO> personLWrapper = new QueryWrapper<>(new PersonLDO());
         personLWrapper.orderByAsc("id");
-        //new Page<>(第几页, 一页取多少条数据)
+        //new Page<>(Which page, how many pieces of data to fetch from one page?)
         Page<PersonLDO> personLDOPage = personLMapper.selectPage(new Page<>(index, pageSize), personLWrapper);
         long total = personLDOPage.getTotal();
         PersonLPageDto personLPageDto = new PersonLPageDto();

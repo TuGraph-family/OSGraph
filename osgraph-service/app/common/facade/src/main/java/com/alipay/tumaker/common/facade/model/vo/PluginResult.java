@@ -3,7 +3,7 @@ package com.alipay.tumaker.common.facade.model.vo;
 import java.io.Serializable;
 
 /**
- * 插件统一返回结构体
+ * Plug-ins uniformly return structures
  */
 public class PluginResult<T> implements Serializable {
     private static final long serialVersionUID = -1009665951460964501L;

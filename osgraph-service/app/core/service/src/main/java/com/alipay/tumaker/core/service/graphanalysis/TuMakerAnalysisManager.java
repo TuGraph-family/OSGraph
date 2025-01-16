@@ -7,7 +7,7 @@ import com.alipay.tumaker.common.facade.model.ExecuteEngineEnum;
 
 public interface TuMakerAnalysisManager {
     /**
-     * 执行查询语句
+     * Execute query statement
      */
     Result<AggregatedResultVO> execute(String gql, GraphLanguageTypeEnum graphLanguageType, Long graphId, Long limit, ExecuteEngineEnum engineType);
 }

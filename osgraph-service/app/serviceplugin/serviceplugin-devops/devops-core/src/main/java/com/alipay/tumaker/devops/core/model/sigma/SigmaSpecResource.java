@@ -5,18 +5,18 @@ import lombok.Data;
 /**
  * @author Created by XiangChen
  * @date 2024/4/23 18:01
- * 创建容器时指定的资源规格
+ * Resource specifications specified when creating the container
  */
 @Data
 public class SigmaSpecResource {
 
     /**
-     * 容器运行过程中能够使用的最大资源量
+     * The maximum amount of resources that a container can use while running
      */
     private SigmaResource limits;
 
     /**
-     * 容器启动时至少需要的资源量
+     * The minimum amount of resources required when the container starts
      */
     private SigmaResource requests;
 

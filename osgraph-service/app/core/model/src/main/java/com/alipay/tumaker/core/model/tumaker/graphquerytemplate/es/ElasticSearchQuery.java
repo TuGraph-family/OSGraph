@@ -7,15 +7,15 @@ import java.util.List;
 @Data
 public class ElasticSearchQuery {
     /**
-     * 查询模版
+     * Query template
      */
     private MatchPhrase query;
     /**
-     * 查询返回行数
+     * Query returns the number of rows
      */
     private int size = 10;
     /**
-     * 排查
+     * troubleshooting
      */
     private List<Object> sort;
 

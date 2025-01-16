@@ -6,19 +6,19 @@ import com.alipay.tumaker.common.facade.model.vo.analysis.AggregatedResultVO;
 import com.alipay.tumaker.common.facade.model.vo.PluginResult;
 
 /**
- * 图查询统一接口定义
+ * Graph query unified interface definition
  */
 public interface TuQueryFacade {
 
     /**
-     * 执行模版查询-函数调用
+     * Execute template query-function call
      * @param tuQueryTemplateExecuteRequest
      * @return
      */
     PluginResult<AggregatedResultVO> executeQueryTemplateFunction(TuQueryTemplateExecuteRequest tuQueryTemplateExecuteRequest);
 
     /**
-     * 执行图查询-GQL调用
+     * Execution graph query-GQL call
      * @param tuQueryExecuteRequest
      * @return
      */

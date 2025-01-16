@@ -7,15 +7,15 @@ public enum GraphLanguageTypeEnum {
      */
     CYPHER("CYPHER"),
     /**
-     * ISOGQL 标准查询语言-Cypher风格
+     * ISOGQL standard query language-Cypher style
      */
     ISOGQL("ISOGQL"),
     /**
-     * ISOGQL 标准查询语言-SQL风格
+     * ISOGQL Standard Query Language-SQL style
      */
     ISOGQL_SQL_STYLE("ISOGQL_SQL_STYLE"),
     /**
-     * 未知
+     * unknown
      */
     UNKNOWN("UNKNOWN");
 

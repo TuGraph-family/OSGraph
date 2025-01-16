@@ -32,8 +32,8 @@ public class MybatisPlusGeneratorRunner {
 
         FastAutoGenerator fastAutoGenerator = FastAutoGenerator.create(url, username, password)
                 .globalConfig(builder -> {
-                    builder.author("dalgen-mybatisplus"); // 设置作者
-                    builder.outputDir(System.getProperty("user.dir") + "/app/common/dal/dal-core/src/main/java/"); // 指定输出目录
+                    builder.author("dalgen-mybatisplus"); // Set author
+                    builder.outputDir(System.getProperty("user.dir") + "/app/common/dal/dal-core/src/main/java/"); // Specify output directory
                 })
                 .dataSourceConfig(builder -> builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
                     return getColumnType(typeRegistry, metaInfo);
@@ -42,7 +42,7 @@ public class MybatisPlusGeneratorRunner {
                     builder.moduleName("com.alipay.tumaker.common.dal.mysql.model");
                     builder.mapper("com.alipay.tumaker.common.dal.mysql.mapper");
                     builder.pathInfo(Collections.singletonMap(OutputFile.xml,
-                            System.getProperty("user.dir") + "/app/common/dal/dal-core/src/main/resources/mybatis/com/alipay/tumaker/common/dal/mysql/mapper")); // 设置mapperXml生成路径
+                            System.getProperty("user.dir") + "/app/common/dal/dal-core/src/main/resources/mybatis/com/alipay/tumaker/common/dal/mysql/mapper")); // Set mapperXml generation path
                 })
                 .strategyConfig(builder -> {
                     builder.entityBuilder().enableFileOverride().idType(IdType.NONE);

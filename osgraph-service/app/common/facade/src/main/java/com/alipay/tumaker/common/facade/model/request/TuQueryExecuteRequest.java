@@ -4,23 +4,23 @@ import com.alipay.tumaker.common.facade.model.vo.common.Enum.GraphLanguageTypeEn
 import lombok.Data;
 
 /**
- * 图查询请求参数
+ * Graph query request parameters
  */
 @Data
 public class TuQueryExecuteRequest {
 
     /**
-     * 查询语句
+     * query statement
      */
     private String gql;
 
     /**
-     * 语言类型
+     * language type
      */
     private GraphLanguageTypeEnum languageType;
 
     /**
-     * 图名称
+     * Picture name
      */
     private String graphName;
 

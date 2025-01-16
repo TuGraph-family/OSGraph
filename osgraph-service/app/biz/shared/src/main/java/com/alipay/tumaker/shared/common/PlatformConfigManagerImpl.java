@@ -32,7 +32,7 @@ public class PlatformConfigManagerImpl implements PlatformConfigManager{
     @Override
     public String getEsServerUrl(){
         return esserverUrl;
-        //todo 替换到db里取值
+        //Replace todo into db to get the value
         //return getValueFromConfigTable();
     }
 

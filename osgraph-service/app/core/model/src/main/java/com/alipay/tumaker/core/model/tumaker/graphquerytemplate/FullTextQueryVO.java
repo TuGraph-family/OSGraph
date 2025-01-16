@@ -15,7 +15,7 @@ public class FullTextQueryVO {
      */
     Long id;
     /**
-     * 具体值
+     * specific value
      */
     String name;
 }

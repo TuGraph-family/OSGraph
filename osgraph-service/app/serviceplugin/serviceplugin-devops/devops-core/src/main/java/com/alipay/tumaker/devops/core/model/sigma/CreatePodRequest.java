@@ -10,22 +10,22 @@ import lombok.Data;
 public class CreatePodRequest {
 
     /**
-     * api版本
+     * api version
      */
     private final String apiVersion = "v1";
 
     /**
-     * 资源类型
+     * Resource type
      */
     private final String kind = "Pod";
 
     /**
-     * 元数据
+     * Metadata
      */
     private SigmaCreateMetaData metaData;
 
     /**
-     * 规格
+     * Specification
      */
     private SigmaSpec spec;
 

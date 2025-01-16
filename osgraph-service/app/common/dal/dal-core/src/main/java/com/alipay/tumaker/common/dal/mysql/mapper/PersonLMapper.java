@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * aaaa bbb  ccc Mapper 接口
+ * aaaa bbb  ccc Mapper interface
  * </p>
  *
  * @author dalgen-mybatisplus

@@ -4,21 +4,21 @@ import lombok.Data;
 
 import java.util.Map;
 /**********************************
- * 节点
+ * node
  * @author junhaohu.hjh
  **************************************/
 @Data
 public class Node {
     /**
-     * 节点id
+     * node id
      */
     private String id;
     /**
-     * 节点类型
+     * node type
      */
     private String nodeType;
     /**
-     * 属性
+     * property
      */
     private Map<String, Object> properties;
 }

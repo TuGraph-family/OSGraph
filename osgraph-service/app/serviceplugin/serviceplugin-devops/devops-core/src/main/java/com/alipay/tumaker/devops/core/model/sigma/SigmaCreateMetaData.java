@@ -14,65 +14,65 @@ import java.util.Map;
 public class SigmaCreateMetaData {
 
     /**
-     * pod名称
+     * pod name
      */
     private String name;
 
     /**
-     * 命名空间
+     * namespace
      */
     private String namespace;
 
     /**
-     * 注解
+     * annotation
      */
     private Map<String, String> annotations = new HashMap<>();
 
     /**
-     * 标签
+     * Label
      */
     private final Map<String, String> labels = new HashMap<>();
 
     /**
-     * 五元组
+     * quintuple
      */
-    // 应用名称
+    // Application name
     private String appName;
-    // 应用分组
+    // Application grouping
     private String instanceGroup;
-    // 部署单元
+    // deployment unit
     private String deployUnit;
-    // 机房
+    // engine room
     private String site;
-    // 逻辑机房
+    // Logic room
     private String zone;
 
     /**
-     * 业务方/批次
+     * Business party/batch
      */
-    // 业务方名称
+    // Business party name
     private String bizName;
-    // 业务组名称，选填
+    // Business group name, optional
     private String bizGroup;
-    // 业务方任务id，选填
+    // Business side task id, optional
     private Long bizGroupId;
-    // 当前批次需要交付pod总数，选填
+    // The total number of pods that need to be delivered in the current batch, optional
     private Integer replicas = 1;
-    // 当前批次最少交付pod总数，选填
+    // The minimum total number of pods delivered in the current batch, optional
     private Integer minReplicas = 1;
 
     /**
-     * 腾挪等级
+     * Move level
      */
     private MigrationLevelEnum migrationLevel = MigrationLevelEnum.L3;
 
     /**
-     * 环境信息，选填
+     * Environmental information, optional
      */
     private String appEnv;
 
     /**
-     * 租户信息,选填
+     * Tenant information, optional
      */
     private String appFhcTenant = "MAIN_SITE";
 
@@ -102,7 +102,7 @@ public class SigmaCreateMetaData {
             labels.put("meta.k8s.alipay.com/app-fhc-tenant", appFhcTenant);
         }
 
-        // 注册到zappinfo，是否需要
+        // Register to zappinfo, whether required
 //        annotations.put("meta.k8s.alipay.com/pod-zappinfo", "{}");
     }
 

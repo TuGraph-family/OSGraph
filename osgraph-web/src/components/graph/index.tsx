@@ -54,7 +54,7 @@ interface IProps {
   renderTemplate?: GRAPH_TEMPLATE_ENUM;
 }
 
-/** 检测 tooltip status */
+/** Detection tooltip status */
 let showToolTipObj = {
   isHoverToolTip: false,
   isHoverNode: false,
@@ -105,7 +105,7 @@ export const GraphView = React.memo(
 
       const { t } = useTranslation();
 
-      /** 自适应窗口 - 抽取出来定义，方便卸载 */
+      /** Adaptive window - extract the definition for easy uninstallation */
       const handleAfterLayout = () => {
         graphRef?.current?.fitView();
       };
@@ -182,7 +182,6 @@ export const GraphView = React.memo(
           layout: {
             type: "force",
             linkDistance: (_, source, target) => {
-
               if (source?.data?.size === 56 && target?.data?.size === 56) {
                 return 1000;
               }
@@ -251,86 +250,87 @@ export const GraphView = React.memo(
                     templateType,
                     path: properties.name,
                     extendsStr,
-                  }).then(async (res) => {
-                    if (graphRef.current) {
-                      const translatorData = graphDataTranslator(res);
+                  })
+                    .then(async (res) => {
+                      if (graphRef.current) {
+                        const translatorData = graphDataTranslator(res);
 
-                      /** 寻找需要 addData 的 diff 节点 */
-                      const graphData = graph.getData();
-                      const formatData = removeExistElement(
-                        graphData,
-                        translatorData
-                      );
-
-                      if (
-                        !formatData.nodes.length &&
-                        !formatData.edges.length
-                      ) {
-                        setIsCanvasLoading(false);
-                        return;
-                      }
-
-                      const extendId = id;
-                      const extendData =
-                        graphRef.current?.getNodeData(extendId);
-
-                      /** addData 中需要 init 节点样式, 并设置扩展节点的初始坐标 */
-                      graphRef.current.addData({
-                        nodes: formatData?.nodes?.map((node) => ({
-                          ...node,
-                          style: extendData?.style,
-                        })),
-                        edges: formatData.edges,
-                      });
-
-                      /** 扩展的点是否需要更新样式，比如 nodeSize */
-                      if (formatData.nodes.length > 1) {
-                        const updateNodeData = translatorData.nodes.find(
-                          (node) => {
-                            return node.id === extendId;
-                          }
+                        /** Find diff nodes that require addData */
+                        const graphData = graph.getData();
+                        const formatData = removeExistElement(
+                          graphData,
+                          translatorData
                         );
-                        graphRef.current.updateNodeData([updateNodeData]);
-                      }
 
-                      /** 更新节点大小 */
-                      const mergeData = graphRef.current.getData();
-                      graphRef.current.updateData(
-                        graphDataTranslator(mergeData)
-                      );
-
-                      /** use d3 force */
-                      graphRef.current?.setOptions({
-                        layout: {
-                          type: "d3-force",
-                          x: {},
-                          y: {},
-                          link: {
-                            distance: 200,
-                          },
-                          collide: {
-                            radius: 36,
-                          },
-                          manyBody: {
-                            strength: -900,
-                          },
+                        if (
+                          !formatData.nodes.length &&
+                          !formatData.edges.length
+                        ) {
+                          setIsCanvasLoading(false);
+                          return;
                         }
-                      });
-                      await graphRef.current.render();
+
+                        const extendId = id;
+                        const extendData =
+                          graphRef.current?.getNodeData(extendId);
+
+                        /** The init node style is required in addData and the initial coordinates of the extended node are set */
+                        graphRef.current.addData({
+                          nodes: formatData?.nodes?.map((node) => ({
+                            ...node,
+                            style: extendData?.style,
+                          })),
+                          edges: formatData.edges,
+                        });
+
+                        /** Whether the extended point needs to update the style, such as nodeSize */
+                        if (formatData.nodes.length > 1) {
+                          const updateNodeData = translatorData.nodes.find(
+                            (node) => {
+                              return node.id === extendId;
+                            }
+                          );
+                          graphRef.current.updateNodeData([updateNodeData]);
+                        }
+
+                        /** Update node size */
+                        const mergeData = graphRef.current.getData();
+                        graphRef.current.updateData(
+                          graphDataTranslator(mergeData)
+                        );
+
+                        /** used3 force */
+                        graphRef.current?.setOptions({
+                          layout: {
+                            type: "d3-force",
+                            x: {},
+                            y: {},
+                            link: {
+                              distance: 200,
+                            },
+                            collide: {
+                              radius: 36,
+                            },
+                            manyBody: {
+                              strength: -900,
+                            },
+                          },
+                        });
+                        await graphRef.current.render();
+                        setIsCanvasLoading(false);
+                        setHistoryStatus({ undo: false, redo: true });
+                        const history =
+                          graphRef.current?.getPluginInstance("history");
+                        history.redoStack = [];
+                        updateGraphDataMapXY(graphRef.current);
+                      }
+                    })
+                    .catch((err) => {
+                      console.log("更新失败：", err);
+                    })
+                    .finally(() => {
                       setIsCanvasLoading(false);
-                      setHistoryStatus({ undo: false, redo: true });
-                      const history =
-                        graphRef.current?.getPluginInstance("history");
-                      history.redoStack = [];
-                      updateGraphDataMapXY(graphRef.current);
-                    }
-                  })
-                  .catch(err => {
-                    console.log('更新失败：', err);
-                  })
-                  .finally(() => {
-                    setIsCanvasLoading(false);
-                  })
+                    });
                 };
 
                 const getMenuItems = (type: string) => {
@@ -414,7 +414,7 @@ export const GraphView = React.memo(
           }
         };
 
-        /** icon-font 加载完毕后再执行渲染，否则会闪烁一下 */
+        /** icon-font Perform rendering after loading is complete, otherwise it will flicker. */
         isFontLoaded("os-iconfont").then((isLoaded) => {
           if (isLoaded) {
             graph.render().then(async () => {
@@ -453,14 +453,14 @@ export const GraphView = React.memo(
       };
 
       const render3DGraph = () => {
-        /**  数据深拷贝，且把 edges 映射到 links上 */
+        /**  Deep copy data and map edges to links */
         const graph3DData = formatGraph3DData(data);
         const highlightNodes = new Set();
         const highlightLinks = new Set();
         let nodeMaterials = new Map();
         let hoverNode: any = null;
 
-        /** 高亮 node 和 link */
+        /** Highlight nodes and links */
         const updateHighlight = (graph: ForceGraph3DInstance) => {
           if (graph) {
             graph
@@ -563,7 +563,7 @@ export const GraphView = React.memo(
           })
           .graphData(graph3DData);
 
-        /** 等图标加载完毕后，再构建 nodeThree 自定义节点 */
+        /** After the icon is loaded, build the nodeThree custom node */
         isFontLoaded("os-iconfont").then((isLoaded) => {
           if (isLoaded) {
             graph.nodeThreeObject((node) =>
@@ -594,7 +594,7 @@ export const GraphView = React.memo(
             showToolTipObj.isHoverToolTip = false;
           };
 
-          /** 点击画布其他区域时，把 contextMenu 收起来 */
+          /** When clicking on other areas of the canvas, collapse the contextMenu */
           if (graphRef.current && renderMode === GRAPH_RENDER_MODEL["2D"]) {
             graphRef?.current.on(CanvasEvent.CLICK, () => {
               const g6ContextMenuDom = document.querySelector(

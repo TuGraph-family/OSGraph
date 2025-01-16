@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class FullTextQueryGithubRepoVO extends FullTextQueryVO{
     /**
-     * 关注数
+     * Number of followers
      */
     Long star;
 }

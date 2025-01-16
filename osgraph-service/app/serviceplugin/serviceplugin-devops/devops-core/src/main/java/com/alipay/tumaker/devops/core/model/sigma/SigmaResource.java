@@ -17,12 +17,12 @@ public class SigmaResource {
     private String cpu;
 
     /**
-     * 内存
+     * Memory
      */
     private String memory;
 
     /**
-     * 存储
+     * storage
      */
     private String ephemeralStorage;
 

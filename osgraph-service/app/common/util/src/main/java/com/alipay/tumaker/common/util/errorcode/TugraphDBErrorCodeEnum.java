@@ -13,19 +13,19 @@ public enum TugraphDBErrorCodeEnum {
     GDB_COMMON_PARAMETER_NOT_MATCH("02-01-0005", "COMMON: parameter not match", "图查询模版查询参数不匹配", "02-02-0003"),
     ;
     /**
-     * 错误码
+     * error code
      */
     private final String errorCode;
     /**
-     * 错误码英文解释
+     * English explanation of error code
      */
     private final String englishDesc;
     /**
-     * 错误码中文解释
+     * Error code Chinese explanation
      */
     private final String chineseDesc;
     /**
-     * tugraphdb的errorcode，-1就不是geabase的错误码
+     * The errorcode of tugraphdb, -1 is not the error code of geabase
      */
     private final String tugraphDbErrorCode;
 

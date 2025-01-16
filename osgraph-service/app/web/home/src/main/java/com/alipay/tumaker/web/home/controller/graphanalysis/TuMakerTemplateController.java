@@ -29,7 +29,7 @@ public class TuMakerTemplateController {
     private TuMakerQueryTemplateDataManager tuMakerQueryTemplateDataManager;
 
     /**
-     * 执行查询模版
+     * Execute query template
      * @param tuMakerExecuteTemplateRequest
      * @param request
      * @param response
@@ -43,7 +43,7 @@ public class TuMakerTemplateController {
     }
 
     /**
-     * 执行分享查询模版
+     * Execute shared query template
      * @param request
      * @param response
      * @return
@@ -56,7 +56,7 @@ public class TuMakerTemplateController {
     }
 
     /**
-     * 获取查询模版列表
+     * Get query template list
      * @return
      */
     @ResponseBody
@@ -66,9 +66,9 @@ public class TuMakerTemplateController {
     }
 
     /**
-     * 全文查询
-     * keyword:关键字
-     * indexName：两个值：github_user, github_repo
+     * Full text query
+     * keyword: Keywords
+     * indexName：two values：github_user, github_repo
      */
     @ResponseBody
     @RequestMapping(value = "/executeFullTextQuery", method = RequestMethod.POST)

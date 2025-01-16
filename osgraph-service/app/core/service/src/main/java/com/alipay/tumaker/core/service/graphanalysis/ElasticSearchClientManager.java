@@ -14,6 +14,6 @@ import java.util.Map;
  * @date 2024/3/18
  */
 public interface ElasticSearchClientManager extends InitializingBean {
-    // es 8.10 版本查询
+    // es 8.10 version query
     Result<List<FullTextQueryGithubRepoVO>> search(FullTextIndexNameEnum indexNameEnum, Map<String, String> searchKeyMap) throws  IndexClientSearchException;
 }

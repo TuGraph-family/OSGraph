@@ -6,27 +6,27 @@ import java.util.Map;
 @Data
 public class Edge {
     /**
-     * 边数据id
+     * Edge data id
      */
     private String id;
     /**
-     * 起点id
+     * starting point id
      */
     private String source;
     /**
-     * 终点id
+     *Endpoint id
      */
     private String target;
     /**
-     * 边的类型
+     * edge type
      */
     private String edgeType;
     /**
-     * 时间戳
+     * Timestamp
      */
     private String timestamp = "0";
     /**
-     * 属性
+     * property
      */
     private Map<String, Object> properties;
 }

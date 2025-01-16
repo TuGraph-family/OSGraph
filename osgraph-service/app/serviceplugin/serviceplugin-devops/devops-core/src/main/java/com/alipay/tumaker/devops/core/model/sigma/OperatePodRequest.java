@@ -10,17 +10,17 @@ import lombok.Data;
 public class OperatePodRequest {
 
     /**
-     * api版本
+     * api version
      */
     private static final String apiVersion = "v1";
 
     /**
-     * 资源类型
+     * Resource type
      */
     private static final String kind = "Pod";
 
     /**
-     * 元数据
+     * Metadata
      */
     private SigmaOperateMateData metaData;
 }

@@ -4,9 +4,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtils {
-    //逗号
+    //comma
     public static final String COMMA_STRING = ",";
-    //空字符串
+    //empty string
     public static final String EMPTY_STRING = "";
     public static final String DOT_STRING = ".";
 
@@ -50,7 +50,7 @@ public class StringUtils {
 
 
     /**
-     * 数组格式字符串转 String 数组
+     * Array format string to String array
      *
      * @param source
      * @return
@@ -60,7 +60,7 @@ public class StringUtils {
     }
 
     /**
-     * 获取字符串最后的数字
+     * Get the last number of a string
      *
      * @param name
      * @return

@@ -40,73 +40,73 @@ public class Result <T>{
     }
 
     /**
-     * 标示是否成功
+     * Indicates success
      */
     private boolean success;
 
     /**
-     * 响应消息
+     * response message
      */
     private String message = "";
 
     /**
-     * 消息链路
+     * message link
      */
     private List<String> msgTraceList = new ArrayList<>();
 
     /**
-     * 请求处理服务端唯一ID
+     * Request processing server unique ID
      */
     private String id;
 
     /**
-     * 所在机器信息
+     * Machine information
      */
     private String server;
     /**
-     * 所在机器 IP
+     * The machine IP
      */
     private String ip;
 
     /**
-     * IP 链路
+     * IP link
      */
     private List<String> ipTraceList = new ArrayList<>();
 
     /**
-     * 响应数据
+     * response data
      */
     private T data;
 
     /**
-     * 平台统一错误码
+     * Platform unified error code
      */
     private TumakerErrorCodeEnum responseCode;
 
     /**
-     * 错误码英文解释
+     * English explanation of error code
      */
     private String ecEnglishMsg;
 
     /**
-     * 错误码中文解释
+     * Error code Chinese explanation
      */
     private String ecChineseMsg;
 
     /**
-     * 引擎对应原始错误码
+     * Engine corresponding original error code
      */
     private String engineErrorCode;
 
     /**
-     * 生成结果
+     * Generate results
      */
     private Result() {
         this.ip = HOST_ADDRESS;
     }
 
     /**
-     * 设置 data
+     * set data
      */
 
     public Result<T> setData(final T data) {
@@ -114,7 +114,7 @@ public class Result <T>{
         return this;
     }
     /**
-     * 获取data
+     * get data
      */
 
     public T getData() {
@@ -122,14 +122,14 @@ public class Result <T>{
     }
 
     /**
-     * 设置响应码
+     * Set response code
      */
     public Result<T> setResponseCode(final TumakerErrorCodeEnum responseCode) {
         this.responseCode = responseCode;
         return this;
     }
     /**
-     * 获取响应码
+     * Get response code
      */
     public TumakerErrorCodeEnum  getResponseCode() {
 
@@ -137,18 +137,18 @@ public class Result <T>{
     }
 
     /**
-     * 获取响应信息
+     * Get response information
      *
-     * @return 返回消息
+     * @return return message
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * 设置响应消息
+     * Set response message
      *
-     * @param message 响应消息
+     * @param message response message
      * @return this
      */
     public Result<T> setMessage(final String message) {
@@ -187,9 +187,9 @@ public class Result <T>{
     }
 
     /**
-     * 成功数据
+     * success data
      *
-     * @param data 数据对象
+     * @param data data object
      * @return result
      */
     public static <T> Result<T> success(T data) {
@@ -197,7 +197,7 @@ public class Result <T>{
     }
 
     /**
-     * 成功消息
+     * success message
      *
      * @param message message
      * @return result
@@ -207,7 +207,7 @@ public class Result <T>{
     }
 
     /**
-     * 成功消息+数据
+     * Success message + data
      *
      * @param message message
      * @param data    data
@@ -218,7 +218,7 @@ public class Result <T>{
     }
 
     /**
-     * 仅成功结果
+     * Only successful results
      *
      * @return result
      */
@@ -241,7 +241,7 @@ public class Result <T>{
     }
 
     /**
-     * 返回引擎失败
+     * Return engine failed
      */
     public static <T> Result<T> failed(TugraphDBErrorCodeEnum tugraphDBErrorCodeEnum, String errorMsg, T data) {
         TumakerErrorCodeEnum responseCodeEnum = TumakerErrorCodeEnum.error;
