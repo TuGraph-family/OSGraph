@@ -287,6 +287,15 @@ export default () => {
     return newParams;
   }, [extendParams]);
 
+  const onUpdateTemplateId = (templateId: number) => {
+    setState((draft) => {
+      draft.locationState = {
+        ...locationState,
+        templateId,
+      };
+    });
+  };
+
   return (
     <OSGraph>
       <div
@@ -315,6 +324,7 @@ export default () => {
                 onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
                 graphExtendParams={graphExtendParams}
+                onUpdateTemplateId={onUpdateTemplateId}
               />
               <ExtendParams
                 templateId={templateId}
