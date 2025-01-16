@@ -52,7 +52,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
         run: |
-          timeout 300 scp -o StrictHostKeyChecking=no -r ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
+          timeout 300 scp -o StrictHostKeyChecking=no -r ./osgraph-service/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           source ~/.bashrc
