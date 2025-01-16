@@ -39,7 +39,7 @@ class OSPartnerService(BaseService):
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
         platform: str = validated_data["platform"]
-        user_limi: int = validated_data["user-limit"]
+        user_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
         query = {"match": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
@@ -47,7 +47,7 @@ class OSPartnerService(BaseService):
             user_id = res[0]["id"]
             cypher = (
                 f"CALL osgraph.get_developer_by_developer('{{"
-                f'"developer_id":{user_id},"top_n":{user_limi}'
+                f'"developer_id":{user_id},"top_n":{user_limit}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )
