@@ -16,17 +16,17 @@ from typing import Any, Dict
 
 from flask import Blueprint, request
 
-from app.managers.develop_activity import DevelopActivitiesManager
+from app.managers.developer_activity import DevelopActivitiesManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-develop_activities_bp = Blueprint(
+developer_activities_bp = Blueprint(
     "project_activities", __name__, url_prefix="/api/graphs"
 )
 logger = logging.getLogger(__name__)
 
 
-class DevelopActivitiesController:
+class DeveloperActivitiesController:
     def __init__(self):
         self.manager = DevelopActivitiesManager()
 
@@ -42,11 +42,11 @@ class DevelopActivitiesController:
             return ResponseHandler.error("Internal server error", 500)
 
 
-controller = DevelopActivitiesController()
+controller = DeveloperActivitiesController()
 
 
-@develop_activities_bp.route("/develop-activity/<platform>/<path:remaining_path>", methods=["GET"])
-def get_project_activity(platform, remaining_path):
+@developer_activities_bp.route("/developer-activity/<platform>/<path:remaining_path>", methods=["GET"])
+def get_developer_activity(platform, remaining_path):
     data = request.args.to_dict()
     data["platform"]=platform
     data["path"]=remaining_path

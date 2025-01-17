@@ -31,7 +31,7 @@ def get_default_end_time() -> int:
     return int(datetime.now().timestamp() * 1000)
 
 
-class DevelopActivityServiceConfig(ServiceConfig):
+class DeveloperActivityServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
             name="开发活动",
@@ -43,9 +43,9 @@ class DevelopActivityServiceConfig(ServiceConfig):
         )
 
 
-class DevelopActivityService(BaseService):
+class DeveloperActivityService(BaseService):
     def __init__(self):
-        super().__init__(DevelopActivityServiceConfig())
+        super().__init__(DeveloperActivityServiceConfig())
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)

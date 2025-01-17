@@ -17,7 +17,7 @@ import os
 from typing import Any, Dict, Union
 
 from app.models.graph_view import Graph, Push, Repo, User, OpenPR
-from app.services.graph_services.develop_activity import DevelopActivityService
+from app.services.graph_services.developer_activity import DeveloperActivityService
 
 
 class DevelopActivitiesManager:
@@ -25,7 +25,7 @@ class DevelopActivitiesManager:
         pass
 
     def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
-        service = DevelopActivityService()
+        service = DeveloperActivityService()
         graph = Graph()
         result = service.execute(data=data)
         if result:
