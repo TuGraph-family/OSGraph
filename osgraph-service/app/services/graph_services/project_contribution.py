@@ -32,8 +32,11 @@ def get_default_end_time() -> str:
     return end_time.strftime('%Y-%m-%d')
 
 def string_to_timestamp(date_str: str) -> int:
-    date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-    return int(date_obj.timestamp())
+    try:
+        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        return int(date_obj.timestamp())
+    except ValueError:
+        return int(date_str)
 
 class ProjectContributionServiceConfig(ServiceConfig):
     def __init__(self):
