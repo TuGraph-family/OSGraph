@@ -26,7 +26,7 @@ class OSInterestServiceConfig(ServiceConfig):
             comment="这是一张开源兴趣图谱",
             inputTypes=["user"],
             filterKeys=[
-                FilterKey(key="topic-limit", type="int", default=10, required=False),
+                FilterKey(key="topic-limit", type="int", default=5, required=False),
                 FilterKey(
                     key="repo-limit", type="int", default=10, required=False
                 ),
