@@ -1,3 +1,16 @@
+#
+# Copyright 2025 AntGroup CO., Ltd.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
 import logging
 from typing import Any, Dict
 
@@ -7,7 +20,7 @@ from app.managers.os_interest import OSInterestManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-os_interest_bp = Blueprint("os_interest", __name__, url_prefix="/api/graph")
+os_interest_bp = Blueprint("os_interest", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 
@@ -33,11 +46,10 @@ class OSInterestController:
 controller = OSInterestController()
 
 
-@os_interest_bp.route("/os-interest", methods=["GET"])
-def get_os_interest():
-    """
-    获取项目贡献的图谱
-    """
+@os_interest_bp.route("/os-interest/<platform>/<path:remaining_path>", methods=["GET"])
+def get_os_interest(platform, remaining_path):
     data = request.args.to_dict()
+    data["platform"]=platform
+    data["path"]=remaining_path
     response = controller.get_interest_graph(data)
     return ResponseHandler.jsonify_response(response)

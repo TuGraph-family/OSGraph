@@ -1,3 +1,16 @@
+#
+# Copyright 2025 AntGroup CO., Ltd.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
 # app/manager/project_community.py
 import json
 import os
@@ -6,6 +19,7 @@ from typing import Any, Dict, Union
 from app.models.graph_view import (
     Belong,
     Country,
+    Company,
     Graph,
     PullRequestAction,
     Repo,
@@ -44,7 +58,7 @@ class ProjectCommunityManager:
                     )
                     graph.insert_entity(country)
                 if start_node["type"] == "company":
-                    company = Repo(
+                    company = Company(
                         id=start_node["id"], name=start_node["properties"]["name"]
                     )
                     graph.insert_entity(company)
@@ -55,13 +69,13 @@ class ProjectCommunityManager:
                 if end_node["type"] == "github_repo":
                     repo = Repo(id=end_node["id"], name=end_node["properties"]["name"])
                     graph.insert_entity(repo)
-                if start_node["type"] == "country":
+                if end_node["type"] == "country":
                     country = Country(
                         id=end_node["id"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(country)
-                if start_node["type"] == "company":
-                    company = Repo(
+                if end_node["type"] == "company":
+                    company = Company(
                         id=end_node["id"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(company)

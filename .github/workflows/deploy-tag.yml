@@ -27,7 +27,7 @@ jobs:
         working-directory: ./osgraph-web
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm run build:prod
+          pnpm run build
 
       # 配置 SSH 密钥
       - name: Configure SSH
@@ -57,6 +57,7 @@ jobs:
           source ~/.bashrc
           source /root/osgraph/myenv/bin/activate
           cd $DEPLOY_PATH_BACKEND
+          rm ./poetry.lock
           poetry install
           lsof -ti:8000 | xargs kill -9 || true
           nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app > gunicorn.log 2>&1 &

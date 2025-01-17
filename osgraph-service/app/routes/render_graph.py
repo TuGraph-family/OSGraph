@@ -1,3 +1,16 @@
+#
+# Copyright 2025 AntGroup CO., Ltd.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
 import os
 import json
 import logging
@@ -111,41 +124,23 @@ def render_graph_with_node(data):
             return BytesIO(res.content), None      
 
 
-@render_graph_bp.route("/<service>/<github_type>/<path:remaining_path>", methods=["GET"])
-def render_graph(service, github_type, remaining_path):
-    if not service:
-        return jsonify({'error': 'Missing service parameter'}), 400
-    if not github_type:
-        return jsonify({'error': 'Missing github_type parameter'}), 400
+@render_graph_bp.route("/<graph>/<platform>/<path:remaining_path>", methods=["GET"])
+
+def render_graph(graph, platform, remaining_path):
+    if not graph:
+        return jsonify({'error': 'Missing graph parameter'}), 400
+    if not platform:
+        return jsonify({'error': 'Missing platform parameter'}), 400
     if not remaining_path:
-        return jsonify({'error': 'Missing remaining_path parameter'}), 400
-
-    index_key = 'GitHubRepo'
-    if github_type == 'github-repo':
-        parts = remaining_path.split('/', 1)
-        if len(parts) != 2:
-            return jsonify({'error': 'Invalid path for github-repo'}), 400
-        github_repo, repo_path = parts
-    elif github_type == 'github-user':
-        parts = remaining_path.split('/')
-        if len(parts) != 1:
-            return jsonify({'error': 'Invalid path for github-user'}), 400
-        github_repo = parts[0]
-        repo_path = ''
-        index_key = 'GitHubUser'
-    else:
-        return jsonify({'error': 'Invalid github_type'}), 400
-
-
+        return jsonify({'error': 'Missing path parameter'}), 400
+    
     query_params = request.args.to_dict()
     query_params.pop('service', None)
     port = os.getenv('FLASK_PORT')
-    base_url = f"http://localhost:{port}/api/graph/{service}"
+    base_url = f"http://localhost:{port}/api/graphs/{graph}/{platform}/{remaining_path}"
     query_string = "&".join([f"{key}={value}" for key, value in query_params.items()])
-    if repo_path:
-        target_url = f"{base_url}?{index_key}={github_repo}/{repo_path}&{query_string}"
-    else:
-        target_url = f"{base_url}?{index_key}={github_repo}&{query_string}"
+    target_url = f"{base_url}?{query_string}"
+
 
     graph_data = get_graph_data(target_url=target_url)
 
@@ -154,5 +149,6 @@ def render_graph(service, github_type, remaining_path):
         return jsonify({'error': 'Failed to render graph', 'details': error}), 500
 
     return send_file(output, mimetype="image/png")
+ 
     
 

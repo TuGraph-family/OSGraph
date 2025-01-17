@@ -1,3 +1,16 @@
+#
+# Copyright 2025 AntGroup CO., Ltd.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
 import os
 from datetime import datetime, timedelta
 from typing import Any, Dict
@@ -23,7 +36,7 @@ class ProjectContributionServiceConfig(ServiceConfig):
         super().__init__(
             name="项目贡献",
             comment="这是一个获取项目贡献的图谱",
-            inputTypes=["GitHubRepo"],
+            inputTypes=["repo"],
             filterKeys=[
                 FilterKey(
                     key="start-time",
@@ -38,7 +51,7 @@ class ProjectContributionServiceConfig(ServiceConfig):
                     required=False,
                 ),
                 FilterKey(
-                    key="contribution-limit", type="int", default=50, required=False
+                    key="repo-limit", type="int", default=10, required=False
                 ),
             ],
         )
@@ -50,19 +63,21 @@ class ProjectContributionService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_repo: str = validated_data["GitHubRepo"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
         start_time: int = validated_data["start-time"] or get_default_start_time()
         end_time: int = validated_data["end-time"] or get_default_end_time()
-        contribution_limit: int = validated_data["contribution-limit"]
+        repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_repo}}
-        res = es.search(index="github_repo", query=query, size=1)
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             cypher = (
                 f"CALL osgraph.get_repo_contribution('{{"
                 f'"repo_id":{repo_id},"start_timestamp":{start_time},'
-                f'"end_timestamp":{end_time},"top_n":{contribution_limit}'
+                f'"end_timestamp":{end_time},"top_n":{repo_limit}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )

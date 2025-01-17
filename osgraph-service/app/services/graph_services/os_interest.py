@@ -24,11 +24,11 @@ class OSInterestServiceConfig(ServiceConfig):
         super().__init__(
             name="开源兴趣",
             comment="这是一张开源兴趣图谱",
-            inputTypes=["GitHubUser"],
+            inputTypes=["user"],
             filterKeys=[
-                FilterKey(key="topic-topn", type="int", default=50, required=False),
+                FilterKey(key="topic-limit", type="int", default=10, required=False),
                 FilterKey(
-                    key="githubrepo-topn", type="int", default=50, required=False
+                    key="repo-limit", type="int", default=10, required=False
                 ),
             ],
         )
@@ -40,18 +40,33 @@ class OSInterestService(BaseService):
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
-        github_user: str = validated_data["GitHubUser"]
-        topic_topn: int = validated_data["topic-topn"]
-        repo_topn: int = validated_data["githubrepo-topn"]
+        input:str = self.inputTypes[0]
+        path: str = validated_data["path"]
+        platform: str = validated_data["platform"]
+        topic_limit: int = validated_data["topic-limit"]
+        repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": github_user}}
-        res = es.search(index="github_user", query=query, size=1)
+        query = {"match": {"name": path}}
+        res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
-            params_dict = {
+            params_dict = {#
+# Copyright 2025 AntGroup CO., Ltd.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
+
                 "developer_id": user_id,
-                "topic_topn": topic_topn,
-                "repo_topn": repo_topn,
+                "topic_topn": topic_limit,
+                "repo_topn": repo_limit,
             }
             params = json.dumps(params_dict)
             cypher = (

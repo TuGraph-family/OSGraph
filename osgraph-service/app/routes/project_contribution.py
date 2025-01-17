@@ -1,3 +1,16 @@
+#
+# Copyright 2025 AntGroup CO., Ltd.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
 import logging
 from typing import Any, Dict
 
@@ -8,7 +21,7 @@ from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
 project_contribution_bp = Blueprint(
-    "project_contribution", __name__, url_prefix="/api/graph"
+    "project_contribution", __name__, url_prefix="/api/graphs"
 )
 logger = logging.getLogger(__name__)
 
@@ -32,8 +45,10 @@ class ProjectContributionController:
 controller = ProjectContributionController()
 
 
-@project_contribution_bp.route("/project-contribution", methods=["GET"])
-def get_project_contribution():
+@project_contribution_bp.route("/project-contribution/<platform>/<path:remaining_path>", methods=["GET"])
+def get_project_contribution(platform, remaining_path):
     data = request.args.to_dict()
+    data["platform"]=platform
+    data["path"]=remaining_path
     response = controller.get_contribution_graph(data)
     return ResponseHandler.jsonify_response(response)
