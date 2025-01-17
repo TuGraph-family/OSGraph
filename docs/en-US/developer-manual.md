@@ -28,13 +28,7 @@ URLs in the interface layer follow standardized design principles, using consist
 | Page  | /graphs/:graph/:platform/org/repo?:param*     | 
 | Image  | /png/graphs/:graph/:platform/org/repo?:param* | 
 
-An example of the API's standardized format:
-![](../img/api-fmt.jpg)
-
-For instance, the URL for the TuGraph DB "Project Contribution" graph:
-```
-https://osgraph.com/api/graphs/project-contribution/github/TuGraph-family/tugraph-db?start-time=1&end-time=1733717926&repo-limit=10
-```
+For more details：[OSGraph API Reference](api-reference.md)
 
 #### 4.1.2 Adding New Graph Interfaces
 

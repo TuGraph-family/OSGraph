@@ -6,17 +6,27 @@
 
 ![](docs/img/graphs.png)
 
-> **OSGraph v2.0 New Features !!!**
-> 1. Backend service refactored completed, fully embracing the Python stack.
-> 2. Support multi-hop graph expansion, enabling unlimited drill-down insights into open-source data.
-> 3. Support `png` url of graph, enabling one-click embedding in Markdown.
-> 4. Easier graph customization, directly connecting to production.
+> **OSGraph v2.0.0 New Features !!!**
+> 1. Open source graph supports parameterized form configuration, making graph visualization more flexible.
+> 2. Backend service refactored completed, fully embracing the Python stack.
+> 3. Support multi-hop graph expansion, enabling unlimited drill-down insights into open-source data.
+> 4. Support PNG url of graph, enabling one-click embedding in Markdown.
+> 5. Easier graph customization, directly connecting to production.
+> 6. Internationalization support.
 
 ## Website
 
 **[https://osgraph.com](https://osgraph.com)**
 
 You can refer to [Graph Demo](docs/en-US/demo.md) for product experience.
+
+Want to directly embed OSGraph graphs in Markdown? Try:
+
+```markdown
+![](https://osgraph.com/graphs/project-contribution/github/TuGraph-family/tugraph-db?lang=en-US)
+```
+
+For more details：[OSGraph API Reference](docs/en-US/api-reference.md)
 
 ## QuickStart
 

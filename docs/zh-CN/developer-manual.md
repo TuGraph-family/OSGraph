@@ -28,13 +28,7 @@
 | 页面  | /graphs/:graph/:platform/org/repo?:param*     | 
 | 图片  | /png/graphs/:graph/:platform/org/repo?:param* | 
 
-如API的规范化格式为：
-![](../img/api-fmt.jpg)
-
-如TuGraph DB “项目贡献”图谱URL：
-```
-https://osgraph.com/api/graphs/project-contribution/github/TuGraph-family/tugraph-db?start-time=1&end-time=1733717926&repo-limit=10
-```
+具体请参考：[OSGraph API设计规范](api-reference.md)
 
 #### 4.1.2 新增图谱接口
 
