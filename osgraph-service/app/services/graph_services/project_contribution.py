@@ -70,9 +70,9 @@ class ProjectContributionService(BaseService):
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
         platform: str = validated_data["platform"]
-        start_time_str: int = validated_data["start-time"] or get_default_start_time()
+        start_time_str: str = validated_data["start-time"] or get_default_start_time()
         start_time: int = string_to_timestamp(start_time_str)
-        end_time_str: int = validated_data["end-time"] or get_default_end_time()
+        end_time_str: str = validated_data["end-time"] or get_default_end_time()
         end_time: int = string_to_timestamp(end_time_str)
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
