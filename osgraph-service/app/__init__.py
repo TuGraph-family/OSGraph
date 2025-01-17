@@ -12,7 +12,7 @@ from app.services import register_all_services
 
 from .utils.custom_exceptions import InvalidUsage
 from .utils.logger import setup_logger
-from .utils.user_repo_converter import UsernameRepoConverter
+
 
 load_dotenv()
 
