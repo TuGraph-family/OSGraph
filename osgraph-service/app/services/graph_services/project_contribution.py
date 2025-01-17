@@ -23,13 +23,17 @@ from app.services.graph_services.base import BaseService, FilterKey, ServiceConf
 load_dotenv()
 
 
-def get_default_start_time() -> int:
-    return int((datetime.now() - timedelta(days=30)).timestamp())
+def get_default_start_time() -> str:
+    start_time = datetime.now() - timedelta(days=30)
+    return start_time.strftime('%Y-%m-%d')
 
+def get_default_end_time() -> str:
+    end_time = datetime.now()
+    return end_time.strftime('%Y-%m-%d')
 
-def get_default_end_time() -> int:
-    return int(datetime.now().timestamp())
-
+def string_to_timestamp(date_str: str) -> int:
+    date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+    return int(date_obj.timestamp())
 
 class ProjectContributionServiceConfig(ServiceConfig):
     def __init__(self):
@@ -40,13 +44,13 @@ class ProjectContributionServiceConfig(ServiceConfig):
             filterKeys=[
                 FilterKey(
                     key="start-time",
-                    type="int",
+                    type="str",
                     default=get_default_start_time(),
                     required=False,
                 ),
                 FilterKey(
                     key="end-time",
-                    type="int",
+                    type="str",
                     default=get_default_end_time(),
                     required=False,
                 ),
@@ -66,8 +70,10 @@ class ProjectContributionService(BaseService):
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
         platform: str = validated_data["platform"]
-        start_time: int = validated_data["start-time"] or get_default_start_time()
-        end_time: int = validated_data["end-time"] or get_default_end_time()
+        start_time_str: int = validated_data["start-time"] or get_default_start_time()
+        start_time: int = string_to_timestamp(start_time_str)
+        end_time_str: int = validated_data["end-time"] or get_default_end_time()
+        end_time: int = string_to_timestamp(end_time_str)
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
         query = {"match": {"name": path}}
