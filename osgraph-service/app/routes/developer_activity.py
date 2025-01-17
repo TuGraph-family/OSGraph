@@ -16,21 +16,21 @@ from typing import Any, Dict
 
 from flask import Blueprint, request
 
-from app.managers.develop_activities import DevelopActivitiesManager
+from app.managers.developer_activity import DevelopActivityManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-develop_activities_bp = Blueprint(
-    "project_activities", __name__, url_prefix="/api/graphs"
+developer_activity_bp = Blueprint(
+    "developer_activity", __name__, url_prefix="/api/graphs"
 )
 logger = logging.getLogger(__name__)
 
 
-class DevelopActivitiesController:
+class DeveloperActivityController:
     def __init__(self):
-        self.manager = DevelopActivitiesManager()
+        self.manager = DevelopActivityManager()
 
-    def get_activities_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def get_activity_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
         try:
             graph = self.manager.get_graph(data)
             return ResponseHandler.success(graph)
@@ -42,13 +42,13 @@ class DevelopActivitiesController:
             return ResponseHandler.error("Internal server error", 500)
 
 
-controller = DevelopActivitiesController()
+controller = DeveloperActivityController()
 
 
-@develop_activities_bp.route("/develop-activities/<platform>/<path:remaining_path>", methods=["GET"])
-def get_project_activities(platform, remaining_path):
+@developer_activity_bp.route("/developer-activity/<platform>/<path:remaining_path>", methods=["GET"])
+def get_developer_activity(platform, remaining_path):
     data = request.args.to_dict()
     data["platform"]=platform
     data["path"]=remaining_path
-    response = controller.get_activities_graph(data)
+    response = controller.get_activity_graph(data)
     return ResponseHandler.jsonify_response(response)

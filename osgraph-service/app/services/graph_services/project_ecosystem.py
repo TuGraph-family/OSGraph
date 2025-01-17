@@ -31,36 +31,36 @@ def get_default_end_time() -> int:
     return int(datetime.now().timestamp() * 1000)
 
 
-class DevelopActivitiesServiceConfig(ServiceConfig):
+class ProjectEcosystemServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="开发活动",
-            comment="这是一个开发活动图谱",
-            inputTypes=["user"],
+            name="项目生态",
+            comment="这是一个获取项目项目生态的图谱",
+            inputTypes=["repo"],
             filterKeys=[
-                FilterKey(key="user-limit", type="int", default=10, required=False),
+                FilterKey(key="repo-limit", type="int", default=10, required=False),
             ],
         )
 
 
-class DevelopActivitiesService(BaseService):
+class ProjectEcosystemService(BaseService):
     def __init__(self):
-        super().__init__(DevelopActivitiesServiceConfig())
+        super().__init__(ProjectEcosystemServiceConfig())
 
     def execute(self, data: Dict[str, Any]) -> Any:
         validated_data = self.validate_params(data)
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
         platform: str = validated_data["platform"]
-        user_limit: int = validated_data["user-limit"]
+        repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match_phrase": {"name": path}}
+        query = {"match": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
-            develop_id = res[0]["id"]
+            repo_id = res[0]["id"]
             cypher = (
-                f"CALL osgraph.get_developer_contribution('{{"
-                f'"developer_id":{develop_id},"top_n":{user_limit}'
+                f"CALL osgraph.get_repo_by_repo('{{"
+                f'"repo_id":{repo_id}, "top_n":{repo_limit}'
                 f"}}') YIELD start_node, relationship, end_node "
                 "return start_node, relationship, end_node"
             )

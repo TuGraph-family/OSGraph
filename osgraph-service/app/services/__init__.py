@@ -15,8 +15,8 @@
 
 from flask import current_app
 
-from app.services.graph_services.develop_activities import (
-    DevelopActivitiesServiceConfig,
+from app.services.graph_services.developer_activity import (
+    DeveloperActivityServiceConfig,
 )
 from app.services.graph_services.os_interest import OSInterestServiceConfig
 from app.services.graph_services.os_partner import OSPartnerServiceConfig
@@ -24,13 +24,13 @@ from app.services.graph_services.project_community import ProjectCommunityServic
 from app.services.graph_services.project_contribution import (
     ProjectContributionServiceConfig,
 )
-from app.services.graph_services.project_ecology import ProjectEcologyServiceConfig
+from app.services.graph_services.project_ecosystem import ProjectEcosystemServiceConfig
 
 SERVICE_CONFIGS = [
     ProjectContributionServiceConfig(),
-    ProjectEcologyServiceConfig(),
+    DeveloperActivityServiceConfig(),
     ProjectCommunityServiceConfig(),
-    DevelopActivitiesServiceConfig(),
+    ProjectEcosystemServiceConfig(),
     OSPartnerServiceConfig(),
     OSInterestServiceConfig(),
 ]

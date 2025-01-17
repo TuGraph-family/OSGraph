@@ -17,15 +17,15 @@ import os
 from typing import Any, Dict, Union
 
 from app.models.graph_view import Graph, Push, Repo, User, OpenPR
-from app.services.graph_services.develop_activities import DevelopActivitiesService
+from app.services.graph_services.developer_activity import DeveloperActivityService
 
 
-class DevelopActivitiesManager:
+class DevelopActivityManager:
     def __init__(self) -> None:
         pass
 
     def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
-        service = DevelopActivitiesService()
+        service = DeveloperActivityService()
         graph = Graph()
         result = service.execute(data=data)
         if result:
