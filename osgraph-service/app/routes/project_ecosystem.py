@@ -16,17 +16,17 @@ from typing import Any, Dict
 
 from flask import Blueprint, request
 
-from app.managers.project_ecology import ProjectEcologyManager
+from app.managers.project_ecosystem import ProjectEcosystemManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
-project_ecology_bp = Blueprint("project_ecology", __name__, url_prefix="/api/graphs")
+project_ecology_bp = Blueprint("project_ecosystem", __name__, url_prefix="/api/graphs")
 logger = logging.getLogger(__name__)
 
 
 class ProjectEcologyController:
     def __init__(self):
-        self.manager = ProjectEcologyManager()
+        self.manager = ProjectEcosystemManager()
 
     def get_ecology_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
         try:
@@ -43,7 +43,7 @@ class ProjectEcologyController:
 controller = ProjectEcologyController()
 
 
-@project_ecology_bp.route("/project-ecology/<platform>/<path:remaining_path>", methods=["GET"])
+@project_ecology_bp.route("/project-ecosystem/<platform>/<path:remaining_path>", methods=["GET"])
 def get_project_ecology(platform, remaining_path):
     data = request.args.to_dict()
     data["platform"]=platform

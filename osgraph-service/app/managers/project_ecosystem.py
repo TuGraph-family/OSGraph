@@ -17,15 +17,15 @@ import os
 from typing import Any, Dict, Union
 
 from app.models.graph_view import Belong, CommonDevelop, Graph, Orgnization, Repo
-from app.services.graph_services.project_ecology import ProjectEcologyService
+from app.services.graph_services.project_ecosystem import ProjectEcosystemService
 
 
-class ProjectEcologyManager:
+class ProjectEcosystemManager:
     def __init__(self) -> None:
         pass
 
     def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
-        service = ProjectEcologyService()
+        service = ProjectEcosystemService()
         graph = Graph()
         result = service.execute(data=data)
         if result:

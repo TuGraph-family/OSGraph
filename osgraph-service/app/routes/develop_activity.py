@@ -16,7 +16,7 @@ from typing import Any, Dict
 
 from flask import Blueprint, request
 
-from app.managers.develop_activities import DevelopActivitiesManager
+from app.managers.develop_activity import DevelopActivitiesManager
 from app.utils.custom_exceptions import InvalidUsage
 from app.utils.response_handler import ResponseHandler
 
@@ -30,7 +30,7 @@ class DevelopActivitiesController:
     def __init__(self):
         self.manager = DevelopActivitiesManager()
 
-    def get_activities_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def get_activity_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
         try:
             graph = self.manager.get_graph(data)
             return ResponseHandler.success(graph)
@@ -45,10 +45,10 @@ class DevelopActivitiesController:
 controller = DevelopActivitiesController()
 
 
-@develop_activities_bp.route("/develop-activities/<platform>/<path:remaining_path>", methods=["GET"])
-def get_project_activities(platform, remaining_path):
+@develop_activities_bp.route("/develop-activity/<platform>/<path:remaining_path>", methods=["GET"])
+def get_project_activity(platform, remaining_path):
     data = request.args.to_dict()
     data["platform"]=platform
     data["path"]=remaining_path
-    response = controller.get_activities_graph(data)
+    response = controller.get_activity_graph(data)
     return ResponseHandler.jsonify_response(response)
