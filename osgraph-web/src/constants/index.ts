@@ -309,7 +309,7 @@ export const GRAPH_EXTEND_PARAMS_FORM = {
       type: "inputNumber",
       key: "topic-limit",
       label: "params.topic",
-      defaultValue: 10,
+      defaultValue: 5,
     },
   ],
 };
@@ -371,11 +371,11 @@ export const GRAPH_LIMIT_MAP = {
 export const GRAPH_TEMPLATE_TYPE_MAP = {
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]]:
     "project-contribution",
-  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]]: "project-ecology",
+  [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY]]: "project-ecosystem",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY]]:
     "project-community",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY]]:
-    "develop-activities",
+    "develop-activity",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_PARTNER]]: "os-partner",
   [GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.ACCT_INTEREST]]: "os-interest",
 };
