@@ -32,6 +32,7 @@ export const ProjectSearch: React.FC<{
   templateType?: string | any;
   getGraphLoading?: (loading: boolean) => void;
   graphExtendParams?: Record<string, any>;
+  onUpdateTemplateId?: (templateId: number) => void;
 }> = ({
   needFixed,
   debounceTimeout = 300,
@@ -46,6 +47,7 @@ export const ProjectSearch: React.FC<{
   graphParameterList,
   getGraphLoading,
   graphExtendParams,
+  onUpdateTemplateId,
 }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -126,6 +128,7 @@ export const ProjectSearch: React.FC<{
   };
 
   const handleProjectChange = (value: string, item: any) => {
+    onUpdateTemplateId?.(item.data.id);
     if (
       projectValue &&
       GRAPH_TYPE_CLUSTER[projectValue as keyof typeof GRAPH_TYPE_CLUSTER] !==
@@ -142,7 +145,7 @@ export const ProjectSearch: React.FC<{
       });
     }
     setState((draft) => {
-      draft.querySource = item.data.querySource;
+      draft.querySource = `github_${item.data.input_types}`;
       draft.templateParameterList = item.data.templateParameterList;
       draft.templateId = item.data.id;
       draft.projectValue = value;

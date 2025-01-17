@@ -23,7 +23,6 @@ import {
   GRAPH_DOCUMENT_TITLE_MAP,
   GRAPH_EXTEND_PARAMS_MAP,
   GRAPH_TEMPLATE_TYPE_MAP,
-  GRAPH_QUERY_SOURCE_MAP,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
@@ -146,66 +145,58 @@ export default () => {
   const generateShareLink = (shareInfo: Record<string, any>) => {
     setState((draft) => {
       draft.locationState = shareInfo;
-      const { templateId, warehouseName, querySource } = shareInfo;
+      const { templateId, warehouseName } = shareInfo;
       const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
+      const host = window.location.origin;
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        const search = `contribution-limit=${shareInfo?.["contribution-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
-        draft.shareLink = `${
-          window.location.origin
-        }/graphs/${projectValueFormat}/github/${warehouseName}${
+        const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
           searchPath + search
         }`;
-        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+        draft.pngShareLink = `${host}/png/graphs/${
           GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
+        }/github/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
-        const { topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
-        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${
           GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
+        }/github/${warehouseName}?repo-limit=${shareInfo?.["repo-limit"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
-        const search = `country-topn=${shareInfo["country-topn"]}&company-topn=${shareInfo["company-topn"]}&developer-topn=${shareInfo["developer-topn"]}`;
+        const search = `country-limit=${shareInfo["country-limit"]}&company-limit=${shareInfo["company-limit"]}&user-limit=${shareInfo["user-limit"]}`;
         /** repo community */
-        draft.shareLink = `${
-          window.location.origin
-        }/graphs/${projectValueFormat}/github/${warehouseName}${
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
           searchPath + search
         }`;
-        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+        draft.pngShareLink = `${host}/png/graphs/${
           GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
+        }/github/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
-        const { topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
-        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${
           GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
+        }/github/${warehouseName}?user-limit=${shareInfo?.["user-limit"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
-        const { topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}topn=${topn}`;
-        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${
           GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?topn=${topn}`;
+        }/github/${warehouseName}?user-limit=${shareInfo?.["user-limit"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
-        const search = `githubrepo-topn=${shareInfo["githubrepo-topn"]}&topic-topn=${shareInfo["topic-topn"]}`;
+        const search = `repo-limit=${shareInfo["repo-limit"]}&topic-limit=${shareInfo["topic-limit"]}`;
         /** acct interest */
-        draft.shareLink = `${
-          window.location.origin
-        }/graphs/${projectValueFormat}/github/${warehouseName}${
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
           searchPath + search
         }`;
-        draft.pngShareLink = `${window.location.origin}/png/graphs/${
+        draft.pngShareLink = `${host}/png/graphs/${
           GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/${GRAPH_QUERY_SOURCE_MAP[querySource]}/${warehouseName}?${search}`;
+        }/github/${warehouseName}?${search}`;
       }
     });
   };
@@ -296,6 +287,15 @@ export default () => {
     return newParams;
   }, [extendParams]);
 
+  const onUpdateTemplateId = (templateId: number) => {
+    setState((draft) => {
+      draft.locationState = {
+        ...locationState,
+        templateId,
+      };
+    });
+  };
+
   return (
     <OSGraph>
       <div
@@ -324,6 +324,7 @@ export default () => {
                 onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
                 graphExtendParams={graphExtendParams}
+                onUpdateTemplateId={onUpdateTemplateId}
               />
               <ExtendParams
                 templateId={templateId}
