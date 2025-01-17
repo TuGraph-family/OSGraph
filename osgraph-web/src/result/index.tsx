@@ -26,6 +26,7 @@ import {
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
+import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
@@ -146,7 +147,7 @@ export default () => {
     setState((draft) => {
       draft.locationState = shareInfo;
       const { templateId, warehouseName } = shareInfo;
-      const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
+      const projectValueFormat = GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]];
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
@@ -154,7 +155,10 @@ export default () => {
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${shareInfo["start-time"]}&end-time=${shareInfo["end-time"]}`;
+        /** translator start time and end time of query */
+        const startTime = timestampToDate(shareInfo["start-time"]);
+        const endTime = timestampToDate(shareInfo["end-time"]);
+        const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${startTime}&end-time=${endTime}`;
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
           searchPath + search
         }`;
