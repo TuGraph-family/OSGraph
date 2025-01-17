@@ -6,18 +6,27 @@
 
 ![](docs/img/graphs.png)
 
-> **OSGraph v2.0 新特性！！！**
-> 1. 服务端重构完成，全面拥抱Python技术栈。
-> 2. 图谱支持多跳扩展，无限下钻洞察开源数据。
-> 3. 图谱支持`png`图片链接，一键嵌入Markdown。
-> 4. 更轻松的图谱扩展定制，直接打通生产服务。
-
+> **OSGraph v2.0.0 新特性！！！**
+> 1. 开源图谱支持参数化表单配置，使图谱可视化更加灵活。
+> 2. 服务端重构完成，全面拥抱Python技术栈。
+> 3. 图谱支持多跳扩展，无限下钻洞察开源数据。
+> 4. 图谱支持PNG图片链接，一键嵌入Markdown。
+> 5. 更轻松的图谱扩展定制，直接打通生产服务。
+> 6. 支持国际化。
 
 ## 产品地址
 
 **[https://osgraph.com](https://osgraph.com)**
 
 在这里你可以参考[图谱示例](docs/zh-CN/demo.md)进行产品体验。
+
+使用Markdown直接引用OSGraph图谱？试试：
+
+```markdown
+![](https://osgraph.com/graphs/project-contribution/github/TuGraph-family/tugraph-db)
+```
+
+具体请参考：[OSGraph API设计规范](docs/zh-CN/api-reference.md)
 
 
 ## 快速开始
