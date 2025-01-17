@@ -20,7 +20,7 @@ from app.models.graph_view import Graph, Push, Repo, User, OpenPR
 from app.services.graph_services.developer_activity import DeveloperActivityService
 
 
-class DevelopActivitiesManager:
+class DevelopActivityManager:
     def __init__(self) -> None:
         pass
 
