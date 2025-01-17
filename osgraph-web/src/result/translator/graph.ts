@@ -5,10 +5,7 @@
 
 import {
   GRAPH_EXTEND_PARAMS_MAP,
-  GRAPH_TEMPLATE_TYPE_MAP,
-  GRAPH_SHARE_LINK_MAP,
   GRAPH_LIMIT_MAP,
-  GRAPH_TEMPLATE_ENUM,
 } from "../../constants/index";
 import {
   dateToTimestamp,
@@ -23,7 +20,7 @@ const graphTranslator = () => {
 
     if (match) {
       return {
-        templateType: GRAPH_TEMPLATE_TYPE_MAP[match[1]],
+        templateType: match[1],
         path: match[2],
       };
     } else {
@@ -84,12 +81,12 @@ const graphTranslator = () => {
 
     /** 单独处理 contrib-repo，添加预处理参数 */
     if (
-      templateType === GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]
+      templateType === 'project-contribution'
     ) {
       const LastYearTimestamps = getLast10YearsTimestampsInSeconds();
       /** 等到扩展参数阶段，开放用户自定义参数的功能 */
-      const startDate = params.get("start");
-      const endDate = params.get("end");
+      const startDate = params.get("start-time");
+      const endDate = params.get("end-time");
       let startTimestamp = LastYearTimestamps.startTimestamp;
       let endTimestamp = LastYearTimestamps.endTimestamp;
 
@@ -115,7 +112,7 @@ const graphTranslator = () => {
     path: urlValues.path,
     extendsStr: transUrlSearchParams(
       location.search,
-      GRAPH_SHARE_LINK_MAP[urlValues.templateType]
+      urlValues.templateType,
     ),
   };
 };
