@@ -18,6 +18,20 @@
 
 **[https://osgraph.com](https://osgraph.com)**
 
+
+## 快速开始
+
+当前OSGraph提供的默认6张基础开源图谱含义如下：
+
+| 图谱名称 | 图谱ID                   | 功能                                            |
+|----------|------------------------|-----------------------------------------------|
+| 项目贡献图谱 | `project-contribution` | 根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。 |
+| 项目生态图谱 | `project-ecosystem`    | 提取项目间的开发活动、组织等关联信息，构建项目核心生态关系。                |
+| 项目社区图谱 | `project-community`    | 根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。             |
+| 开发活动图谱 | `developer-activity`   | 根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。   |
+| 开源伙伴图谱 | `os-partner`           | 找到开发者在开源社区中，与之协作紧密的其他开发者。                     |
+| 开源兴趣图谱 | `os-interest`          | 根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。                 |
+
 在这里你可以参考[图谱示例](docs/zh-CN/demo.md)进行产品体验。
 
 使用Markdown直接引用OSGraph图谱？试试：
@@ -27,9 +41,6 @@
 ```
 
 具体请参考：[OSGraph API设计规范](docs/zh-CN/api-reference.md)
-
-
-## 快速开始
 
 本地启动测试请参考：[快速开始](docs/zh-CN/quick-start.md)
 
@@ -52,7 +63,7 @@
 
 
 
-##  参与贡献
+## 参与贡献
 
 您可以参考[贡献手册](community/CONTRIBUTING.md)提交GitHub Issue/PR对OSGraph反馈建议与功能改进，也可以通过下面的联系方式加入TuGraph社区群与我们直接沟通交流。
 

@@ -18,6 +18,19 @@
 
 **[https://osgraph.com](https://osgraph.com)**
 
+## QuickStart
+
+The following are the meanings of the 6 default basic open source graphs currently provided by OSGraph:
+
+| Graph Name | Graph ID | Function |
+|----------|------------------------|-----------------------------------------------|
+| Project Contribution Graph | `project-contribution` | Find core project contributors based on developer activity information (Issues, PRs, Commits, CRs, etc.). |
+| Project Ecosystem Graph | `project-ecosystem` | Extract relationships between projects' development activities and organizations to build core project ecosystem relationships. |
+| Project Community Graph | `project-community` | Extract core developer community distribution based on project development activities and developer organization information. |
+| Developer Activity Graph | `developer-activity` | Find core projects participated in based on developer activity information (Issues, PRs, Commits, CRs, etc.). |
+| Open Source Partner Graph | `os-partner` | Find other developers who collaborate closely with the developer in the open source community. |
+| Open Source Interest Graph | `os-interest` | Analyze developer's technical domains and interests based on participated project topics, tags and other information. |
+
 You can refer to [Graph Demo](docs/en-US/demo.md) for product experience.
 
 Want to directly embed OSGraph graphs in Markdown? Try:
@@ -27,8 +40,6 @@ Want to directly embed OSGraph graphs in Markdown? Try:
 ```
 
 For more details：[OSGraph API Reference](docs/en-US/api-reference.md)
-
-## QuickStart
 
 Startup and test on local machine: [Quick Start](docs/en-US/quick-start.md)
 

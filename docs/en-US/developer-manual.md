@@ -3,8 +3,17 @@
 ## 1. Introduction
 **OSGraph (Open Source Graph)** provides six open-source graph datasets for users to explore, including three project-related graphs (Contribution, Ecosystem, Community) and three development-related graphs (Activities, Partners, Interests). If these six graphs do not meet your needs, you can customize your own graphs following this document.
 
-## 2. Local Setup
 Refer to the [Quick Start](./quick-start.md) document to complete the local setup and testing of the OSGraph service.
+
+## 2. Product Design
+
+By writing GitHub Archive data into the [TuGraph](https://github.com/TuGraph-family) database, OSGraph builds a graph query service for open source, and uses [AntV](https://github.com/antvis) for graph visualization.
+
+![](../img/arch.jpg)
+
+Furthermore, by connecting different open source graphs, unlimited exploration and expansion of the open source graphs can be achieved.
+
+![](../img/expand.jpg)
 
 ## 3. Project Structure
 
@@ -14,11 +23,11 @@ Refer to the [Quick Start](./quick-start.md) document to complete the local setu
 * Service Layer: `osgraph-service/app/services`
 * Data Layer: `osgraph-service/app/dal`
 
-## 4. Development Details
+## 4. Development
 
-### 4.1 Interface Layer Development
+### 4.1 Graph API Development
 
-#### 4.1.1 Interface Design Specifications
+#### 4.1.1 Graph API Design
 
 URLs in the interface layer follow standardized design principles, using consistent formats for RESTful APIs, shared pages, and shared images.
 
@@ -30,7 +39,7 @@ URLs in the interface layer follow standardized design principles, using consist
 
 For more details：[OSGraph API Reference](api-reference.md)
 
-#### 4.1.2 Adding New Graph Interfaces
+#### 4.1.2 Add Graph API
 
 Create a new graph interface in the `osgraph-service/app/routes` directory and call the corresponding manager for implementation.
 
@@ -53,7 +62,7 @@ class OSInterestController:
         ...
 ```
 
-### 4.2 Business Layer Development
+### 4.2 Graph Manager Development
 
 #### 4.2.1 Graph View Model
 
@@ -114,7 +123,7 @@ Meaning of edge models:
 | `CommonDevelop` | Development activities that users jointly participate in |
 | `ContributeRepo` | A user contributes to a repository                       |
 
-#### 4.2.2 Adding New Graph Managers
+#### 4.2.2 Add Graph Manager
 
 Create a manager in the `osgraph-service/app/managers` directory and call the respective service for implementation.
 
@@ -126,14 +135,14 @@ class OSInterestManager:
 ```
 
 
-### 4.3 Service Layer Development
+### 4.3 Graph Service Development
 
 
-#### 4.3.1 Adding New Graph Services
+#### 4.3.1 Add Graph Service
 
 Create a new service in the `osgraph-service/app/services/graph_services` directory.
 
-Configure the required service parameters. Use inputTypes to declare the main query type and filterKeys to define query parameters for the service.
+Configure the required service parameters. Use `inputTypes` to declare the main query type and `filterKeys` to define query parameters for the service.
 
 ```Python
 class OSInterestServiceConfig(ServiceConfig):
@@ -168,7 +177,7 @@ class OSInterestService(BaseService):
 ```
 
 
-### 4.4 Data Layer Development
+### 4.4 Graph Data Development
 
 #### 4.4.1 Graph Data Schema
 
@@ -178,12 +187,12 @@ The underlying graph schema for OSGraph is defined as follows:
 For details, you can visit the TuGraph console directly: [Link](http://127.0.0.1:7070/#/Workbench/CreateLabel)
 
 
-## 5. Development Example
+## 5. Development Demo
 
 ### 5.1 Requirement
-Build a "Development Language" graph to describe the programming languages a user prefers when contributing to open source.
+Build a "Development Language" graph (`dev-lang`) to describe the programming languages a user prefers when contributing to open source.
 
-### 5.2 Develop DevLangController
+### 5.2 Develop `DevLangController`
 
 ```python
 dev_lang_bp = Blueprint("dev_lang", __name__, url_prefix="/api/graphs")
@@ -203,7 +212,7 @@ def get_org_repo(platform, remaining_path):
     response = controller.get_graph(data)
 ```
 
-### 5.3 Develop DevLangManager
+### 5.3 Develop `DevLangManager`
 
 ```Python
 class DevLangManager:
@@ -231,9 +240,9 @@ class DevLangManager:
             return graph.to_dict()
 ```
 
-### 5.4 Develop DevLangService
+### 5.4 Develop `DevLangService`
 
-Configure the DevLangService service parameters.
+Configure the `DevLangService` service parameters.
 ```python
 class DevLangServiceConfig(ServiceConfig):
     def __init__(self):
@@ -247,7 +256,7 @@ class DevLangServiceConfig(ServiceConfig):
         )
 ```
 
-Implement the DevLangService service logic.
+Implement the `DevLangService` service logic.
 
 ```python
 class DevLangService(BaseService):
@@ -283,7 +292,7 @@ class DevLangService(BaseService):
             return results
 ```
 
-Register the DevLangService graph service.
+Register the `DevLangService` graph service.
 
 ```python
 SERVICE_CONFIGS = [
@@ -292,9 +301,9 @@ SERVICE_CONFIGS = [
 ]
 ```
 
-### 5.5 Validation
+### 5.5 Test
 
-Test the URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/fanzhidongyzby?lang-limit=3
+Test URL：`http://127.0.0.1:8000/api/graphs/dev-lang/github/fanzhidongyzby?lang-limit=3`
 
 
 Response Result：
