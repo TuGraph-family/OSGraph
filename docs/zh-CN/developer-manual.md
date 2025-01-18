@@ -3,8 +3,18 @@
 ## 1. 介绍
 **OSGraph (Open Source Graph)** 默认提供了6张开源数据图谱供大家体验，包含项目类图谱3个（贡献、生态、社区）、开发类3个（活动、伙伴、兴趣）。如果这6张图谱不能满足您的需求，您也可以根据此文档，定制属于您自己的图谱。
 
-## 2. 本地启动
-请选参考[快速开始](./quick-start.md)文档完成本地OSGraph服务启动测试。
+请先参考[快速开始](./quick-start.md)文档完成本地OSGraph服务启动测试。
+
+## 2. 产品设计
+
+通过将GitHub Archive数据写入到[TuGraph](https://github.com/TuGraph-family)数据库，OSGraph构建了开源图谱的查询服务，并使用[AntV](https://github.com/antvis)完成图谱可视化。
+
+![](../img/arch.jpg)
+
+更进一步地，通过连接不同的开源图谱，可以对开源图谱进行无限的探索与扩展。
+
+![](../img/expand.jpg)
+
 
 ## 3. 项目结构
 
@@ -133,7 +143,7 @@ class OSInterestManager:
 
 在`osgraph-service/app/services/graph_services`目录中创建对应服务。
 
-配置必要的服务参数，inputTypes声明图谱的查询主体类型，filterKeys声明图谱服务的查询参数。
+配置必要的服务参数，`inputTypes`声明图谱的查询主体类型，`filterKeys`声明图谱服务的查询参数。
 
 ```Python
 class OSInterestServiceConfig(ServiceConfig):
@@ -158,7 +168,7 @@ SERVICE_CONFIGS = [
 ]
 ```
 
-编写execute函数，并调用数据层`GraphClient`，获取所需的底图数据。
+编写`execute`函数，并调用数据层`GraphClient`，获取所需的底图数据。
 
 ```Python
 class OSInterestService(BaseService):
@@ -181,9 +191,9 @@ OSGraph底层图数据结构定义为：
 ## 5. 开发示例
 
 ### 5.1 需求
-构建一个“开发语言”图谱，描述用户开源贡献时偏爱的编程语言。
+构建一个“开发语言”图谱（`dev-lang`），描述用户开源贡献时偏爱的编程语言。
 
-### 5.2 开发DevLangController
+### 5.2 开发`DevLangController`
 
 ```python
 dev_lang_bp = Blueprint("dev_lang", __name__, url_prefix="/api/graphs")
@@ -203,7 +213,7 @@ def get_org_repo(platform, remaining_path):
     response = controller.get_graph(data)
 ```
 
-### 5.3 开发DevLangManager
+### 5.3 开发`DevLangManager`
 
 ```Python
 class DevLangManager:
@@ -231,9 +241,9 @@ class DevLangManager:
             return graph.to_dict()
 ```
 
-### 5.4 开发DevLangService
+### 5.4 开发`DevLangService`
 
-配置DevLangService服务参数。
+配置`DevLangService`服务参数。
 ```python
 class DevLangServiceConfig(ServiceConfig):
     def __init__(self):
@@ -248,7 +258,7 @@ class DevLangServiceConfig(ServiceConfig):
 ```
 
 
-实现DevLangService服务逻辑。
+实现`DevLangService`服务逻辑。
 
 ```python
 class DevLangService(BaseService):
@@ -284,7 +294,7 @@ class DevLangService(BaseService):
             return results
 ```
 
-注册DevLangService图谱服务。
+注册`DevLangService`图谱服务。
 
 ```python
 SERVICE_CONFIGS = [
@@ -293,9 +303,9 @@ SERVICE_CONFIGS = [
 ]
 ```
 
-### 5.5 验证
+### 5.5 测试
 
-访问测试URL：http://127.0.0.1:8000/api/graphs/dev-lang/github/fanzhidongyzby?lang-limit=3
+访问测试URL：`http://127.0.0.1:8000/api/graphs/dev-lang/github/fanzhidongyzby?lang-limit=3`
 
 响应结果：
 ```json
