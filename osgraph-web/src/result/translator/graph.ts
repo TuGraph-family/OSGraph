@@ -6,6 +6,7 @@
 import {
   GRAPH_EXTEND_PARAMS_MAP,
   GRAPH_LIMIT_MAP,
+  GRAPH_SHARE_LINK_MAP,
 } from "../../constants/index";
 import {
   dateToTimestamp,
@@ -18,9 +19,31 @@ const graphTranslator = () => {
     const pattern = /^\/graphs\/([^\/]+)\/github\/(\S+)/;
     const match = url.match(pattern);
 
+    const adaptorHistoryTemplateType = (type: string) => {
+      if (GRAPH_SHARE_LINK_MAP.repo_contribute === type) {
+        return 'project-contribution';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.repo_ecology === type) {
+        return 'project-ecosystem';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.repo_community === type) {
+        return 'project-community';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.acct_activity === type) {
+        return 'developer-activity';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.acct_partner === type) {
+        return 'os-partner';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.acct_interest === type) {
+        return 'os-interest';
+      }
+      return type;
+    };
+
     if (match) {
       return {
-        templateType: match[1],
+        templateType: adaptorHistoryTemplateType(match[1]),
         path: match[2],
       };
     } else {
@@ -106,6 +129,8 @@ const graphTranslator = () => {
   };
 
   const urlValues = extractValuesFromURL(location.pathname);
+
+  console.log('urlValues:', urlValues);
 
   return {
     templateType: urlValues.templateType,
