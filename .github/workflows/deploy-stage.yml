@@ -61,7 +61,7 @@ jobs:
           if [ -f ./poetry.lock ]; then
             rm ./poetry.lock
           fi
-          poetry install
+          poetry install --no-dev --only main --lock
           lsof -ti:8000 | xargs kill -9 || true
           nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 server:app > gunicorn.log 2>&1 &
           EOF
