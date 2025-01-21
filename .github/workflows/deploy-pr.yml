@@ -1,7 +1,7 @@
 name: Pre-Production Deployment
 
 on:
-  pull_request:
+  push:
     branches:
       - master
 
@@ -13,6 +13,9 @@ jobs:
       # Step 1: 检出代码
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }} # 指定 PR 提交的分支
+          repository: ${{ github.event.pull_request.head.repo.full_name }} # 支持 fork 仓库代码
 
       # Step 2: 安装 Node.js 和 pnpm 环境
       - name: Set up Node.js
@@ -52,13 +55,16 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH_BACKEND: ${{ secrets.DEPLOY_PATH_BACKEND }}
         run: |
-          timeout 300 scp -o StrictHostKeyChecking=no -r ./osgraph-service-py/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
+          timeout 300 scp -o StrictHostKeyChecking=no -r ./osgraph-service/* $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH_BACKEND
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
           set -e
           source ~/.bashrc
           source /root/osgraph/myenv/bin/activate
           cd $DEPLOY_PATH_BACKEND
+          if [ -f ./poetry.lock ]; then
+            rm ./poetry.lock
+          fi
           poetry install
           lsof -ti:8000 | xargs kill -9 || true
-          nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 run:app > gunicorn.log 2>&1 &
+          nohup poetry run gunicorn -w 4 -b 0.0.0.0:8000 server:app > gunicorn.log 2>&1 &
           EOF

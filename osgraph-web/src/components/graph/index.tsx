@@ -345,7 +345,7 @@ export const GraphView = React.memo(
                       },
                       {
                         name: t("template.REPO_ECOLOGY"),
-                        templateType: "project-ecology",
+                        templateType: "project-ecosystem",
                         key: "2",
                       },
                       {
@@ -358,7 +358,7 @@ export const GraphView = React.memo(
                     return [
                       {
                         name: t("template.ACCT_ACTIVITY"),
-                        templateType: "develop-activities",
+                        templateType: "developer-activity",
                         key: "4",
                       },
                       {

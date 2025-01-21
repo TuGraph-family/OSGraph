@@ -147,7 +147,7 @@ export const getExecuteQueryTemplate = async (params: {
   }
 
   if (templateName === "项目生态") {
-    url = `/api/graphs/project-ecology/github/${params.value}`;
+    url = `/api/graphs/project-ecosystem/github/${params.value}`;
     args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
@@ -155,7 +155,7 @@ export const getExecuteQueryTemplate = async (params: {
   }
 
   if (templateName === "开发活动") {
-    url = `/api/graphs/develop-activities/github/${params.value}`;
+    url = `/api/graphs/developer-activity/github/${params.value}`;
     args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
