@@ -4,13 +4,17 @@
 cd ./osgraph-service || { echo "Failed to enter osgraph-service directory"; exit 1; }
 
 # 2. Copy OSGraph/.env.template to the current directory and rename it to .env
-cp ../.env.template .env || { echo "Failed to copy .env template"; exit 1; }
+if [ ! -f ".env" ]; then
+    cp ../.env.template .env || { echo "Failed to copy .env template"; exit 1; }
+else
+    echo ".env file already exists, skipping copy."
+fi
 
 # 3. Execute pip install poetry
 pip install poetry || { echo "Failed to install poetry"; exit 1; }
 
 # 4. Execute poetry install
-poetry install --no-root  || { echo "Failed to poetry install"; exit 1; }
+poetry install  --no-root --without dev  || { echo "Failed to poetry install"; exit 1; }
 
 # 5. Create the web folder
 mkdir -p web || { echo "Failed to create web folder"; exit 1; }
