@@ -17,10 +17,12 @@ jobs:
         run: |
           sshpass -p "$PROD_PWD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST << EOF
           set -e
+          export PATH="/root/miniconda3/bin:\$PATH"
+          source /root/miniconda3/etc/profile.d/conda.sh
+          conda activate osgraph-env
           cd $DEPLOY_PATH
           git checkout release
           git pull
-          conda activate osgraph-env
           bash ./bin/build.sh
           bash ./bin/start.sh prod
           EOF
