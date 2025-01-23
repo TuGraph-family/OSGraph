@@ -2,12 +2,6 @@ name: Deploy-Prod
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: "The branch to deploy"
-        required: true
-        default: "release"
-        type: string
 
 jobs:
   deploy-to-server:
@@ -27,7 +21,7 @@ jobs:
           source /root/miniconda3/etc/profile.d/conda.sh
           conda activate osgraph-env
           cd $DEPLOY_PATH
-          git checkout $DEPLOY_BRANCH
+          git checkout release
           git pull
           bash ./bin/build.sh
           bash ./bin/start.sh prod
