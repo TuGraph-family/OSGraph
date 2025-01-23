@@ -272,7 +272,7 @@ class DevLangService(BaseService):
         platform: str = validated_data["platform"]
         lang_limit: int = validated_data["lang-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         
         if len(res):
