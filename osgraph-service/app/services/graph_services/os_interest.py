@@ -46,7 +46,7 @@ class OSInterestService(BaseService):
         topic_limit: int = validated_data["topic-limit"]
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]

@@ -51,7 +51,7 @@ class ProjectCommunityService(BaseService):
         country_limit: int = validated_data["country-limit"]
         developer_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]

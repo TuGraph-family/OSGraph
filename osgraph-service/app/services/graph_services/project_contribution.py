@@ -79,7 +79,7 @@ class ProjectContributionService(BaseService):
         end_time: int = string_to_timestamp(end_time_str)
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
