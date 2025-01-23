@@ -22,6 +22,7 @@ jobs:
           cd $DEPLOY_PATH
           git checkout master
           git pull
+          source /root/.bashrc
           conda activate osgraph-env
           bash ./bin/build.sh
           bash ./bin/start.sh prod
