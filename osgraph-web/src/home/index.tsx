@@ -8,19 +8,10 @@ import {
   ANTV,
   OSGRAPH_GITHUB,
   TUGRAPH_TECH,
-  X_LAB_GITHUB
+  X_LAB_GITHUB,
 } from "../constants/links";
-import { SPAPOS } from "../constants/log";
-import { adjustWidth } from "../utils/adjust-width";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
-
-window?.Tracert?.call?.("set", {
-  spmAPos: SPAPOS,
-  spmBPos: location.pathname,
-  pathName: "首页"
-});
-window?.Tracert?.call?.("logPv");
 
 const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);

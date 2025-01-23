@@ -10,10 +10,8 @@ import { useImmer } from "use-immer";
 import { GraphView, ProjectSearch } from "../components";
 import PageNotFound from "../404";
 import { OSGraph } from "../controller";
-import {
-  getExecuteShareQueryTemplate,
-  getExecuteShareLinkQuery,
-} from "../services/result";
+import { getExecuteShareQueryTemplate } from "../services/result";
+
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
@@ -24,12 +22,14 @@ import {
   GRAPH_TEMPLATE_ENUM,
   GRAPH_DOCUMENT_TITLE_MAP,
   GRAPH_EXTEND_PARAMS_MAP,
+  GRAPH_TEMPLATE_TYPE_MAP,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
-import { SPAPOS } from "../constants/log";
+import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
+import { getExecuteShareLinkQuery } from "../services/result_new";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -37,14 +37,6 @@ export default () => {
   const location = useLocation();
   const isMobile = getIsMobile();
   const navigate = useNavigate();
-
-  window?.Tracert?.call?.("set", {
-    spmAPos: SPAPOS,
-    spmBPos: location.pathname,
-    pathName: "结果页"
-  });
-  window?.Tracert?.call?.("logPv");
-
 
   const powerByRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<{
@@ -56,6 +48,7 @@ export default () => {
     locationState: Record<string, any>;
     isOpen: boolean;
     shareLink: string;
+    pngShareLink: string;
     isLoading: boolean;
     isErrorShareParams: boolean;
     renderMode: string;
@@ -77,6 +70,7 @@ export default () => {
       locationState: location || {},
       isOpen: false,
       shareLink: "",
+      pngShareLink: "",
       isLoading: false,
       isErrorShareParams: false,
       renderMode: initializeRenderMode(),
@@ -89,7 +83,14 @@ export default () => {
     redo: boolean;
   }>({ undo: true, redo: true });
 
-  const { locationState, isOpen, isLoading, shareLink, extendParams } = state;
+  const {
+    locationState,
+    isOpen,
+    isLoading,
+    shareLink,
+    extendParams,
+    pngShareLink,
+  } = state;
 
   const {
     data,
@@ -147,36 +148,60 @@ export default () => {
     setState((draft) => {
       draft.locationState = shareInfo;
       const { templateId, warehouseName } = shareInfo;
-      const projectValueFormat = GRAPH_SHARE_LINK_MAP[templateId];
-
+      const projectValueFormat = GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]];
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
+      const host = window.location.origin;
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}contrib-limit=${top_n}`;
+        /** translator start time and end time of query */
+        const startTime = timestampToDate(shareInfo["start-time"]);
+        const endTime = timestampToDate(shareInfo["end-time"]);
+        const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${startTime}&end-time=${endTime}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${host}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/github/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/github/${warehouseName}?repo-limit=${shareInfo?.["repo-limit"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
+        const search = `country-limit=${shareInfo["country-limit"]}&company-limit=${shareInfo["company-limit"]}&user-limit=${shareInfo["user-limit"]}`;
         /** repo community */
-        const { country_topn, company_topn, developer_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}country-limit=${country_topn}&org-limit=${company_topn}&contrib-limit=${developer_topn}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${host}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/github/${warehouseName}?${search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${top_n}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/github/${warehouseName}?user-limit=${shareInfo?.["user-limit"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
-        const { top_n } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}partner-limit=${top_n}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/github/${warehouseName}?user-limit=${shareInfo?.["user-limit"]}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
+        const search = `repo-limit=${shareInfo["repo-limit"]}&topic-limit=${shareInfo["topic-limit"]}`;
         /** acct interest */
-        const { repo_topn, topic_topn } = shareInfo;
-        draft.shareLink = `${window.location.origin}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${repo_topn}&topic-limit=${topic_topn}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
+          searchPath + search
+        }`;
+        draft.pngShareLink = `${host}/png/graphs/${
+          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+        }/github/${warehouseName}?${search}`;
       }
     });
   };
@@ -267,6 +292,15 @@ export default () => {
     return newParams;
   }, [extendParams]);
 
+  const onUpdateTemplateId = (templateId: number) => {
+    setState((draft) => {
+      draft.locationState = {
+        ...locationState,
+        templateId,
+      };
+    });
+  };
+
   return (
     <OSGraph>
       <div
@@ -296,6 +330,7 @@ export default () => {
                 onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
                 graphExtendParams={graphExtendParams}
+                onUpdateTemplateId={onUpdateTemplateId}
               />
               <ExtendParams
                 templateId={templateId}
@@ -405,7 +440,7 @@ export default () => {
       </div>
 
       <Modal
-        title={t`share`}
+        title={t`graph.share`}
         open={isOpen}
         footer={null}
         onCancel={() => {
@@ -414,35 +449,30 @@ export default () => {
           });
         }}
       >
-        <div
-          style={{
-            background: "#f6f6f6",
-            borderRadius: 8,
-            padding: "0 8px",
-            width: 432,
-            height: 40,
-            lineHeight: "40px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              marginRight: 8,
-              width: "calc(100% - 65px)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {shareLink}
-          </div>
+        <div className={styles.shareItem}>
+          <div className={styles.shareItemLabel}>{t`web`}</div>
+          <div className={styles.shareItemContent}>{shareLink}</div>
           <CopyToClipboard
             text={shareLink}
             onCopy={(_, result) => {
               if (result) {
-                message.success(t`copy success`);
+                message.success(t`copySuccess`);
+              } else {
+                message.error("复制失败，请稍后再试");
+              }
+            }}
+          >
+            <Button type="primary">{t`copy`}</Button>
+          </CopyToClipboard>
+        </div>
+        <div className={styles.shareItem}>
+          <div className={styles.shareItemLabel}>{t`png`}</div>
+          <div className={styles.shareItemContent}>{pngShareLink}</div>
+          <CopyToClipboard
+            text={pngShareLink}
+            onCopy={(_, result) => {
+              if (result) {
+                message.success(t`copySuccess`);
               } else {
                 message.error("复制失败，请稍后再试");
               }

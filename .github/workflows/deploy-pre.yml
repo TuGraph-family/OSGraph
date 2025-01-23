@@ -1,0 +1,30 @@
+name: Deploy-Pre
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-to-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into server and execute deployment script
+        env:
+          PRE_HOST: ${{ secrets.PRE_HOST }}
+          PRE_USER: ${{ secrets.PRE_USER }}
+          PRE_PWD: ${{ secrets.PRE_PWD }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          sshpass -p "$PRE_PWD" ssh -o StrictHostKeyChecking=no $PRE_USER@$PRE_HOST << EOF
+          set -e
+          export PATH="/root/miniconda3/bin:\$PATH"
+          source /root/miniconda3/etc/profile.d/conda.sh
+          conda activate osgraph-env
+          cd $DEPLOY_PATH
+          git checkout master
+          git pull
+          bash ./bin/build.sh
+          bash ./bin/start.sh prod
+          EOF

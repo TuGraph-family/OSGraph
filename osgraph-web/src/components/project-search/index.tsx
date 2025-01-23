@@ -6,14 +6,17 @@ import { useImmer } from "use-immer";
 import { GRAPH_TYPE_CLUSTER } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
 import { TranslatorTemplateList } from "./translator/transTemplateList";
-import {
-  getExecuteFullTextQuery,
-  getExecuteQueryTemplate,
-  getListQueryTemplate,
-} from "../../services/homePage";
+import * as homePageNew from "../../services/homePage_new";
 import styles from "./index.module.less";
 import { useTranslation } from "react-i18next";
 import { GET_TEMPLATE, getPlaceholder } from "../../constants/data";
+
+let getExecuteFullTextQuery: (...args: any[]) => Promise<any> =
+  homePageNew.getExecuteFullTextQuery;
+let getExecuteQueryTemplate: (...args: any[]) => Promise<any> =
+  homePageNew.getExecuteQueryTemplate;
+let getListQueryTemplate: (...args: any[]) => Promise<any> =
+  homePageNew.getListQueryTemplate;
 
 export const ProjectSearch: React.FC<{
   needFixed: boolean;
@@ -29,6 +32,7 @@ export const ProjectSearch: React.FC<{
   templateType?: string | any;
   getGraphLoading?: (loading: boolean) => void;
   graphExtendParams?: Record<string, any>;
+  onUpdateTemplateId?: (templateId: number) => void;
 }> = ({
   needFixed,
   debounceTimeout = 300,
@@ -43,6 +47,7 @@ export const ProjectSearch: React.FC<{
   graphParameterList,
   getGraphLoading,
   graphExtendParams,
+  onUpdateTemplateId,
 }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -123,6 +128,7 @@ export const ProjectSearch: React.FC<{
   };
 
   const handleProjectChange = (value: string, item: any) => {
+    onUpdateTemplateId?.(item.data.id);
     if (
       projectValue &&
       GRAPH_TYPE_CLUSTER[projectValue as keyof typeof GRAPH_TYPE_CLUSTER] !==
@@ -139,7 +145,7 @@ export const ProjectSearch: React.FC<{
       });
     }
     setState((draft) => {
-      draft.querySource = item.data.querySource;
+      draft.querySource = `github_${item.data.input_types}`;
       draft.templateParameterList = item.data.templateParameterList;
       draft.templateId = item.data.id;
       draft.projectValue = value;
@@ -199,8 +205,10 @@ export const ProjectSearch: React.FC<{
       .join(",");
 
     getGraphLoading?.(true);
+
     getExecuteQueryTemplate({
       templateId: templateId,
+      value: value,
       templateParameterList: templateList,
     })
       .then((res) => {
@@ -239,7 +247,7 @@ export const ProjectSearch: React.FC<{
             },
           });
         } else {
-          message.error(res.message);
+          message.error(res?.message);
         }
       })
       .finally(() => {

@@ -5,10 +5,8 @@
 
 import {
   GRAPH_EXTEND_PARAMS_MAP,
-  GRAPH_TEMPLATE_TYPE_MAP,
-  GRAPH_SHARE_LINK_MAP,
   GRAPH_LIMIT_MAP,
-  GRAPH_TEMPLATE_ENUM,
+  GRAPH_SHARE_LINK_MAP,
 } from "../../constants/index";
 import {
   dateToTimestamp,
@@ -21,9 +19,31 @@ const graphTranslator = () => {
     const pattern = /^\/graphs\/([^\/]+)\/github\/(\S+)/;
     const match = url.match(pattern);
 
+    const adaptorHistoryTemplateType = (type: string) => {
+      if (GRAPH_SHARE_LINK_MAP.repo_contribute === type) {
+        return 'project-contribution';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.repo_ecology === type) {
+        return 'project-ecosystem';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.repo_community === type) {
+        return 'project-community';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.acct_activity === type) {
+        return 'developer-activity';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.acct_partner === type) {
+        return 'os-partner';
+      }
+      else if (GRAPH_SHARE_LINK_MAP.acct_interest === type) {
+        return 'os-interest';
+      }
+      return type;
+    };
+
     if (match) {
       return {
-        templateType: GRAPH_TEMPLATE_TYPE_MAP[match[1]],
+        templateType: adaptorHistoryTemplateType(match[1]),
         path: match[2],
       };
     } else {
@@ -84,12 +104,12 @@ const graphTranslator = () => {
 
     /** 单独处理 contrib-repo，添加预处理参数 */
     if (
-      templateType === GRAPH_SHARE_LINK_MAP[GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE]
+      templateType === 'project-contribution'
     ) {
       const LastYearTimestamps = getLast10YearsTimestampsInSeconds();
       /** 等到扩展参数阶段，开放用户自定义参数的功能 */
-      const startDate = params.get("start");
-      const endDate = params.get("end");
+      const startDate = params.get("start-time");
+      const endDate = params.get("end-time");
       let startTimestamp = LastYearTimestamps.startTimestamp;
       let endTimestamp = LastYearTimestamps.endTimestamp;
 
@@ -101,8 +121,8 @@ const graphTranslator = () => {
         endTimestamp = dateToTimestamp(endDate);
       }
 
-      searchObj["start_timestamp"] = startTimestamp;
-      searchObj["end_timestamp"] = endTimestamp;
+      searchObj["start-time"] = startTimestamp;
+      searchObj["end-time"] = endTimestamp;
     }
 
     return objectToSearchParams(searchObj);
@@ -110,12 +130,14 @@ const graphTranslator = () => {
 
   const urlValues = extractValuesFromURL(location.pathname);
 
+  console.log('urlValues:', urlValues);
+
   return {
     templateType: urlValues.templateType,
     path: urlValues.path,
     extendsStr: transUrlSearchParams(
       location.search,
-      GRAPH_SHARE_LINK_MAP[urlValues.templateType]
+      urlValues.templateType,
     ),
   };
 };
