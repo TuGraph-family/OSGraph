@@ -26,6 +26,7 @@ import {
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
+import { SPAPOS } from "../constants/log";
 import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
@@ -36,6 +37,13 @@ export default () => {
   const location = useLocation();
   const isMobile = getIsMobile();
   const navigate = useNavigate();
+
+  window?.Tracert?.call?.("set", {
+    spmAPos: SPAPOS,
+    spmBPos: location.pathname,
+    pathName: "结果页"
+  });
+  window?.Tracert?.call?.("logPv");
 
   const powerByRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<{
