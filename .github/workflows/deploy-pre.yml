@@ -23,7 +23,7 @@ jobs:
           git checkout master
           git pull
           source /root/.bashrc
-          bash /root/miniconda3/etc/profile.d/conda.sh
+          conda init
           conda activate osgraph-env
           bash ./bin/build.sh
           bash ./bin/start.sh prod
