@@ -4,8 +4,3 @@ export const getIsMobile = () => {
   );
   return flag;
 };
-
-export const isIOS = () => {
-  const userAgent = navigator.userAgent.toLowerCase();
-  return /(iphone|ipad|ipod|ios)/i.test(userAgent);
-};

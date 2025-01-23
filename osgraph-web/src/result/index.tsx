@@ -33,7 +33,6 @@ import { getExecuteShareLinkQuery } from "../services/result_new";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
-
   const location = useLocation();
   const isMobile = getIsMobile();
   const navigate = useNavigate();
@@ -306,7 +305,6 @@ export default () => {
       <div
         className={isMobile ? styles["mobile-result"] : "graph-container"}
         css={GRAPH_STYLE}
-        style={{}}
       >
         {!isShare && (
           <div className="header">

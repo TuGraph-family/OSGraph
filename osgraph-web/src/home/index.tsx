@@ -51,7 +51,6 @@ const HomePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    adjustWidth();
     window.onscroll = function () {
       const { scrollHeight, clientHeight, scrollTop } =
         document.documentElement;
@@ -117,7 +116,7 @@ const HomePage: React.FC = () => {
           playsInline
           className={styles["header-img"]}
           id="video"
-          src="https://gw.alipayobjects.com/v/huamei_tu4rvn/afts/video/A*V9DKSIe4nKEAAAAAAAAAAAAADp_eAQ"
+          style={{ visibility: "hidden" }}
         ></video>
         <div className={styles["open-source"]}>
           <img
