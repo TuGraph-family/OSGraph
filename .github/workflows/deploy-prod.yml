@@ -22,8 +22,14 @@ jobs:
           source /root/miniconda3/etc/profile.d/conda.sh
           conda activate osgraph-env
           cd $DEPLOY_PATH
-          git checkout $DEPLOY_BRANCH
-          git pull
+          
+          echo "Switch to branch $DEPLOY_BRANCH"
+          git show-ref --verify --quiet refs/heads/deploy && git branch -D deploy
+          git checkout -b deploy origin/$DEPLOY_BRANCH
+          
+          echo "Build OSGraph"
           bash ./bin/build.sh
+          
+          echo "Start OSGraph"
           bash ./bin/start.sh prod
           EOF

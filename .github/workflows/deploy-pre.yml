@@ -23,8 +23,14 @@ jobs:
           source /root/miniconda3/etc/profile.d/conda.sh
           conda activate osgraph-env
           cd $DEPLOY_PATH
+          
+          echo "Update master branch"
           git checkout master
-          git pull
+          git pull origin master
+          
+          echo "Build OSGraph"
           bash ./bin/build.sh
+          
+          echo "Start OSGraph"
           bash ./bin/start.sh prod
           EOF
