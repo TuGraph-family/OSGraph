@@ -27,7 +27,7 @@ jobs:
           source /root/miniconda3/etc/profile.d/conda.sh
           conda activate osgraph-env
           cd $DEPLOY_PATH
-          git checkout release
+          git checkout $DEPLOY_BRANCH
           git pull
           bash ./bin/build.sh
           bash ./bin/start.sh prod
