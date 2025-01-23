@@ -24,6 +24,7 @@ jobs:
           cd $DEPLOY_PATH
           
           echo "Switch to branch $DEPLOY_BRANCH"
+          git checkout master
           git show-ref --verify --quiet refs/heads/deploy && git branch -D deploy
           git checkout -b deploy origin/$DEPLOY_BRANCH
           
