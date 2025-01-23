@@ -1,0 +1,26 @@
+name: Deploy-Prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-to-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into server and execute deployment script
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_PWD: ${{ secrets.PROD_PWD }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          sshpass -p "$PROD_PWD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST << EOF
+          set -e
+          cd $DEPLOY_PATH
+          git checkout release
+          git pull
+          conda activate osgraph-env
+          bash ./bin/build.sh
+          bash ./bin/start.sh prod
+          EOF
