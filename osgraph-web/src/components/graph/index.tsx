@@ -1,6 +1,13 @@
 // @ts-nocheck
 import type { GraphData, NodeData } from "@antv/g6";
-import { Graph, GraphEvent, CanvasEvent, HistoryEvent } from "@antv/g6";
+import {
+  Graph,
+  GraphEvent,
+  CanvasEvent,
+  HistoryEvent,
+  ExtensionCategory,
+  register,
+} from "@antv/g6";
 import { Spin } from "antd";
 import { isEmpty, isEqual, isFunction } from "lodash";
 import React, {
@@ -40,6 +47,7 @@ import ReactDOM from "react-dom";
 import LayoutSelect from "../layout-select";
 import GraphMenuItem from "../graph-menu-item";
 import { createRoot } from "react-dom/client";
+import MultipleSelects from "./plugin/multiple-selects";
 
 interface IProps {
   data: GraphData;
@@ -59,6 +67,8 @@ let showToolTipObj = {
   isHoverToolTip: false,
   isHoverNode: false,
 };
+
+register(ExtensionCategory.BEHAVIOR, "multiple-selects", MultipleSelects);
 
 export const GraphView = React.memo(
   forwardRef(
@@ -193,21 +203,35 @@ export const GraphView = React.memo(
           },
           behaviors: [
             "zoom-canvas",
-            {
-              key: "drag-canvas",
-              type: "drag-canvas",
-            },
             "drag-element",
-            "click-select",
+            {
+              type: "drag-canvas",
+              enable: (event) => {
+                return (
+                  event.shiftKey === false && event.targetType === "canvas"
+                );
+              },
+            },
+
+            {
+              type: "click-select",
+              enable: (e) => {
+                if (e?.metaKey || e?.ctrlKey || e.shiftKey) {
+                  return false;
+                }
+                return true;
+              },
+              multiple: true,
+            },
             {
               type: "hover-activate",
               degree: 1,
             },
-            // {
-            //   type: 'auto-adapt-label',
-            //   enable: true,
-            //   padding: 0,
-            // },
+            {
+              type: "lasso-select",
+              trigger: ["shift"],
+            },
+            "multiple-selects",
           ],
           autoResize: true,
           zoomRange: [0.1, 5],
@@ -223,7 +247,7 @@ export const GraphView = React.memo(
               type: "tooltip",
               key: "tooltip",
               trigger: "click",
-              enable: true,
+              enable: (e) => !(e.metaKey || e.ctrlKey || e.shiftKey),
               enterable: true,
               getContent: (_, record: Record<string, any>) =>
                 getTooltipContent(record, t),
@@ -448,6 +472,11 @@ export const GraphView = React.memo(
         });
         graphRef.current = graph;
         graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+        graph.on(CanvasEvent.CLICK, (e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey) {
+            e?.preventDefault();
+          }
+        });
 
         if (isFunction(onReady)) onReady(graph);
       };
