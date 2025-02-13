@@ -14,7 +14,7 @@
 import logging
 from typing import Any, Dict
 
-from flask import Blueprint
+from flask import Blueprint, request
 
 from app.managers.graph_list import GraphListManager
 from app.utils.custom_exceptions import InvalidUsage
