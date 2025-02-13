@@ -14,13 +14,17 @@
 
 import importlib
 import os
+import json
 from typing import Type, Union
 
+from datetime import datetime
+import uuid
+
 from dotenv import load_dotenv
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request, g
 
 from app.dal.graph.tugraph import GraphClient, GraphLabel, LabelProps
-from app.models.system_graph import GraphService
+from app.models.system_graph import GraphService, TraceApi
 from app.services import register_all_services
 
 from .utils.custom_exceptions import InvalidUsage
@@ -28,6 +32,20 @@ from .utils.logger import setup_logger
 
 
 load_dotenv()
+
+TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
+TUGRAPHDB_SYSTEM_HOST = os.getenv("TUGRAPHDB_SYSTEM_HOST")
+TUGRAPHDB_SYSTEM_PORT = os.getenv("TUGRAPHDB_SYSTEM_PORT")
+TUGRAPHDB_SYSTEM_USER = os.getenv("TUGRAPHDB_SYSTEM_USER")
+TUGRAPHDB_SYSTEM_PASSWORD = os.getenv("TUGRAPHDB_SYSTEM_PASSWORD")
+
+client = GraphClient(
+    host=TUGRAPHDB_SYSTEM_HOST,
+    port=TUGRAPHDB_SYSTEM_PORT,
+    user=TUGRAPHDB_SYSTEM_USER,
+    password=TUGRAPHDB_SYSTEM_PASSWORD,
+    graph_name=TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME
+)
 
 
 def create_app(
@@ -52,6 +70,7 @@ def create_app(
         initialize_system_graph(app)
         register_all_services()
     register_error_handlers(app)
+    register_trace_handlers(app)
     return app
 
 
@@ -87,23 +106,41 @@ def register_error_handlers(app: Flask) -> None:
     def internal_error(error):
         app.logger.error("Internal Server Error")
         return jsonify({"message": "Internal server error"}), 500
-
+    
+def register_trace_handlers(app: Flask) -> None:
+    @app.before_request
+    def before_request():
+        if not request.path.startswith(("/api", "/png")):
+            return
+        g.request_id = str(uuid.uuid4())
+        g.timestamp = str(datetime.now().isoformat())
+        g.endpoint = str(request.path)
+        g.ip_address = str(request.remote_addr)
+        g.user_agent = str(request.headers.get("User-Agent", ""))
+        g.query_params = json.dumps(dict(request.args))
+        g.start_time = datetime.now()
+    @app.after_request
+    def after_request(response):
+        if not request.path.startswith(("/api", "/png")):
+            return response
+        end_time = datetime.now()
+        response_time_ms = (end_time - g.start_time).total_seconds() * 1000
+        g.response_time = f"{response_time_ms:.2f} ms"
+        g.status_code = str(response.status_code)
+        trace_api = TraceApi(
+            id=g.request_id,
+            timestamp=g.timestamp,
+            endpoint=g.endpoint,
+            status_code=g.status_code,
+            response_time= g.response_time,
+            ip_address= g.ip_address,
+            user_agent=g.user_agent,
+            query_params=g.query_params.replace('"','')
+        )
+        client.upsert_vertex(TraceApi.label, trace_api.props)
+        return response
 
 def initialize_system_graph(app: Flask):
-    TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME = os.getenv("TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME")
-    TUGRAPHDB_SYSTEM_HOST = os.getenv("TUGRAPHDB_SYSTEM_HOST")
-    TUGRAPHDB_SYSTEM_PORT = os.getenv("TUGRAPHDB_SYSTEM_PORT")
-    TUGRAPHDB_SYSTEM_USER = os.getenv("TUGRAPHDB_SYSTEM_USER")
-    TUGRAPHDB_SYSTEM_PASSWORD = os.getenv("TUGRAPHDB_SYSTEM_PASSWORD")
-
-    client = GraphClient(
-        host=TUGRAPHDB_SYSTEM_HOST,
-        port=TUGRAPHDB_SYSTEM_PORT,
-        user=TUGRAPHDB_SYSTEM_USER,
-        password=TUGRAPHDB_SYSTEM_PASSWORD,
-        graph_name=TUGRAPHDB_OSGRAPH_SYSTEM_GRAPH_NAME
-    )
-
     try:
         system_graph = client.get_graph()
         if not system_graph:
@@ -125,7 +162,23 @@ def initialize_system_graph(app: Flask):
             ],
         )
         client.create_label(label)
-
+        trave_api = client.get_label("vertex", "trave_api")
+        if not trave_api:
+            trave_api_label = GraphLabel(
+                label=TraceApi.label,
+                primary=TraceApi.primary,
+                type=TraceApi.type,
+                properties=[
+                    LabelProps(name=key, type="string", optional=True)
+                    for key in (
+                        TraceApi.props.keys()
+                        if isinstance(TraceApi.props, dict)
+                        else dir(TraceApi.props)
+                    )
+                    if not key.startswith("_")
+                ],
+            )
+            client.create_label(trave_api_label)
         app.logger.info(f"OSGraph server started success, "
                         f"please visit http://127.0.0.1:{os.getenv('FLASK_PORT')}")
     except Exception as e:
