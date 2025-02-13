@@ -39,8 +39,6 @@ def get_graph_data(target_url:str)->dict:
     else:
         return {'error': 'No data found in response'}, 400
 
-    # processed_data = process_graph_data(graph_data)
-
     return graph_data
 
 def process_graph_data(graph_data):

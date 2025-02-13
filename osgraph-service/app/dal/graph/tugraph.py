@@ -72,7 +72,6 @@ class GraphClient:
         if self.driver:
             self.driver.close()
 
-    # 创建 Label
     def create_label(self, label: GraphLabel):
         try:
             with self.driver.session(database=self.graph_name) as session:
@@ -98,7 +97,6 @@ class GraphClient:
             )
             return None
 
-    # 创建节点
     def create_vertex(self, label: str, properties: Dict[str, Any]):
         try:
             properties_str = self._convert_dict_to_str(properties)
@@ -117,7 +115,6 @@ class GraphClient:
                 f"Error message : {str(e)}"
             )
 
-    # 创建边
     def create_relationship(
         self,
         src_label: str = "",
