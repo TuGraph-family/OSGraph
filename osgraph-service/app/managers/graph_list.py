@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #
 # app/manager/graph_list.py
+from dataclasses import asdict, field
 from typing import List, Union
 from app.utils.get_lang import get_language
 from app.services.graph_list import GraphListService

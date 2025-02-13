@@ -16,7 +16,7 @@ import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Union
-
+from app.utils.get_lang import get_language
 from dotenv import load_dotenv
 
 from app.dal.graph.tugraph import GraphClient
@@ -83,8 +83,13 @@ class ServiceConfig:
 
 class BaseService(ABC):
     def __init__(self, config: ServiceConfig):
-        self.name: str = config.name
-        self.comment: str = config.comment
+        lang = get_language()
+        if lang == "zh-CN":
+            self.name = config.name_zh
+            self.comment = config.comment_zh
+        elif lang == "en-US":
+            self.name = config.name_en
+            self.comment = config.comment_en
         self.inputTypes: List[str] = config.inputTypes
         self.filterKeys: List[FilterKey] = config.filterKeys
         
