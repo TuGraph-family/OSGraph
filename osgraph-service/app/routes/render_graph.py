@@ -18,6 +18,7 @@ import requests
 from flask import Blueprint, send_file, request, jsonify
 import subprocess
 from io import BytesIO
+from app.utils.get_lang import get_language
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -74,6 +75,7 @@ def process_graph_data(graph_data):
     return result
 
 def render_graph_with_node(data):
+    lang = get_language()
     oneclip_url = os.getenv("ONECLIP_URL")
     if oneclip_url is None:
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -100,6 +102,7 @@ def render_graph_with_node(data):
         context = {"width": 1000, "height": 600, "devicePixelRatio": 1}
         params = {
             # "assetId": asset_id,
+            "lang":lang,
             "config": {
                 "data":data
             },
