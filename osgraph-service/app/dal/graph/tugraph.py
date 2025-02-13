@@ -363,7 +363,6 @@ class GraphClient:
         if not properties:
             return ""
 
-        # 如果是 dataclass，则将其转换为字典
         if is_dataclass(properties) and not isinstance(properties, type):
             properties = asdict(properties)
 
