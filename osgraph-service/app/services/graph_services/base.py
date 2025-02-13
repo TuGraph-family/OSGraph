@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #
 import os
+import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Union
@@ -35,8 +36,10 @@ class FilterKey:
 
 @dataclass
 class ServiceConfig:
-    name: str
-    comment: str
+    name_zh: str
+    comment_zh: str
+    name_en: str
+    comment_en: str
     inputTypes: List[str]
     filterKeys: List[FilterKey]
 
@@ -56,16 +59,22 @@ class ServiceConfig:
         )
 
         properties = {
-            "name": self.name,
-            "comment": self.comment,
+            "id": uuid.uuid4(),
+            "name_zh": self.name_zh,
+            "comment_zh": self.comment_zh,
+            "name_en": self.name_en,
+            "comment_en": self.comment_en,
             "input_types": ";".join(self.inputTypes),
             "filter_keys": ";".join(
                 [f"key:{key.key},type:{key.type},default:{key.default},required:{key.required}" for key in self.filterKeys]
             ),
         }
         service = GraphService(
-            name=self.name,
-            comment=self.comment,
+            id=properties["id"],
+            name_zh=properties["name_zh"],
+            comment_zh=properties["comment_zh"],
+            name_en=properties["name_en"],
+            comment_en=properties["comment_en"],
             input_types=properties["input_types"],
             filter_keys=properties["filter_keys"],
         )

@@ -96,6 +96,18 @@ class GraphClient:
                 f"Faild to get {label_type} {label_name} . Errormessage: {str(e)}"
             )
             return None
+        
+    def delete_label(self, label_type: str, label_name: str) -> Union[str, None]:
+        try:
+            with self.driver.session(database=self.graph_name) as session:
+                query = f"""CALL db.deleteLabel('{label_type}','{label_name}')"""
+                result = session.run(query).data()
+                return json.dumps(result)
+        except Exception as e:
+            current_app.logger.info(
+                f"Faild to delete {label_type} {label_name} . Errormessage: {str(e)}"
+            )
+            return None
 
     def create_vertex(self, label: str, properties: Dict[str, Any]):
         try:

@@ -109,23 +109,22 @@ def initialize_system_graph(app: Flask):
         if not system_graph:
             client.create_graph()
             app.logger.info("System metadata graph is created")
-        graph_service = client.get_label("vertex", "graph_service")
-        if not graph_service:
-            label = GraphLabel(
-                label=GraphService.label,
-                primary=GraphService.primary,
-                type=GraphService.type,
-                properties=[
-                    LabelProps(name=key, type="string", optional=True)
-                    for key in (
-                        GraphService.props.keys()
-                        if isinstance(GraphService.props, dict)
-                        else dir(GraphService.props)
-                    )
-                    if not key.startswith("_")
-                ],
-            )
-            client.create_label(label)
+        client.delete_label("vertex", "graph_service")
+        label = GraphLabel(
+            label=GraphService.label,
+            primary=GraphService.primary,
+            type=GraphService.type,
+            properties=[
+                LabelProps(name=key, type="string", optional=True)
+                for key in (
+                    GraphService.props.keys()
+                    if isinstance(GraphService.props, dict)
+                    else dir(GraphService.props)
+                )
+                if not key.startswith("_")
+            ],
+        )
+        client.create_label(label)
 
         app.logger.info(f"OSGraph server started success, "
                         f"please visit http://127.0.0.1:{os.getenv('FLASK_PORT')}")

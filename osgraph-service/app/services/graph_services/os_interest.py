@@ -36,8 +36,10 @@ def get_default_end_time() -> int:
 class OSInterestServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="开源兴趣",
-            comment="这是一张开源兴趣图谱",
+            name_zh="开源兴趣",
+            comment_zh="挖掘个人开源兴趣：根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。",
+            name_en="Open-source Interest",
+            comment_en="Discover individual open-source interests: Analyze the developer's technical domain and interests based on the themes and tags of the projects participated in.",
             inputTypes=["user"],
             filterKeys=[
                 FilterKey(key="topic-limit", type="int", default=5, required=False),

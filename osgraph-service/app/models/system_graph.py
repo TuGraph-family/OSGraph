@@ -17,21 +17,24 @@ from dataclasses import dataclass
 
 @dataclass
 class GraphServiceProps:
-    name: str = ""
-    comment: str = ""
+    id:str = ""
+    name_zh: str = ""
+    name_en: str = ""
+    comment_zh: str = ""
+    comment_en: str = ""
     input_types: str = ""
     filter_keys: str = ""
 
 
 class GraphService:
     label: str = "graph_service"
-    primary: str = "name"
+    primary: str = "id"
     type: str = "VERTEX"
     props: GraphServiceProps = GraphServiceProps()
 
-    def __init__(self, name: str, comment: str, input_types: str, filter_keys: str):
+    def __init__(self,id:str, name_zh: str, comment_zh: str,name_en: str, comment_en: str, input_types: str, filter_keys: str):
         self.props = GraphServiceProps(
-            name=name, comment=comment, input_types=input_types, filter_keys=filter_keys
+            id = id, name_zh=name_zh, comment_zh=comment_zh,name_en=name_en, comment_en=comment_en, input_types=input_types, filter_keys=filter_keys
         )
 
     def __repr__(self):

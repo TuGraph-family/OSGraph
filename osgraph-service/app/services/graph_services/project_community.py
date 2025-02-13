@@ -27,8 +27,10 @@ load_dotenv()
 class ProjectCommunityServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="项目社区",
-            comment="这是一个项目社区图谱",
+            name_zh="项目社区",
+            comment_zh="分析项目社区分布：根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。",
+            name_en="Project Community",
+            comment_en="Analyze the distribution of the project community: Extract core developers' community distribution based on project development activities and developer organizations.",
             inputTypes=["repo"],
             filterKeys=[
                 FilterKey(key="company-limit", type="int", default=3, required=False),

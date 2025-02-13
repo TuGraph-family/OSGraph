@@ -41,8 +41,10 @@ def string_to_timestamp(date_str: str) -> int:
 class ProjectContributionServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="项目贡献",
-            comment="这是一个获取项目贡献的图谱",
+            name_zh="项目贡献",
+            comment_zh="发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。",
+            name_en="Project Contribution",
+            comment_en="Discover core project contributors: Identify core contributors based on project development activities (Issues, PRs, Commits, CRs, etc.).",
             inputTypes=["repo"],
             filterKeys=[
                 FilterKey(
