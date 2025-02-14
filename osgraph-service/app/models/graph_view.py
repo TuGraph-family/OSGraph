@@ -246,7 +246,7 @@ class OpenPR(Edge):
 @dataclass
 class CommitAction(Edge):
     name_zh: Literal["提交"] = field(default="提交", init=False)
-    name_en: Literal["Commite"] = field(default="Commite", init=False)
+    name_en: Literal["Commit"] = field(default="Commit", init=False)
 
 
 @dataclass
