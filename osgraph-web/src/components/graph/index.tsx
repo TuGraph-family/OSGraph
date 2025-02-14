@@ -247,7 +247,18 @@ export const GraphView = React.memo(
               type: "tooltip",
               key: "tooltip",
               trigger: "click",
-              enable: (e) => !(e.metaKey || e.ctrlKey || e.shiftKey),
+              enable: (e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey) {
+                  const tooltipElement =
+                    document.getElementsByClassName("tooltip")[0];
+                  if (tooltipElement) {
+                    tooltipElement.style.visibility = "hidden";
+                  } else {
+                    console.warn("Tooltip element not found");
+                  }
+                }
+                return !(e.metaKey || e.ctrlKey || e.shiftKey);
+              },
               enterable: true,
               getContent: (_, record: Record<string, any>) =>
                 getTooltipContent(record, t),

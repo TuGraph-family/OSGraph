@@ -123,8 +123,6 @@ const graphTranslator = () => {
 
   const urlValues = extractValuesFromURL(location.pathname);
 
-  console.log("urlValues:", urlValues);
-
   return {
     templateType: urlValues.templateType,
     path: urlValues.path,

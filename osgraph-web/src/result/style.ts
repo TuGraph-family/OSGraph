@@ -16,9 +16,17 @@ export const GRAPH_STYLE = css`
       align-items: center;
       justify-content: space-between;
     }
+    .control{
+      display: flex;
+    }
 
     button {
-      width: 65px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      width: fix-content;
+      padding: 0 12px;
       height: 32px;
       background: #ffffff;
       border: 1px solid #dddddf;
