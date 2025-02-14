@@ -198,7 +198,7 @@ export default () => {
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
-      const host = "https://osgraph.com";
+        const host = window.location.origin;
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
