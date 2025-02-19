@@ -162,8 +162,8 @@ def initialize_system_graph(app: Flask):
             ],
         )
         client.create_label(label)
-        trave_api = client.get_label("vertex", "trave_api")
-        if not trave_api:
+        trace_api = client.get_label("vertex", "trace_api")
+        if not trace_api:
             trave_api_label = GraphLabel(
                 label=TraceApi.label,
                 primary=TraceApi.primary,

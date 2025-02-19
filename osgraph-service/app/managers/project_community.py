@@ -54,13 +54,21 @@ class ProjectCommunityManager:
                     )
                     graph.insert_entity(repo)
                 if start_node["type"] == "country":
+                    # replace country id by name
+                    # country = Country(
+                    #     id=start_node["id"], name=start_node["properties"]["name"]
+                    # )
                     country = Country(
-                        id=start_node["id"], name=start_node["properties"]["name"]
+                        id=start_node["properties"]["name"], name=start_node["properties"]["name"]
                     )
                     graph.insert_entity(country)
                 if start_node["type"] == "company":
+                    # replace company id by name
+                    # company = Company(
+                    #     id=start_node["id"], name=start_node["properties"]["name"]
+                    # )
                     company = Company(
-                        id=start_node["id"], name=start_node["properties"]["name"]
+                        id=start_node["properties"]["name"], name=start_node["properties"]["name"]
                     )
                     graph.insert_entity(company)
 
@@ -71,36 +79,47 @@ class ProjectCommunityManager:
                     repo = Repo(id=end_node["id"], name=end_node["properties"]["name"])
                     graph.insert_entity(repo)
                 if end_node["type"] == "country":
+                    # replace country id by name
+                    # country = Country(
+                    #     id=end_node["id"], name=end_node["properties"]["name"]
+                    # )
                     country = Country(
-                        id=end_node["id"], name=end_node["properties"]["name"]
+                        id=end_node["properties"]["name"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(country)
                 if end_node["type"] == "company":
+                    # replace company id by name
+                    # company = Company(
+                    #     id=end_node["id"], name=end_node["properties"]["name"]
+                    # )
                     company = Company(
-                        id=end_node["id"], name=end_node["properties"]["name"]
+                        id=end_node["properties"]["name"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(company)
 
+                source = start_node["properties"]["name"] if start_node["type"] == "country" or start_node["type"] == "company" else relationship["src"]
+                target = end_node["properties"]["name"] if end_node["type"] == "country" or end_node["type"] == "company" else relationship["dst"]
+
                 if relationship["type"] == "PR":
                     pr = PullRequestAction(
-                        source=relationship["src"],
-                        target=relationship["dst"],
+                        source=source,
+                        target=target,
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(pr)
                 if relationship["type"] == "Star":
                     star = Star(
-                        source=relationship["src"],
-                        target=relationship["dst"],
+                        source=source,
+                        target=target,
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
                     graph.insert_relationship(star)
                 if relationship["type"] == "belong_to":
                     belong = Belong(
-                        source=relationship["src"],
-                        target=relationship["dst"],
+                        source=source,
+                        target=target,
                         id=relationship["id"],
                     )
                     graph.insert_relationship(belong)
