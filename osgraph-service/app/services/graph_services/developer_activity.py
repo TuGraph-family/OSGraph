@@ -34,8 +34,10 @@ def get_default_end_time() -> int:
 class DeveloperActivityServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="开发活动",
-            comment="这是一个开发活动图谱",
+            name_zh="开发活动",
+            comment_zh="展示个人开源贡献：根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。",
+            name_en="Developer Activity",
+            comment_en="Showcasing individual open-source contributions: Find core projects participated in based on developer development activities (Issues, PRs, Commits, CRs, etc.).",
             inputTypes=["user"],
             filterKeys=[
                 FilterKey(key="user-limit", type="int", default=10, required=False),

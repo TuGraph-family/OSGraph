@@ -15,7 +15,7 @@
 import json
 import os
 from typing import Any, Dict, Union
-
+from app.utils.get_lang import get_language
 from app.models.graph_view import (
     CommonIssue,
     CommonPR,
@@ -33,7 +33,8 @@ class OSPartnerManager:
 
     def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
         service = OSPartnerService()
-        graph = Graph()
+        lang = get_language()
+        graph = Graph(lang=lang)
         result = service.execute(data=data)
         if result:
             for data in result:

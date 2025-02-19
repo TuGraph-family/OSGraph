@@ -12,8 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #
 # app/manager/graph_list.py
+from dataclasses import asdict, field
 from typing import List, Union
-
+from app.utils.get_lang import get_language
 from app.services.graph_list import GraphListService
 
 
@@ -25,8 +26,20 @@ class GraphListManager:
         service = GraphListService()
         graph_list: List = []
         result = service.execute()
+        lang = get_language()
+        
         if result:
             for item in result:
-                graph_list.append(item["n"])
+                processed_item = {}
+                for key, value in item["n"].items():
+                    if key.endswith("_zh") or key.endswith("_en"):
+                        base_key = key[:-3]
+                        if lang == "en-US" and key.endswith("_en"):
+                            processed_item[base_key] = value
+                        elif lang == "zh-CN" and key.endswith("_zh"):
+                            processed_item[base_key] = value
+                    else:
+                        processed_item[key] = value
+                graph_list.append(processed_item)
             return graph_list
         return None

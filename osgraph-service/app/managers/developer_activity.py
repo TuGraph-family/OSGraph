@@ -15,7 +15,7 @@
 import json
 import os
 from typing import Any, Dict, Union
-
+from app.utils.get_lang import get_language
 from app.models.graph_view import Graph, Push, Repo, User, OpenPR
 from app.services.graph_services.developer_activity import DeveloperActivityService
 
@@ -26,7 +26,8 @@ class DevelopActivityManager:
 
     def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
         service = DeveloperActivityService()
-        graph = Graph()
+        lang = get_language()
+        graph = Graph(lang=lang)
         result = service.execute(data=data)
         if result:
             for data in result:

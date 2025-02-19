@@ -15,7 +15,7 @@
 import json
 import os
 from typing import Any, Dict, Union
-
+from app.utils.get_lang import get_language
 from app.models.graph_view import Belong, ContributeRepo, Graph, Repo, Topic, User
 from app.services.graph_services.os_interest import OSInterestService
 
@@ -26,7 +26,8 @@ class OSInterestManager:
 
     def get_graph(self, data: Dict[str, Any]) -> Union[Dict, None]:
         service = OSInterestService()
-        graph = Graph()
+        lang = get_language()
+        graph = Graph(lang=lang)
         result = service.execute(data=data)
         if result:
             for data in result:
@@ -44,8 +45,12 @@ class OSInterestManager:
                     )
                     graph.insert_entity(repo)
                 if start_node["type"] == "topic":
+                    # replace topic id by name
+                    # topic = Topic(
+                    #     id=start_node["id"], name=start_node["properties"]["name"]
+                    # )
                     topic = Topic(
-                        id=start_node["id"], name=start_node["properties"]["name"]
+                        id=start_node["properties"]["name"], name=start_node["properties"]["name"]
                     )
                     graph.insert_entity(topic)
 
@@ -56,22 +61,29 @@ class OSInterestManager:
                     repo = Repo(id=end_node["id"], name=end_node["properties"]["name"])
                     graph.insert_entity(repo)
                 if end_node["type"] == "topic":
+                    # replace topic id by name
+                    # topic = Topic(
+                    #     id=end_node["id"], name=end_node["properties"]["name"]
+                    # )
                     topic = Topic(
-                        id=end_node["id"], name=end_node["properties"]["name"]
+                        id=end_node["properties"]["name"], name=end_node["properties"]["name"]
                     )
                     graph.insert_entity(topic)
 
+                source = start_node["properties"]["name"] if start_node["type"] == "topic" else relationship["src"]
+                target = end_node["properties"]["name"] if end_node["type"] == "topic" else relationship["dst"]
+
                 if relationship["type"] == "belong_to":
                     belong_to = Belong(
-                        source=relationship["src"],
-                        target=relationship["dst"],
+                        source=source,
+                        target=target,
                         id=relationship["id"],
                     )
                     graph.insert_relationship(belong_to)
                 if relationship["type"] == "repo":
                     contribute_repo = ContributeRepo(
-                        source=relationship["src"],
-                        target=relationship["dst"],
+                        source=source,
+                        target=target,
                         id=relationship["id"],
                         count=relationship["properties"]["count"],
                     )
