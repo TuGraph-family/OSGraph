@@ -29,7 +29,8 @@ import {
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
-import { timestampToDate } from "../utils/date";
+import { SPAPOS } from "../constants/log";
+import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
@@ -41,6 +42,13 @@ export default () => {
   const location = useLocation();
   const isMobile = getIsMobile();
   const navigate = useNavigate();
+
+  window?.Tracert?.call?.("set", {
+    spmAPos: SPAPOS,
+    spmBPos: location.pathname,
+    pathName: "结果页"
+  });
+  window?.Tracert?.call?.("logPv");
 
   const powerByRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<{
@@ -145,19 +153,19 @@ export default () => {
   const onFilterrData = (graphData: Record<string, any>) => {
 
     const newNodes = graphData?.nodes?.map((nodeItem: Record<string, any>) => {
-      const {comment,id,name,nodeType,source} = nodeItem;
+      const { comment, id, name, nodeType, source } = nodeItem;
 
-      return {comment,id,name,nodeType,source};
+      return { comment, id, name, nodeType, source };
     }) || []
     const newEdges = graphData?.edges?.map((nodeItem: Record<string, any>) => {
-      const {comment,count,direction,edgeType,id,name,name_en,source,target,weight} = nodeItem;
+      const { comment, count, direction, edgeType, id, name, name_en, source, target, weight } = nodeItem;
 
-      return {comment,count,direction,edgeType,id,name,name_en,source,target,weight};
+      return { comment, count, direction, edgeType, id, name, name_en, source, target, weight };
     }) || []
     return {
       ...graphData,
-      nodes:newNodes,
-      edges:newEdges
+      nodes: newNodes,
+      edges: newEdges
     };
   };
 
@@ -198,7 +206,7 @@ export default () => {
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
-        const host = window.location.origin;
+      const host = window.location.origin;
 
       /** repo contribute */
       if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
@@ -206,54 +214,42 @@ export default () => {
         const startTime = timestampToDate(shareInfo["start-time"]);
         const endTime = timestampToDate(shareInfo["end-time"]);
         const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${startTime}&end-time=${endTime}`;
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
-          searchPath + search
-        }`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}${searchPath + search}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
+          }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath + search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}${searchPath}repo-limit=${
-          shareInfo?.["repo-limit"]
-        }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]
+          }`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
         const search = `country-limit=${shareInfo["country-limit"]}&company-limit=${shareInfo["company-limit"]}&user-limit=${shareInfo["user-limit"]}`;
         /** repo community */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
-          searchPath + search
-        }`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}${searchPath + search}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
+          }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath + search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}${searchPath}user-limit=${
-          shareInfo?.["user-limit"]
-        }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]
+          }`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}${searchPath}user-limit=${
-          shareInfo?.["user-limit"]
-        }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]
+          }`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
         const search = `repo-limit=${shareInfo["repo-limit"]}&topic-limit=${shareInfo["topic-limit"]}`;
         /** acct interest */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
-          searchPath + search
-        }`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}${searchPath + search}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
+          }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath + search}`;
       }
     });
   };
@@ -443,10 +439,10 @@ export default () => {
                 }}
               /> */}
               <button onClick={downloadJSON}>
-                    <img src={downloadIcon} alt="" className={styles['button-icon']} />JSON
+                <img src={downloadIcon} alt="" className={styles['button-icon']} />JSON
               </button>
               <button onClick={download}>
-                    <img src={downloadIcon} alt="" className={styles['button-icon']} />{t("graph.download_png")}
+                <img src={downloadIcon} alt="" className={styles['button-icon']} />{t("graph.download_png")}
               </button>
               <button
                 onClick={() => {
@@ -455,7 +451,7 @@ export default () => {
                   });
                 }}
               >
-                  <img src={share} alt="" className={styles['button-icon']} />{t("graph.link")}
+                <img src={share} alt="" className={styles['button-icon']} />{t("graph.link")}
               </button>
               <button
                 onClick={() => {

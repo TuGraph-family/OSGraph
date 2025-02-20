@@ -37,9 +37,6 @@ SERVICE_CONFIGS = [
 
 
 def register_all_services():
-    """
-    遍历所有的服务配置，并在应用启动时自动注册。
-    """
     with current_app.app_context():
         for config in SERVICE_CONFIGS:
             config.register_service()

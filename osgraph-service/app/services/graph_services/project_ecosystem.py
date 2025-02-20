@@ -34,8 +34,10 @@ def get_default_end_time() -> int:
 class ProjectEcosystemServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="项目生态",
-            comment="这是一个获取项目项目生态的图谱",
+            name_zh="项目生态",
+            comment_zh="洞察项目生态伙伴：提取项目间的开发活动、组织等关联信息，构建项目核心生态关系。",
+            name_en="Project Ecosystem",
+            comment_en="Insight into project ecosystem partners: Extract inter-project development activities, organizations, and other related information to construct the core ecosystem relationships of the project.",
             inputTypes=["repo"],
             filterKeys=[
                 FilterKey(key="repo-limit", type="int", default=10, required=False),
@@ -54,7 +56,7 @@ class ProjectEcosystemService(BaseService):
         platform: str = validated_data["platform"]
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]

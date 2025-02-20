@@ -28,7 +28,6 @@ class ElasticsearchClient:
     def __init__(
         self,
     ):
-        """初始化 Elasticsearch 连接"""
         ES_HOST = os.getenv("ES_HOST")
         ES_PORT = os.getenv("ES_PORT")
         ES_USERNAME = os.getenv("ES_USERNAME")

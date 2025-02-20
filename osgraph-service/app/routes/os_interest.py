@@ -29,9 +29,6 @@ class OSInterestController:
         self.manager = OSInterestManager()
 
     def get_interest_graph(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        获取项目贡献的图数据
-        """
         try:
             graph = self.manager.get_graph(data)
             return ResponseHandler.success(graph)
@@ -44,7 +41,6 @@ class OSInterestController:
 
 
 controller = OSInterestController()
-
 
 @os_interest_bp.route("/os-interest/<platform>/<path:remaining_path>", methods=["GET"])
 def get_os_interest(platform, remaining_path):

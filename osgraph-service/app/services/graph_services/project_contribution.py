@@ -41,8 +41,10 @@ def string_to_timestamp(date_str: str) -> int:
 class ProjectContributionServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="项目贡献",
-            comment="这是一个获取项目贡献的图谱",
+            name_zh="项目贡献",
+            comment_zh="发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。",
+            name_en="Project Contribution",
+            comment_en="Discover core project contributors: Identify core contributors based on project development activities (Issues, PRs, Commits, CRs, etc.).",
             inputTypes=["repo"],
             filterKeys=[
                 FilterKey(
@@ -79,7 +81,7 @@ class ProjectContributionService(BaseService):
         end_time: int = string_to_timestamp(end_time_str)
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]

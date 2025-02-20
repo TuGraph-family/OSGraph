@@ -72,7 +72,6 @@ class GraphClient:
         if self.driver:
             self.driver.close()
 
-    # 创建 Label
     def create_label(self, label: GraphLabel):
         try:
             with self.driver.session(database=self.graph_name) as session:
@@ -97,8 +96,19 @@ class GraphClient:
                 f"Faild to get {label_type} {label_name} . Errormessage: {str(e)}"
             )
             return None
+        
+    def delete_label(self, label_type: str, label_name: str) -> Union[str, None]:
+        try:
+            with self.driver.session(database=self.graph_name) as session:
+                query = f"""CALL db.deleteLabel('{label_type}','{label_name}')"""
+                result = session.run(query).data()
+                return json.dumps(result)
+        except Exception as e:
+            current_app.logger.info(
+                f"Faild to delete {label_type} {label_name} . Errormessage: {str(e)}"
+            )
+            return None
 
-    # 创建节点
     def create_vertex(self, label: str, properties: Dict[str, Any]):
         try:
             properties_str = self._convert_dict_to_str(properties)
@@ -117,7 +127,6 @@ class GraphClient:
                 f"Error message : {str(e)}"
             )
 
-    # 创建边
     def create_relationship(
         self,
         src_label: str = "",
@@ -354,7 +363,6 @@ class GraphClient:
         if not properties:
             return ""
 
-        # 如果是 dataclass，则将其转换为字典
         if is_dataclass(properties) and not isinstance(properties, type):
             properties = asdict(properties)
 

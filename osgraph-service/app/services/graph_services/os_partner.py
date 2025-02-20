@@ -34,8 +34,10 @@ def get_default_end_time() -> int:
 class OSPartnerServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
-            name="开源伙伴",
-            comment="这是一个获取开源伙伴的图谱",
+            name_zh="开源伙伴",
+            comment_zh="寻找个人开源伙伴：找到开发者在开源社区中，与之协作紧密的其他开发者。",
+            name_en="Open-source Partner",
+            comment_en="Finding open-source partners: Find other developers in the open-source community who collaborate closely with you.",
             inputTypes=["user"],
             filterKeys=[
                 FilterKey(key="user-limit", type="int", default=10, required=False),
@@ -54,7 +56,7 @@ class OSPartnerService(BaseService):
         platform: str = validated_data["platform"]
         user_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
-        query = {"match": {"name": path}}
+        query = {"match_phrase": {"name": path}}
         res = es.search(index=f"{platform}_{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]

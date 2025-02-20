@@ -1,6 +1,5 @@
 const puppeteer = require("puppeteer");
 
-// Read data from standard input
 async function getInputData() {
   return new Promise((resolve, reject) => {
     let input = "";
@@ -24,8 +23,7 @@ async function renderGraph(data) {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
-  // Generate HTML content
-  const htmlContent = `
+    const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -73,18 +71,13 @@ async function renderGraph(data) {
     </html>
     `;
 
-  // Set page content
-  await page.setContent(htmlContent);
-  await page.waitForFunction("window.layoutCompleted === true", {
-    timeout: 5000,
-  });
+    await page.setContent(htmlContent);
+    await page.waitForFunction('window.layoutCompleted === true', { timeout: 5000 });
 
-  // Take a screenshot and save it to Buffer
-  const screenshotBuffer = await page.screenshot({ encoding: "binary" });
-  await browser.close();
+    const screenshotBuffer = await page.screenshot({ encoding: 'binary' });
+    await browser.close();
 
-  // Write Buffer to standard output
-  process.stdout.write(screenshotBuffer);
+    process.stdout.write(screenshotBuffer);
 }
 
 (async () => {
