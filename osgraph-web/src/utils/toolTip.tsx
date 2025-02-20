@@ -60,7 +60,7 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
   outDiv.style.padding = "6px";
   const container = ReactDOM.createRoot(outDiv);
 
-  /** result 页与分享页需要做区分展示 */
+  /** The result page and the sharing page need to be displayed separately */
   const isShareRouter = window.location.href.includes("shareId");
 
   container.render(
@@ -68,7 +68,7 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
       <Space direction="vertical" key={nodeId}>
         {isNode && renderTooltipItem("ID", nodeId)}
         {Object.keys(properties)
-          // 过滤没有信息的属性
+          // Filter properties with no information
           .filter(
             (item) =>
               properties[item] !== undefined && properties[item] !== null

@@ -21,22 +21,17 @@ const graphTranslator = () => {
 
     const adaptorHistoryTemplateType = (type: string) => {
       if (GRAPH_SHARE_LINK_MAP.repo_contribute === type) {
-        return 'project-contribution';
-      }
-      else if (GRAPH_SHARE_LINK_MAP.repo_ecology === type) {
-        return 'project-ecosystem';
-      }
-      else if (GRAPH_SHARE_LINK_MAP.repo_community === type) {
-        return 'project-community';
-      }
-      else if (GRAPH_SHARE_LINK_MAP.acct_activity === type) {
-        return 'developer-activity';
-      }
-      else if (GRAPH_SHARE_LINK_MAP.acct_partner === type) {
-        return 'os-partner';
-      }
-      else if (GRAPH_SHARE_LINK_MAP.acct_interest === type) {
-        return 'os-interest';
+        return "project-contribution";
+      } else if (GRAPH_SHARE_LINK_MAP.repo_ecology === type) {
+        return "project-ecosystem";
+      } else if (GRAPH_SHARE_LINK_MAP.repo_community === type) {
+        return "project-community";
+      } else if (GRAPH_SHARE_LINK_MAP.acct_activity === type) {
+        return "developer-activity";
+      } else if (GRAPH_SHARE_LINK_MAP.acct_partner === type) {
+        return "os-partner";
+      } else if (GRAPH_SHARE_LINK_MAP.acct_interest === type) {
+        return "os-interest";
       }
       return type;
     };
@@ -92,7 +87,7 @@ const graphTranslator = () => {
   const transUrlSearchParams = (search: string, templateType: string) => {
     const searchObj: Record<string, any> = {};
     const params = new URLSearchParams(search);
-    /** 根据不同的 templateType 需要做不同的限制 */
+    /** Different restrictions are required according to different templateTypes */
     for (const [key, value] of params) {
       if (GRAPH_EXTEND_PARAMS_MAP[templateType + key]) {
         searchObj[GRAPH_EXTEND_PARAMS_MAP[templateType + key]] =
@@ -102,10 +97,8 @@ const graphTranslator = () => {
       }
     }
 
-    /** 单独处理 contrib-repo，添加预处理参数 */
-    if (
-      templateType === 'project-contribution'
-    ) {
+    /** Process contrib-repo separately and add preprocessing parameters */
+    if (templateType === "project-contribution") {
       const LastYearTimestamps = getLast10YearsTimestampsInSeconds();
       /** 等到扩展参数阶段，开放用户自定义参数的功能 */
       const startDate = params.get("start-time");
@@ -130,15 +123,10 @@ const graphTranslator = () => {
 
   const urlValues = extractValuesFromURL(location.pathname);
 
-  console.log('urlValues:', urlValues);
-
   return {
     templateType: urlValues.templateType,
     path: urlValues.path,
-    extendsStr: transUrlSearchParams(
-      location.search,
-      urlValues.templateType,
-    ),
+    extendsStr: transUrlSearchParams(location.search, urlValues.templateType),
   };
 };
 

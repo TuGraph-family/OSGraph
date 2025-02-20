@@ -54,34 +54,41 @@ export const getListQueryTemplate = async () => {
       }
     );
 
-    if (item.input_types === "GitHubUser") {
+    if (item.input_types === "user") {
       item.querySource = "github_user";
     }
-    if (item.input_types === "GitHubRepo") {
+    if (item.input_types === "repo") {
       item.querySource = "github_repo";
     }
+
     switch (item.name) {
       case "项目贡献":
+      case "Project Contribution":
         item.templateType = "REPO_CONTRIBUTE";
         item.id = 1;
         break;
       case "项目生态":
+      case "Project Ecosystem":
         item.templateType = "REPO_ECOLOGY";
         item.id = 2;
         break;
       case "项目社区":
+      case "Project Community":
         item.templateType = "REPO_COMMUNITY";
         item.id = 3;
         break;
       case "开发活动":
+      case "Developer Activity":
         item.templateType = "ACCT_ACTIVITY";
         item.id = 4;
         break;
       case "开源伙伴":
+      case "Open-source Partner":
         item.templateType = "ACCT_PARTNER";
         item.id = 5;
         break;
       case "开源兴趣":
+      case "Open-source Interest":
         item.templateType = "ACCT_INTEREST";
         item.id = 6;
         break;
@@ -129,7 +136,7 @@ export const getExecuteQueryTemplate = async (params: {
   let args: any = {};
   const templateName =
     GRAPH_TEMPLATE_ID_MAP[
-      +params.templateId as keyof typeof GRAPH_TEMPLATE_ID_MAP
+    +params.templateId as keyof typeof GRAPH_TEMPLATE_ID_MAP
     ];
   if (templateName === "项目贡献") {
     url = `/api/graphs/project-contribution/github/${params.value}`;

@@ -87,7 +87,7 @@ const ExtendParams: React.FC<Props> = ({
   };
 
   const stopPropagation = (event: React.MouseEvent) => {
-    // 阻止事件冒泡
+    // Prevent events from bubbling up
     event.stopPropagation();
   };
 

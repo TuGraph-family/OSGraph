@@ -148,6 +148,15 @@ const HomePage: React.FC = () => {
                 window.open(X_LAB_GITHUB);
               }}
             />
+             <div
+            className={styles["gitHub"]}
+            onClick={() => {
+              window.open(OSGRAPH_GITHUB);
+            }}
+          >
+            <div className={styles["gitHub-url"]} />
+            <p>GitHub</p>
+          </div>
           </div>
           <div className={styles["text"]}>
             <p>{t("home.desc")}</p>

@@ -44,7 +44,13 @@
       "desc14": "参与项目"
     },
     "share": "分享",
-    "download": "导出"
+    "download_png": "图片",
+    "real_time": "Markdown",
+    "real_time_link": "Markdown链接",
+    "real_time_code": "可在 md 文档中显示实时OSGraph图谱，示例代码如下",
+    "link": "链接",
+    "share_link": "分享链接",
+    "share_link_code": "可在博客或网站中嵌入OSGraph图谱，示例代码如下"
   },
   "template": {
     "REPO_CONTRIBUTE": "项目贡献",

@@ -1,6 +1,13 @@
 // @ts-nocheck
 import type { GraphData, NodeData } from "@antv/g6";
-import { Graph, GraphEvent, CanvasEvent, HistoryEvent } from "@antv/g6";
+import {
+  Graph,
+  GraphEvent,
+  CanvasEvent,
+  HistoryEvent,
+  ExtensionCategory,
+  register,
+} from "@antv/g6";
 import { Spin } from "antd";
 import { isEmpty, isEqual, isFunction } from "lodash";
 import React, {
@@ -40,6 +47,7 @@ import ReactDOM from "react-dom";
 import LayoutSelect from "../layout-select";
 import GraphMenuItem from "../graph-menu-item";
 import { createRoot } from "react-dom/client";
+import MultipleSelects from "./plugin/multiple-selects";
 
 interface IProps {
   data: GraphData;
@@ -54,11 +62,13 @@ interface IProps {
   renderTemplate?: GRAPH_TEMPLATE_ENUM;
 }
 
-/** 检测 tooltip status */
+/** Detection tooltip status */
 let showToolTipObj = {
   isHoverToolTip: false,
   isHoverNode: false,
 };
+
+register(ExtensionCategory.BEHAVIOR, "multiple-selects", MultipleSelects);
 
 export const GraphView = React.memo(
   forwardRef(
@@ -105,7 +115,7 @@ export const GraphView = React.memo(
 
       const { t } = useTranslation();
 
-      /** 自适应窗口 - 抽取出来定义，方便卸载 */
+      /** Adaptive window - extract the definition for easy uninstallation */
       const handleAfterLayout = () => {
         graphRef?.current?.fitView();
       };
@@ -182,7 +192,6 @@ export const GraphView = React.memo(
           layout: {
             type: "force",
             linkDistance: (_, source, target) => {
-
               if (source?.data?.size === 56 && target?.data?.size === 56) {
                 return 1000;
               }
@@ -194,21 +203,35 @@ export const GraphView = React.memo(
           },
           behaviors: [
             "zoom-canvas",
-            {
-              key: "drag-canvas",
-              type: "drag-canvas",
-            },
             "drag-element",
-            "click-select",
+            {
+              type: "drag-canvas",
+              enable: (event) => {
+                return (
+                  event.shiftKey === false && event.targetType === "canvas"
+                );
+              },
+            },
+
+            {
+              type: "click-select",
+              enable: (e) => {
+                if (e?.metaKey || e?.ctrlKey || e.shiftKey) {
+                  return false;
+                }
+                return true;
+              },
+              multiple: true,
+            },
             {
               type: "hover-activate",
               degree: 1,
             },
-            // {
-            //   type: 'auto-adapt-label',
-            //   enable: true,
-            //   padding: 0,
-            // },
+            {
+              type: "lasso-select",
+              trigger: ["shift"],
+            },
+            "multiple-selects",
           ],
           autoResize: true,
           zoomRange: [0.1, 5],
@@ -224,7 +247,18 @@ export const GraphView = React.memo(
               type: "tooltip",
               key: "tooltip",
               trigger: "click",
-              enable: true,
+              enable: (e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey) {
+                  const tooltipElement =
+                    document.getElementsByClassName("tooltip")[0];
+                  if (tooltipElement) {
+                    tooltipElement.style.visibility = "hidden";
+                  } else {
+                    console.warn("Tooltip element not found");
+                  }
+                }
+                return !(e.metaKey || e.ctrlKey || e.shiftKey);
+              },
               enterable: true,
               getContent: (_, record: Record<string, any>) =>
                 getTooltipContent(record, t),
@@ -251,86 +285,87 @@ export const GraphView = React.memo(
                     templateType,
                     path: properties.name,
                     extendsStr,
-                  }).then(async (res) => {
-                    if (graphRef.current) {
-                      const translatorData = graphDataTranslator(res);
+                  })
+                    .then(async (res) => {
+                      if (graphRef.current) {
+                        const translatorData = graphDataTranslator(res);
 
-                      /** 寻找需要 addData 的 diff 节点 */
-                      const graphData = graph.getData();
-                      const formatData = removeExistElement(
-                        graphData,
-                        translatorData
-                      );
-
-                      if (
-                        !formatData.nodes.length &&
-                        !formatData.edges.length
-                      ) {
-                        setIsCanvasLoading(false);
-                        return;
-                      }
-
-                      const extendId = id;
-                      const extendData =
-                        graphRef.current?.getNodeData(extendId);
-
-                      /** addData 中需要 init 节点样式, 并设置扩展节点的初始坐标 */
-                      graphRef.current.addData({
-                        nodes: formatData?.nodes?.map((node) => ({
-                          ...node,
-                          style: extendData?.style,
-                        })),
-                        edges: formatData.edges,
-                      });
-
-                      /** 扩展的点是否需要更新样式，比如 nodeSize */
-                      if (formatData.nodes.length > 1) {
-                        const updateNodeData = translatorData.nodes.find(
-                          (node) => {
-                            return node.id === extendId;
-                          }
+                        /** Find diff nodes that require addData */
+                        const graphData = graph.getData();
+                        const formatData = removeExistElement(
+                          graphData,
+                          translatorData
                         );
-                        graphRef.current.updateNodeData([updateNodeData]);
-                      }
 
-                      /** 更新节点大小 */
-                      const mergeData = graphRef.current.getData();
-                      graphRef.current.updateData(
-                        graphDataTranslator(mergeData)
-                      );
-
-                      /** use d3 force */
-                      graphRef.current?.setOptions({
-                        layout: {
-                          type: "d3-force",
-                          x: {},
-                          y: {},
-                          link: {
-                            distance: 200,
-                          },
-                          collide: {
-                            radius: 36,
-                          },
-                          manyBody: {
-                            strength: -900,
-                          },
+                        if (
+                          !formatData.nodes.length &&
+                          !formatData.edges.length
+                        ) {
+                          setIsCanvasLoading(false);
+                          return;
                         }
-                      });
-                      await graphRef.current.render();
+
+                        const extendId = id;
+                        const extendData =
+                          graphRef.current?.getNodeData(extendId);
+
+                        /** The init node style is required in addData and the initial coordinates of the extended node are set */
+                        graphRef.current.addData({
+                          nodes: formatData?.nodes?.map((node) => ({
+                            ...node,
+                            style: extendData?.style,
+                          })),
+                          edges: formatData.edges,
+                        });
+
+                        /** Whether the extended point needs to update the style, such as nodeSize */
+                        if (formatData.nodes.length > 1) {
+                          const updateNodeData = translatorData.nodes.find(
+                            (node) => {
+                              return node.id === extendId;
+                            }
+                          );
+                          graphRef.current.updateNodeData([updateNodeData]);
+                        }
+
+                        /** Update node size */
+                        const mergeData = graphRef.current.getData();
+                        graphRef.current.updateData(
+                          graphDataTranslator(mergeData)
+                        );
+
+                        /** used3 force */
+                        graphRef.current?.setOptions({
+                          layout: {
+                            type: "d3-force",
+                            x: {},
+                            y: {},
+                            link: {
+                              distance: 200,
+                            },
+                            collide: {
+                              radius: 36,
+                            },
+                            manyBody: {
+                              strength: -900,
+                            },
+                          },
+                        });
+                        await graphRef.current.render();
+                        setIsCanvasLoading(false);
+                        setHistoryStatus({ undo: false, redo: true });
+                        const history =
+                          graphRef.current?.getPluginInstance("history");
+                        history.redoStack = [];
+                        updateGraphDataMapXY(graphRef.current);
+                      }
+                    })
+                    .catch((err) => {
+                      console.log("更新失败：", err);
+                    })
+                    .finally(() => {
                       setIsCanvasLoading(false);
-                      setHistoryStatus({ undo: false, redo: true });
-                      const history =
-                        graphRef.current?.getPluginInstance("history");
-                      history.redoStack = [];
-                      updateGraphDataMapXY(graphRef.current);
-                    }
-                  })
-                  .catch(err => {
-                    console.log('更新失败：', err);
-                  })
-                  .finally(() => {
-                    setIsCanvasLoading(false);
-                  })
+                    });
                 };
 
                 const getMenuItems = (type: string) => {
@@ -414,7 +449,7 @@ export const GraphView = React.memo(
           }
         };
 
-        /** icon-font 加载完毕后再执行渲染，否则会闪烁一下 */
+        /** icon-font Perform rendering after loading is complete, otherwise it will flicker. */
         isFontLoaded("os-iconfont").then((isLoaded) => {
           if (isLoaded) {
             graph.render().then(async () => {
@@ -448,19 +483,24 @@ export const GraphView = React.memo(
         });
         graphRef.current = graph;
         graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
+        graph.on(CanvasEvent.CLICK, (e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey) {
+            e?.preventDefault();
+          }
+        });
 
         if (isFunction(onReady)) onReady(graph);
       };
 
       const render3DGraph = () => {
-        /**  数据深拷贝，且把 edges 映射到 links上 */
+        /**  Deep copy data and map edges to links */
         const graph3DData = formatGraph3DData(data);
         const highlightNodes = new Set();
         const highlightLinks = new Set();
         let nodeMaterials = new Map();
         let hoverNode: any = null;
 
-        /** 高亮 node 和 link */
+        /** Highlight nodes and links */
         const updateHighlight = (graph: ForceGraph3DInstance) => {
           if (graph) {
             graph
@@ -563,7 +603,7 @@ export const GraphView = React.memo(
           })
           .graphData(graph3DData);
 
-        /** 等图标加载完毕后，再构建 nodeThree 自定义节点 */
+        /** After the icon is loaded, build the nodeThree custom node */
         isFontLoaded("os-iconfont").then((isLoaded) => {
           if (isLoaded) {
             graph.nodeThreeObject((node) =>
@@ -594,7 +634,7 @@ export const GraphView = React.memo(
             showToolTipObj.isHoverToolTip = false;
           };
 
-          /** 点击画布其他区域时，把 contextMenu 收起来 */
+          /** When clicking on other areas of the canvas, collapse the contextMenu */
           if (graphRef.current && renderMode === GRAPH_RENDER_MODEL["2D"]) {
             graphRef?.current.on(CanvasEvent.CLICK, () => {
               const g6ContextMenuDom = document.querySelector(

@@ -1,27 +1,27 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 
 async function getInputData() {
-    return new Promise((resolve, reject) => {
-        let input = '';
-        process.stdin.on('data', chunk => {
-            input += chunk;
-        });
-        process.stdin.on('end', () => {
-            try {
-                resolve(JSON.parse(input));
-            } catch (err) {
-                reject(err);
-            }
-        });
-        process.stdin.on('error', err => {
-            reject(err);
-        });
+  return new Promise((resolve, reject) => {
+    let input = "";
+    process.stdin.on("data", (chunk) => {
+      input += chunk;
     });
+    process.stdin.on("end", () => {
+      try {
+        resolve(JSON.parse(input));
+      } catch (err) {
+        reject(err);
+      }
+    });
+    process.stdin.on("error", (err) => {
+      reject(err);
+    });
+  });
 }
 
 async function renderGraph(data) {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
 
     const htmlContent = `
     <!DOCTYPE html>
@@ -81,11 +81,11 @@ async function renderGraph(data) {
 }
 
 (async () => {
-    try {
-        const inputData = await getInputData();
-        await renderGraph(inputData);
-    } catch (err) {
-        console.error('Error rendering graph:', err);
-        process.exit(1);
-    }
+  try {
+    const inputData = await getInputData();
+    await renderGraph(inputData);
+  } catch (err) {
+    console.error("Error rendering graph:", err);
+    process.exit(1);
+  }
 })();

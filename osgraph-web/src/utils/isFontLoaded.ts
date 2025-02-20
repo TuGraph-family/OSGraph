@@ -1,15 +1,15 @@
 /**
- * file: 判断 os-graph 字体是否加载完毕
+ * file: Determine whether the os-graph font is loaded
  * author: Allen
-*/
+ */
 
 const isFontLoaded = async (fontName: string) => {
-  if ('fonts' in document) {
+  if ("fonts" in document) {
     try {
       await document.fonts.load(`16px ${fontName}`);
       return document.fonts.check(`16px ${fontName}`);
     } catch (error) {
-      console.error('Error loading font:', error);
+      console.error("Error loading font:", error);
       return false;
     }
   }

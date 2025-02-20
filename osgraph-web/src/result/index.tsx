@@ -1,7 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { Graph } from "@antv/g6";
-import { Button, Modal, Spin, message, Divider } from "antd";
-import { UndoOutlined, RedoOutlined } from "@ant-design/icons";
+import { Button, Modal, Spin, message, Divider, Input } from "antd";
+import {
+  UndoOutlined,
+  RedoOutlined
+} from "@ant-design/icons";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
@@ -31,6 +34,8 @@ import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
+import share from '../assets/share.svg'
+import downloadIcon from '../assets/download.svg'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -53,7 +58,8 @@ export default () => {
 
   const [state, setState] = useImmer<{
     locationState: Record<string, any>;
-    isOpen: boolean;
+    isShareOpen: boolean;
+    isRealTimeOpen: boolean;
     shareLink: string;
     pngShareLink: string;
     isLoading: boolean;
@@ -61,7 +67,7 @@ export default () => {
     renderMode: string;
     extendParams: Record<string, any>;
   }>(() => {
-    /** 用于初始化渲染模式 */
+    /** Used to initialize rendering mode */
     const initializeRenderMode: () => string = () => {
       const params = new URLSearchParams(location.search);
       const renderMode = params.get("render-mode");
@@ -75,7 +81,8 @@ export default () => {
 
     return {
       locationState: location || {},
-      isOpen: false,
+      isShareOpen: false,
+      isRealTimeOpen: false,
       shareLink: "",
       pngShareLink: "",
       isLoading: false,
@@ -92,7 +99,8 @@ export default () => {
 
   const {
     locationState,
-    isOpen,
+    isShareOpen,
+    isRealTimeOpen,
     isLoading,
     shareLink,
     extendParams,
@@ -141,6 +149,44 @@ export default () => {
     a.download = warehouseValue || "os graph";
     a.click();
   };
+
+  const onFilterrData = (graphData: Record<string, any>) => {
+
+    const newNodes = graphData?.nodes?.map((nodeItem: Record<string, any>) => {
+      const { comment, id, name, nodeType, source } = nodeItem;
+
+      return { comment, id, name, nodeType, source };
+    }) || []
+    const newEdges = graphData?.edges?.map((nodeItem: Record<string, any>) => {
+      const { comment, count, direction, edgeType, id, name, name_en, source, target, weight } = nodeItem;
+
+      return { comment, count, direction, edgeType, id, name, name_en, source, target, weight };
+    }) || []
+    return {
+      ...graphData,
+      nodes: newNodes,
+      edges: newEdges
+    };
+  };
+
+  const downloadJSON = () => {
+    if (!graphRef.current) return;
+    const graphData = graphRef.current.getData();
+
+    const blob = new Blob([JSON.stringify(onFilterrData(graphData), null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = warehouseValue || "os graph";
+
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
   const getGraphLoading = (loading: boolean) => {
     setState((draft) => {
       draft.isLoading = loading;
@@ -155,7 +201,8 @@ export default () => {
     setState((draft) => {
       draft.locationState = shareInfo;
       const { templateId, warehouseName } = shareInfo;
-      const projectValueFormat = GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]];
+      const projectValueFormat =
+        GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]];
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
@@ -167,48 +214,42 @@ export default () => {
         const startTime = timestampToDate(shareInfo["start-time"]);
         const endTime = timestampToDate(shareInfo["end-time"]);
         const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${startTime}&end-time=${endTime}`;
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
-          searchPath + search
-        }`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}?${search}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
+          }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath + search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
         /** repo ecology */
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}?repo-limit=${shareInfo?.["repo-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]
+          }`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
         const search = `country-limit=${shareInfo["country-limit"]}&company-limit=${shareInfo["company-limit"]}&user-limit=${shareInfo["user-limit"]}`;
         /** repo community */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
-          searchPath + search
-        }`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}?${search}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
+          }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath + search}`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
         /** acct activity */
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}?user-limit=${shareInfo?.["user-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]
+          }`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
         /** acct partner */
         draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}?user-limit=${shareInfo?.["user-limit"]}`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]
+          }`;
       } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
         const search = `repo-limit=${shareInfo["repo-limit"]}&topic-limit=${shareInfo["topic-limit"]}`;
         /** acct interest */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${
-          searchPath + search
-        }`;
-        draft.pngShareLink = `${host}/png/graphs/${
-          GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-        }/github/${warehouseName}?${search}`;
+        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
+          }`;
+        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
+          }/github/${warehouseName}${searchPath + search}`;
       }
     });
   };
@@ -246,7 +287,7 @@ export default () => {
     }
   }, [shareId, shareParams]);
 
-  /** 主页跳转注入 State 的查询逻辑 */
+  /** Homepage jump injects State query logic */
   useEffect(() => {
     if (location.state) {
       generateShareLink(location.state);
@@ -306,6 +347,14 @@ export default () => {
         templateId,
       };
     });
+  };
+
+  const getEmbedCode = (url: string) => {
+    if (isRealTimeOpen) {
+      return `## OSGraph
+![OSGraph Chart](${url})`;
+    }
+    return `<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="${url}" frameBorder="0"></iframe>`;
   };
 
   return (
@@ -389,22 +438,35 @@ export default () => {
                   });
                 }}
               /> */}
-
+              <button onClick={downloadJSON}>
+                <img src={downloadIcon} alt="" className={styles['button-icon']} />JSON
+              </button>
+              <button onClick={download}>
+                <img src={downloadIcon} alt="" className={styles['button-icon']} />{t("graph.download_png")}
+              </button>
               <button
                 onClick={() => {
                   setState((draft) => {
-                    draft.isOpen = true;
+                    draft.isShareOpen = true;
                   });
                 }}
               >
-                {t("graph.share")}
+                <img src={share} alt="" className={styles['button-icon']} />{t("graph.link")}
               </button>
-              <button onClick={download}>{t("graph.download")}</button>
+              <button
+                onClick={() => {
+                  setState((draft) => {
+                    draft.isRealTimeOpen = true;
+                  });
+                }}
+              >
+                <img src={share} alt="" className={styles['button-icon']} />{t("graph.real_time")}
+              </button>
             </div>
           </div>
         )}
         <Spin spinning={isLoading}>
-          {/* 分享页没有搜索栏，画布高度需要区分 */}
+          {/* There is no search bar on the sharing page, and the height of the canvas needs to be differentiated */}
           <div className={`${isShare ? "graph-share" : "graph"}`}>
             <GraphView
               data={data}
@@ -417,7 +479,7 @@ export default () => {
             />
           </div>
         </Spin>
-        {/* 水印 */}
+        {/* watermark */}
         <div className={styles["graph-waterfall"]} ref={powerByRef}>
           <div
             className={styles["os-graph"]}
@@ -446,46 +508,72 @@ export default () => {
       </div>
 
       <Modal
-        title={t`graph.share`}
-        open={isOpen}
+        title={
+          <div className={styles.shareItemTitle}>
+            <img src={share} alt="" className={styles['button-icon']} />
+            {isRealTimeOpen ? t`graph.real_time` : t`graph.link`}
+          </div>
+        }
+        width={800}
+        open={isShareOpen || isRealTimeOpen}
         footer={null}
         onCancel={() => {
           setState((draft) => {
-            draft.isOpen = false;
+            draft.isShareOpen = false;
+            draft.isRealTimeOpen = false;
           });
         }}
       >
         <div className={styles.shareItem}>
-          <div className={styles.shareItemLabel}>{t`web`}</div>
-          <div className={styles.shareItemContent}>{shareLink}</div>
-          <CopyToClipboard
-            text={shareLink}
-            onCopy={(_, result) => {
-              if (result) {
-                message.success(t`copySuccess`);
-              } else {
-                message.error("复制失败，请稍后再试");
-              }
-            }}
-          >
-            <Button type="primary">{t`copy`}</Button>
-          </CopyToClipboard>
+          <div className={styles.shareItemLabel}>
+            {isRealTimeOpen ? t`graph.real_time_link` : t`graph.share_link`}：
+          </div>
+          <div className={styles.shareItemContent}>
+            <Input.TextArea
+              value={isRealTimeOpen ? pngShareLink : shareLink}
+              autoSize={{ maxRows: 3, minRows: 3 }}
+              className={styles.shareItemVal}
+            />
+            <CopyToClipboard
+              text={isRealTimeOpen ? pngShareLink : shareLink}
+              onCopy={(_, result) => {
+                if (result) {
+                  message.success(t`copySuccess`);
+                } else {
+                  message.error("复制失败，请稍后再试");
+                }
+              }}
+            >
+              <Button type="primary">{t`copy`}</Button>
+            </CopyToClipboard>
+          </div>
         </div>
         <div className={styles.shareItem}>
-          <div className={styles.shareItemLabel}>{t`png`}</div>
-          <div className={styles.shareItemContent}>{pngShareLink}</div>
-          <CopyToClipboard
-            text={pngShareLink}
-            onCopy={(_, result) => {
-              if (result) {
-                message.success(t`copySuccess`);
-              } else {
-                message.error("复制失败，请稍后再试");
-              }
-            }}
-          >
-            <Button type="primary">{t`copy`}</Button>
-          </CopyToClipboard>
+          <div className={styles.shareItemLabel}>
+            {isRealTimeOpen
+              ? t`graph.real_time_code`
+              : t`graph.share_link_code`}
+            ：
+          </div>
+          <div className={styles.shareItemContent}>
+            <Input.TextArea
+              value={getEmbedCode(isRealTimeOpen ? pngShareLink : shareLink)}
+              autoSize={{ maxRows: 3, minRows: 3 }}
+              className={styles.shareItemVal}
+            />
+            <CopyToClipboard
+              text={getEmbedCode(isRealTimeOpen ? pngShareLink : shareLink)}
+              onCopy={(_, result) => {
+                if (result) {
+                  message.success(t`copySuccess`);
+                } else {
+                  message.error("复制失败，请稍后再试");
+                }
+              }}
+            >
+              <Button type="primary">{t`copy`}</Button>
+            </CopyToClipboard>
+          </div>
         </div>
       </Modal>
     </OSGraph>

@@ -5,7 +5,7 @@
 
 import { GraphData } from "@antv/g6";
 
-/** 过滤孤立节点，和不存在节点的边 */
+/** Filter isolated nodes and edges with no nodes */
 const filterGraphDataTranslator = (data: GraphData): GraphData => {
   if (!data || !Array.isArray(data?.nodes) || !Array.isArray(data?.edges)) {
     return { nodes: [], edges: [] };
@@ -16,17 +16,17 @@ const filterGraphDataTranslator = (data: GraphData): GraphData => {
     (edge) => nodeSet.has(edge.source) && nodeSet.has(edge.target)
   );
 
-  // 更新边集合后，重新创建新的节点集合，确保每个节点在新的边集合中被使用
+  // After updating the edge set, re-create the new node set to ensure that each node is used in the new edge set
   const connectedNodeSet = new Set<string>();
   validEdges.forEach((edge) => {
     connectedNodeSet.add(edge.source);
     connectedNodeSet.add(edge.target);
   });
 
-  // 过滤掉不在边集合中的节点
+  // Filter out nodes that are not in the edge set
   const validNodes = data.nodes.filter((node) => connectedNodeSet.has(node.id));
 
-  // 返回过滤后的数据
+  // Return filtered data
   return {
     nodes: validNodes,
     edges: validEdges,
