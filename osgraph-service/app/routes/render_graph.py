@@ -76,6 +76,7 @@ def process_graph_data(graph_data):
 
 def render_graph_with_node(data):
     lang = get_language()
+    data["lang"] = lang
     oneclip_url = os.getenv("ONECLIP_URL")
     if oneclip_url is None:
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -100,6 +101,7 @@ def render_graph_with_node(data):
         return BytesIO(output), None
     else:
         context = {"width": 1000, "height": 600, "devicePixelRatio": 1}
+        
         params = {
             # "assetId": asset_id,
             "lang":lang,
