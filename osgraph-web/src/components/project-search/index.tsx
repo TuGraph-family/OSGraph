@@ -367,7 +367,7 @@ export const ProjectSearch: React.FC<{
                   key={item.templateType}
                   data={item}
                 >
-                  {GET_TEMPLATE(t)[item.templateType]}
+                  {item.name}
                 </Select.Option>
               );
             })}

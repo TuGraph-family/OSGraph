@@ -22,7 +22,7 @@ const Language: React.FC = () => {
     const newLang = lang === "en-US" ? "zh-CN" : "en-US";
     i18n.changeLanguage(newLang === "en-US" ? "en" : "zh");
     url.searchParams.set("lang", newLang);
-    window.history.pushState({}, "", url.toString());
+    window.location.href = url.toString()
   };
 
   return (
