@@ -106,6 +106,11 @@ export const GraphView = React.memo(
 
       useEffect(() => {
         window.Tracert?.call?.('expo', 'a4378.b118751.c400430', '');
+        document.addEventListener('contextmenu', (event) => {
+          if (event.ctrlKey) {
+            event.preventDefault();
+          }
+        });
       }, [])
 
       useImperativeHandle(ref, () => ({
@@ -494,6 +499,7 @@ export const GraphView = React.memo(
         graphRef.current = graph;
         graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
         graph.on(CanvasEvent.CLICK, (e) => {
+          console.log("click", e)
           if (e.metaKey || e.ctrlKey || e.shiftKey) {
             e?.preventDefault();
           }
