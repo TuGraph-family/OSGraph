@@ -9,7 +9,7 @@ import { TranslatorTemplateList } from "./translator/transTemplateList";
 import * as homePageNew from "../../services/homePage_new";
 import styles from "./index.module.less";
 import { useTranslation } from "react-i18next";
-import { GET_TEMPLATE, getPlaceholder } from "../../constants/data";
+import { getPlaceholder } from "../../constants/data";
 
 let getExecuteFullTextQuery: (...args: any[]) => Promise<any> =
   homePageNew.getExecuteFullTextQuery;

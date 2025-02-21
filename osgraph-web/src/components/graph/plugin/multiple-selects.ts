@@ -5,15 +5,17 @@ import type {
 } from "@antv/g6";
 import { BaseBehavior, CommonEvent } from "@antv/g6";
 
-interface ClickAddNodeOptions extends BaseBehaviorOptions {}
+interface ClickAddNodeOptions extends BaseBehaviorOptions { }
 
 const getElementState = (
   nodes: string[] = [],
-  edges: string[] = []
+  edges: (string | undefined)[] = []
 ): Record<string, string[]> => {
   const newElements: any = {};
   [...edges, ...nodes]?.forEach((item) => {
-    newElements[item] = ["selected"];
+    if (item) {
+      newElements[item] = ["selected"];
+    }
   });
 
   return newElements;
