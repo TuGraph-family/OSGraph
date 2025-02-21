@@ -76,6 +76,7 @@ export const GraphView = React.memo(
       { data, renderMode, renderTemplate, setHistoryStatus, onReady }: IProps,
       ref
     ) => {
+
       const containerRef = React.useRef(null);
       const graphRef = React.useRef<Graph>(null);
       const selectEdges = useRef<string[]>([]);
@@ -90,14 +91,22 @@ export const GraphView = React.memo(
           const history = graphRef.current.getPluginInstance("history");
 
           if (action === "redo" && history.canRedo()) {
+            window?.Tracert?.call?.("click", 'a4378.b118751.c400429.d533732'
+            );
             history.redo();
           }
 
           if (action === "undo" && history.canUndo()) {
+            window?.Tracert?.call?.("click", 'a4378.b118751.c400429.d533731'
+            );
             history.undo();
           }
         }
       };
+
+      useEffect(() => {
+        window.Tracert?.call?.('expo', 'a4378.b118751.c400430', '');
+      }, [])
 
       useImperativeHandle(ref, () => ({
         redo: () => redoAndUndo("redo"),
@@ -171,9 +180,8 @@ export const GraphView = React.memo(
               labelText: (d) => {
                 const { displayName, hasCount } =
                   GET_EDGE_DISPLAY_NAME_MAP(t)[d?.edgeType];
-                return ` ${displayName}${
-                  hasCount ? "：" + (d?.properties?.count || 0) + " " : ""
-                }`;
+                return ` ${displayName}${hasCount ? "：" + (d?.properties?.count || 0) + " " : ""
+                  }`;
               },
               endArrow: (d) =>
                 GET_EDGE_DISPLAY_NAME_MAP(t)[d?.edgeType].hasArrow,
@@ -304,6 +312,8 @@ export const GraphView = React.memo(
                           setIsCanvasLoading(false);
                           return;
                         }
+
+                        window.Tracert.call('click', "a4378.b118751.c400430.d533737")
 
                         const extendId = id;
                         const extendData =

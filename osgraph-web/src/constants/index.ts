@@ -399,3 +399,5 @@ export const GRAPH_QUERY_SOURCE_MAP: Record<string, string> = {
   github_repo: "github-repo",
   github_user: "github-user",
 };
+
+export const MAX_INVALID_TIME = 30000;
