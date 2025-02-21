@@ -35,8 +35,7 @@ import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
 import moment from "moment";
-import share from '../assets/share.svg'
-import downloadIcon from '../assets/download.svg'
+import { DOWNLOAD_ICON, SHARE_ICON } from "../constants/links";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -488,10 +487,10 @@ export default () => {
                 }}
               /> */}
               <button onClick={downloadJSON}>
-                <img src={downloadIcon} alt="" className={styles['button-icon']} />JSON
+                <img src={DOWNLOAD_ICON} alt="" className={styles['button-icon']} />JSON
               </button>
               <button onClick={download}>
-                <img src={downloadIcon} alt="" className={styles['button-icon']} />{t("graph.download_png")}
+                <img src={DOWNLOAD_ICON} alt="" className={styles['button-icon']} />{t("graph.download_png")}
               </button>
               <button
                 onClick={() => {
@@ -500,7 +499,7 @@ export default () => {
                   });
                 }}
               >
-                <img src={share} alt="" className={styles['button-icon']} />{t("graph.link")}
+                <img src={SHARE_ICON} alt="" className={styles['button-icon']} />{t("graph.link")}
               </button>
               <button
                 onClick={() => {
@@ -509,7 +508,7 @@ export default () => {
                   });
                 }}
               >
-                <img src={share} alt="" className={styles['button-icon']} />{t("graph.real_time")}
+                <img src={SHARE_ICON} alt="" className={styles['button-icon']} />{t("graph.real_time")}
               </button>
             </div>
           </div>
@@ -559,7 +558,7 @@ export default () => {
       <Modal
         title={
           <div className={styles.shareItemTitle}>
-            <img src={share} alt="" className={styles['button-icon']} />
+            <img src={SHARE_ICON} alt="" className={styles['button-icon']} />
             {isRealTimeOpen ? t`graph.real_time` : t`graph.link`}
           </div>
         }

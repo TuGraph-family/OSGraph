@@ -106,6 +106,11 @@ export const GraphView = React.memo(
 
       useEffect(() => {
         window.Tracert?.call?.('expo', 'a4378.b118751.c400430', '');
+        document.addEventListener('contextmenu', (event) => {
+          if (event.ctrlKey) {
+            event.preventDefault();
+          }
+        });
       }, [])
 
       useImperativeHandle(ref, () => ({
