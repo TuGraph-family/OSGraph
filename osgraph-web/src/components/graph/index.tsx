@@ -183,6 +183,7 @@ export const GraphView = React.memo(
           edge: {
             style: {
               labelText: (d) => {
+                console.log(d, 'lkm')
                 const { displayName, hasCount } =
                   GET_EDGE_DISPLAY_NAME_MAP(t)[d?.edgeType];
                 return ` ${displayName}${hasCount ? "：" + (d?.properties?.count || 0) + " " : ""
