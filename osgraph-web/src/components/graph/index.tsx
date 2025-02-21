@@ -499,7 +499,6 @@ export const GraphView = React.memo(
         graphRef.current = graph;
         graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
         graph.on(CanvasEvent.CLICK, (e) => {
-          console.log("click", e)
           if (e.metaKey || e.ctrlKey || e.shiftKey) {
             e?.preventDefault();
           }
