@@ -26,14 +26,15 @@ import {
   GRAPH_DOCUMENT_TITLE_MAP,
   GRAPH_EXTEND_PARAMS_MAP,
   GRAPH_TEMPLATE_TYPE_MAP,
+  MAX_INVALID_TIME,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
-import { SPAPOS } from "../constants/log";
 import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
+import moment from "moment";
 import share from '../assets/share.svg'
 import downloadIcon from '../assets/download.svg'
 
@@ -43,12 +44,6 @@ export default () => {
   const isMobile = getIsMobile();
   const navigate = useNavigate();
 
-  window?.Tracert?.call?.("set", {
-    spmAPos: SPAPOS,
-    spmBPos: location.pathname,
-    pathName: "结果页"
-  });
-  window?.Tracert?.call?.("logPv");
 
   const powerByRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<{
@@ -129,6 +124,7 @@ export default () => {
 
   const download = async () => {
     if (!graphRef.current) return;
+    window?.Tracert?.call('click', "a4378.b118751.c400429.d533734")
     const dataURL = await graphRef.current.toDataURL({ mode: "viewport" });
     const [head, content] = dataURL.split(",");
     const contentType = head.match(/:(.*?);/)![1];
@@ -171,6 +167,7 @@ export default () => {
 
   const downloadJSON = () => {
     if (!graphRef.current) return;
+    window?.Tracert?.call('click', "a4378.b118751.c400429.d533733")
     const graphData = graphRef.current.getData();
 
     const blob = new Blob([JSON.stringify(onFilterrData(graphData), null, 2)], {
@@ -317,6 +314,47 @@ export default () => {
     resizePowerBy();
   }, [powerByRef.current]);
 
+
+
+  useEffect(() => {
+    const startTime = moment().valueOf();
+    let invalidTimes: number = 0
+    let departureTime: number | null = null
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        departureTime = moment().valueOf();
+      } else if (document.visibilityState === 'visible') {
+        if (departureTime) {
+          if ((moment().valueOf() - departureTime) > MAX_INVALID_TIME) {
+            invalidTimes += moment().valueOf() - departureTime
+          }
+          departureTime = null
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const unload = () => {
+      const residence_time = moment().valueOf() - startTime - invalidTimes;
+      if (residence_time > 1000) {
+        window?.Tracert?.call?.("set", {
+          spmAPos: 'a4378',
+          spmBPos: 'b118751',
+          pathName: "结果页"
+        });
+        const isSharePage = location.pathname.includes("/graphs") &&
+          location.pathname.includes("/github") ? true : false
+        window?.Tracert?.call?.("logPv", { residence_time, isSharePage });
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', unload);
+    }
+
+    window.addEventListener('beforeunload', unload);
+
+    return unload
+  }, [])
+
   if (state.isErrorShareParams) {
     return <PageNotFound source="error" />;
   }
@@ -349,6 +387,11 @@ export default () => {
     });
   };
 
+  useEffect(() => {
+    if (!isShare) {
+      window.Tracert?.call?.('expo', 'a4378.b118751.c400429', '');
+    }
+  }, [])
   const getEmbedCode = (url: string) => {
     if (isRealTimeOpen) {
       return `## OSGraph
@@ -356,6 +399,11 @@ export default () => {
     }
     return `<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="${url}" frameBorder="0"></iframe>`;
   };
+
+  const onReport = () => {
+    const spmD = isRealTimeOpen ? 'd533736' : 'd533735'
+    window?.Tracert?.call('click', `a4378.b118751.c400429.${spmD}`)
+  }
 
   return (
     <OSGraph>
@@ -386,6 +434,7 @@ export default () => {
                 getGraphLoading={getGraphLoading}
                 graphExtendParams={graphExtendParams}
                 onUpdateTemplateId={onUpdateTemplateId}
+                spmD="b118751.c400429.d535123"
               />
               <ExtendParams
                 templateId={templateId}
@@ -544,7 +593,7 @@ export default () => {
                 }
               }}
             >
-              <Button type="primary">{t`copy`}</Button>
+              <Button type="primary" onClick={onReport}>{t`copy`}</Button>
             </CopyToClipboard>
           </div>
         </div>
@@ -571,7 +620,7 @@ export default () => {
                 }
               }}
             >
-              <Button type="primary">{t`copy`}</Button>
+              <Button type="primary" onClick={onReport}>{t`copy`}</Button>
             </CopyToClipboard>
           </div>
         </div>

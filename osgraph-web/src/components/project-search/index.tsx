@@ -33,6 +33,7 @@ export const ProjectSearch: React.FC<{
   getGraphLoading?: (loading: boolean) => void;
   graphExtendParams?: Record<string, any>;
   onUpdateTemplateId?: (templateId: number) => void;
+  spmD: string;
 }> = ({
   needFixed,
   debounceTimeout = 300,
@@ -48,6 +49,7 @@ export const ProjectSearch: React.FC<{
   getGraphLoading,
   graphExtendParams,
   onUpdateTemplateId,
+  spmD,
 }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -189,9 +191,16 @@ export const ProjectSearch: React.FC<{
 
     const handelWarehouseChange = (
       value: any,
-      templateInfo: { templateId: string; templateParameterList: any[] }
+      templateInfo: { templateId: string; templateParameterList: any[] },
+      isCall = true
     ) => {
       if (!value) return;
+      if (isCall) {
+        window?.Tracert?.call?.("click", `a4378.${spmD}`, {
+          keyword: value
+        }
+        );
+      }
       const { templateId, templateParameterList } = templateInfo;
 
       setState((draft) => {
@@ -217,7 +226,6 @@ export const ProjectSearch: React.FC<{
           }
           const graphData = graphDataTranslator(res.data);
           getGraphLoading?.(false);
-
           const basicParams = {
             data: graphData,
             querySource,
@@ -316,7 +324,7 @@ export const ProjectSearch: React.FC<{
         handelWarehouseChange(warehouseValue, {
           templateId: templateId,
           templateParameterList: newTemplateParameterList,
-        });
+        }, false);
       }
     }, [graphExtendParams]);
 
