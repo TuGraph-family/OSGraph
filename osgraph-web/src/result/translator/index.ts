@@ -33,9 +33,9 @@ export const graphDataTranslator = (graphData: GraphData) => {
   const edges = graphData.edges?.map((item) => {
     const { target, properties } = item;
     const { count = edgeMinCount } = properties as any;
-    const diffCount = parseInt(String((count - edgeMinCount) / edgeRange));
-    const lineWidth = lineWidthList[diffCount] || 1;
-    const endArrowSize = endArrowSizeList[diffCount] || 8;
+    const diffCount = parseInt(String((count - edgeMinCount) / edgeRange)) || 0;
+    const lineWidth = lineWidthList[diffCount];
+    const endArrowSize = endArrowSizeList[diffCount];
     const targetNodeType = graphData.nodes?.find(
       (item) => item.id === target
     )?.nodeType;
