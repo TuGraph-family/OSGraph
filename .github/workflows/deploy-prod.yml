@@ -1,0 +1,36 @@
+name: Deploy-Prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-to-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into server and execute deployment script
+        env:
+          PROD_HOST: ${{ secrets.PROD_HOST }}
+          PROD_USER: ${{ secrets.PROD_USER }}
+          PROD_PWD: ${{ secrets.PROD_PWD }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_BRANCH: ${{ github.ref_name }}
+        run: |
+          sshpass -p "$PROD_PWD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST << EOF
+          set -e
+          export PATH="/root/miniconda3/bin:\$PATH"
+          source /root/miniconda3/etc/profile.d/conda.sh
+          conda activate osgraph-env
+          cd $DEPLOY_PATH
+          
+          echo "Switch to branch $DEPLOY_BRANCH"
+          git checkout master
+          git show-ref --verify --quiet refs/heads/deploy && git branch -D deploy
+          git checkout -b deploy origin/$DEPLOY_BRANCH
+          
+          echo "Build OSGraph"
+          bash ./bin/build.sh
+          
+          echo "Start OSGraph"
+          bash ./bin/start.sh prod
+          EOF

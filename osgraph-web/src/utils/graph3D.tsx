@@ -19,12 +19,12 @@ const formatGraph3DData = (data: GraphData) => {
   const graph3DData = cloneDeep({ ...data, links: data.edges });
 
   const recordLinks: Record<string, number[]> = {};
-  /** 写一个函数，为每条边生成一个 curvature 和 rotate 的值 */
+  /** Write a function to generate a curvature and rotate value for each edge */
   const genOffsetAndRotate = (source: number, target: number) => {
-    /** 将 source 和 target 组合成key */
+    /** Combine source and target into key */
     const key = source + target;
     if (recordLinks[key]) {
-      /** 取出数组的最后一位 */
+      /** Get the last bit of the array */
       const rotation =
         nth(recordLinks[source + target], -1) + (Math.PI * 1) / 6;
       recordLinks[source + target] = [
@@ -39,7 +39,7 @@ const formatGraph3DData = (data: GraphData) => {
     }
   };
 
-  /** 设置 rotation */
+  /** Set rotation */
   graph3DData.links = graph3DData.links?.map((link) => {
     const offsetAndRotateObj = genOffsetAndRotate(
       link.source.id,
@@ -52,7 +52,7 @@ const formatGraph3DData = (data: GraphData) => {
     };
   });
 
-  /** 设置 curvature */
+  /** set curvature */
   graph3DData.links = graph3DData.links?.map((link) => {
     return {
       ...link,
@@ -123,30 +123,30 @@ const createTextTexture = ({
   canvas.width = canvasSize;
   canvas.height = canvasSize;
 
-  // 图标部分
+  // icon part
   const iconSize = canvasSize / 2;
   context.font = `${iconSize}px os-iconfont`;
   context.textAlign = "center";
   context.textBaseline = "middle";
   context.fillStyle = "rgba(255, 255, 255, 0.8)";
 
-  // 绘制图标
+  // draw icon
   const iconX = canvas.width / 2;
   const iconY = canvas.height / 3;
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.fillText(iconText, iconX, iconY);
 
-  // 文本部分
+  // text part
   let fontSize = nodeSize * 3;
   context.font = `${fontSize}px os-iconfont`;
   context.fillStyle = "rgba(255, 255, 255, 0.8)";
   context.textAlign = "center";
   context.textBaseline = "middle";
 
-  /** 计算文本宽度和高度, 并留出边距 */
+  /** Calculate text width and height, and leave margins */
   const maxWidth = canvas.width - 20;
 
-  /** 渲染文字并调整字体大小 */
+  /** Render text and adjust font size */
   while (
     context.measureText(text).width > maxWidth ||
     fontSize > canvas.height
@@ -174,7 +174,7 @@ const generateNodeThreeObject = (
 ) => {
   const nodeColor = getRandomColor(node.nodeType);
 
-  /** 创建一个球体节点 */
+  /** Create a sphere node */
   const sphereGeometry = new THREE.SphereGeometry(node.size / 3, 32, 32);
   const sphereMaterial = new THREE.MeshBasicMaterial({
     color: nodeColor,
@@ -183,10 +183,10 @@ const generateNodeThreeObject = (
   });
   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-  /** map 缓存每个 nodeThreeObject, 用户后续颜色高亮设置， nodeColor 不能用于设置 nodeThreeObject 节点 */
+  /** The map caches each nodeThreeObject, and the user subsequently sets the color highlight. nodeColor cannot be used to set nodeThreeObject nodes. */
   nodeMaterials.set(node, { ...sphereMaterial, nodeColor });
 
-  /** 创建一个节点的文本标签 */
+  /** Create a text label for a node */
   const sprite = new THREE.Sprite(
     new THREE.SpriteMaterial({
       map: new THREE.CanvasTexture(
@@ -231,10 +231,10 @@ const focusNodePositionForClick = (
 
 const calcTooltipPos = (graph: ForceGraph3DInstance, node: Object) => {
   const { x, y, z } = node;
-  // 获取相机、渲染器和控制
+  // Get cameras, renderers and controls
   const camera = graph.camera();
   const renderer = graph.renderer();
-  // 创建向量并将其转换为屏幕坐标
+  // Create vector and convert it to screen coordinates
   const vec = new THREE.Vector3(x, y, z);
   vec.project(camera);
   const widthHalf = renderer.domElement.clientWidth / 2;

@@ -33,7 +33,7 @@ function parseStringToObjects(inputStr: string) {
 }
 
 export const getListQueryTemplate = async () => {
-  const response = await request(`/api/graph/list`, {
+  const response = await request(`/api/graphs/list`, {
     method: "get",
   });
 
@@ -54,34 +54,41 @@ export const getListQueryTemplate = async () => {
       }
     );
 
-    if (item.input_types === "GitHubUser") {
+    if (item.input_types === "user") {
       item.querySource = "github_user";
     }
-    if (item.input_types === "GitHubRepo") {
+    if (item.input_types === "repo") {
       item.querySource = "github_repo";
     }
+
     switch (item.name) {
       case "项目贡献":
+      case "Project Contribution":
         item.templateType = "REPO_CONTRIBUTE";
         item.id = 1;
         break;
       case "项目生态":
+      case "Project Ecosystem":
         item.templateType = "REPO_ECOLOGY";
         item.id = 2;
         break;
       case "项目社区":
+      case "Project Community":
         item.templateType = "REPO_COMMUNITY";
         item.id = 3;
         break;
       case "开发活动":
+      case "Developer Activity":
         item.templateType = "ACCT_ACTIVITY";
         item.id = 4;
         break;
       case "开源伙伴":
+      case "Open-source Partner":
         item.templateType = "ACCT_PARTNER";
         item.id = 5;
         break;
       case "开源兴趣":
+      case "Open-source Interest":
         item.templateType = "ACCT_INTEREST";
         item.id = 6;
         break;
@@ -97,7 +104,7 @@ export const getExecuteFullTextQuery = async (params: {
   keyword: string;
   indexName: string;
 }) => {
-  const response = await request(`/api/graph/fulltext-search`, {
+  const response = await request(`/api/graphs/fulltext-search`, {
     method: "get",
     params: params,
   });
@@ -129,62 +136,50 @@ export const getExecuteQueryTemplate = async (params: {
   let args: any = {};
   const templateName =
     GRAPH_TEMPLATE_ID_MAP[
-      +params.templateId as keyof typeof GRAPH_TEMPLATE_ID_MAP
+    +params.templateId as keyof typeof GRAPH_TEMPLATE_ID_MAP
     ];
   if (templateName === "项目贡献") {
-    url = "/api/graph/project-contribution";
-    args = {
-      GitHubRepo: params.value,
-    };
+    url = `/api/graphs/project-contribution/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
   if (templateName === "项目社区") {
-    url = "/api/graph/project-community";
-    args = {
-      GitHubRepo: params.value,
-    };
+    url = `/api/graphs/project-community/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "项目生态") {
-    url = "/api/graph/project-ecology";
-    args = {
-      GitHubRepo: params.value,
-    };
+    url = `/api/graphs/project-ecosystem/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "开发活动") {
-    url = "/api/graph/develop-activities";
-    args = {
-      GitHubUser: params.value,
-    };
+    url = `/api/graphs/developer-activity/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "开源伙伴") {
-    url = "/api/graph/os-partner";
-    args = {
-      GitHubUser: params.value,
-    };
+    url = `/api/graphs/os-partner/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });
   }
 
   if (templateName === "开源兴趣") {
-    url = "/api/graph/os-interest";
-    args = {
-      GitHubUser: params.value,
-    };
+    url = `/api/graphs/os-interest/github/${params.value}`;
+    args = {};
     params.templateParameterList.forEach((item: any) => {
       args[item.parameterName] = item.parameterValue;
     });

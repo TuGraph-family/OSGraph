@@ -42,7 +42,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     proxy: {
-      "/api/graph": {
+      "/api/graphs": {
         target: isDev ? "http://116.62.110.113:8000/" : "https://osgraph.com",
         changeOrigin: isDev,
       },

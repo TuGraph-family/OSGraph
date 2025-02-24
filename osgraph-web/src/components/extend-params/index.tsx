@@ -16,12 +16,14 @@ interface Props {
   onChangeParams: (params: any) => void;
   placement?: TooltipPlacement;
   popupContainer?: HTMLElement;
+  isCall?: boolean;
 }
 const ExtendParams: React.FC<Props> = ({
   templateId,
   onChangeParams,
   placement = "bottom",
   popupContainer = document.body,
+  isCall = true,
 }) => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
@@ -40,7 +42,7 @@ const ExtendParams: React.FC<Props> = ({
             required={false}
             rules={[{ required: true, message: "请输入" }]}
           >
-            <InputNumber  style={{width: 'auto'}} min={0} />
+            <InputNumber style={{ width: "auto" }} min={3} max={50} />
           </Item>
         );
       case "date":
@@ -65,6 +67,9 @@ const ExtendParams: React.FC<Props> = ({
 
   const onSubmit = () => {
     form.validateFields().then((values) => {
+      if (isCall) {
+        window?.Tracert?.call?.("click", 'a4378.b118751.c400429.d533730');
+      }
       setOpen(false);
       if (+templateId === 1) {
         onChangeParams({
@@ -87,7 +92,7 @@ const ExtendParams: React.FC<Props> = ({
   };
 
   const stopPropagation = (event: React.MouseEvent) => {
-    // 阻止事件冒泡
+    // Prevent events from bubbling up
     event.stopPropagation();
   };
 

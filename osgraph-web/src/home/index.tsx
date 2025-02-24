@@ -12,6 +12,9 @@ import {
 } from "../constants/links";
 import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
+import moment from "moment";
+import { MAX_INVALID_TIME } from "../constants";
+
 
 const HomePage: React.FC = () => {
   const [needFixed, setNeedFixed] = useState<boolean>(false);
@@ -44,6 +47,46 @@ const HomePage: React.FC = () => {
   const toGov = () => {
     window.open("https://beian.miit.gov.cn");
   };
+
+  useEffect(() => {
+    window.Tracert?.call?.('expo', 'a4378.b118745.c400963', '');
+    const startTime = moment().valueOf();
+    let invalidTimes: number = 0
+    let departureTime: number | null = null
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        departureTime = moment().valueOf();
+      } else if (document.visibilityState === 'visible') {
+        if (departureTime) {
+          if ((moment().valueOf() - departureTime) > MAX_INVALID_TIME) {
+            invalidTimes += moment().valueOf() - departureTime
+          }
+          departureTime = null
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    const unload = () => {
+      const residence_time = moment().valueOf() - startTime - invalidTimes;
+      if (residence_time > 1000) {
+        window?.Tracert?.call?.("set", {
+          spmAPos: 'a4378',
+          spmBPos: 'b118745',
+          pathName: "首页"
+        });
+        window?.Tracert?.call?.("logPv", { residence_time });
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', unload);
+    }
+
+    window.addEventListener('beforeunload', unload);
+
+    return unload
+  }, [])
+
 
   useEffect(() => {
     const lang = getUrlParams("lang") || "zh-CN";
@@ -81,21 +124,21 @@ const HomePage: React.FC = () => {
   const imgList = useMemo(() => {
     return i18n.language === "en"
       ? [
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9vxoSI3Rm0IAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*3CNASKuv-SkAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9KxVQIWeoMMAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*WHt9R5DepBYAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*nN72RLT2HXMAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*cIgUTpIp3AEAAAAAAAAAAAAADp_eAQ/original",
-        ]
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9vxoSI3Rm0IAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*3CNASKuv-SkAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9KxVQIWeoMMAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*WHt9R5DepBYAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*nN72RLT2HXMAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*cIgUTpIp3AEAAAAAAAAAAAAADp_eAQ/original",
+      ]
       : [
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original",
-          "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original",
-        ];
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original",
+      ];
   }, [i18n.language]);
 
   return (
@@ -124,7 +167,7 @@ const HomePage: React.FC = () => {
             alt=""
             className={styles["title"]}
           />
-          <ProjectSearch needFixed={needFixed} templateType={templateType} />
+          <ProjectSearch needFixed={needFixed} templateType={templateType} spmD="b118745.c400963.d535120" />
           <div className={styles["tuGraph-icon"]}>
             <p>Powered by</p>
             <div
@@ -140,6 +183,15 @@ const HomePage: React.FC = () => {
                 window.open(X_LAB_GITHUB);
               }}
             />
+            <div
+              className={styles["gitHub"]}
+              onClick={() => {
+                window.open(OSGRAPH_GITHUB);
+              }}
+            >
+              <div className={styles["gitHub-url"]} />
+              <p>GitHub</p>
+            </div>
           </div>
           <div className={styles["text"]}>
             <p>{t("home.desc")}</p>

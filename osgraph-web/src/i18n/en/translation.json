@@ -44,7 +44,13 @@
       "desc14": "Participated Projects"
     },
     "share": "Share",
-    "download": "Export"
+    "download_png": "IMAGE",
+    "real_time": "Markdown",
+    "real_time_link": "Markdown chart Link",
+    "real_time_code": "You can display real-time OSGraph charts in Markdown documentation. Sample code is as follows",
+    "link": "Link",
+    "share_link": "Share Link",
+    "share_link_code": "You can embed the OSGraph chart in a blog or website. Sample code is as follows"
   },
   "template": {
     "REPO_CONTRIBUTE": "Project Contribution",
