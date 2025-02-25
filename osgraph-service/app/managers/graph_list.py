@@ -57,6 +57,6 @@ class GraphListManager:
                 })
                 
                 graph_list.append(sorted_item)
-            graph_list.sort(key=lambda x: sort_order.index(x.get["path"]) if x.get["path"] in sort_order else len(sort_order))
+            graph_list.sort(key=lambda x: sort_order.index(x.get("path")) if x.get("path") in sort_order else len(sort_order))
             return graph_list
         return None
