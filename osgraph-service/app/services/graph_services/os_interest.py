@@ -40,7 +40,8 @@ class OSInterestServiceConfig(ServiceConfig):
             comment_zh="挖掘个人开源兴趣：根据参与的项目主题、标签等信息，分析开发者技术领域与兴趣。",
             name_en="Open-source Interest",
             comment_en="Discover individual open-source interests: Analyze the developer's technical domain and interests based on the themes and tags of the projects participated in.",
-            inputTypes=["user"],
+            inputTypes=["github_user"],
+            path="os-interest",
             filterKeys=[
                 FilterKey(key="topic-limit", type="int", default=5, required=False),
                 FilterKey(
@@ -58,12 +59,12 @@ class OSInterestService(BaseService):
         validated_data = self.validate_params(data)
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
-        platform: str = validated_data["platform"]
+        # platform: str = validated_data["platform"]
         topic_limit: int = validated_data["topic-limit"]
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
         query = {"match_phrase": {"name": path}}
-        res = es.search(index=f"{platform}_{input}", query=query, size=1)
+        res = es.search(index=f"{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
             params_dict = {

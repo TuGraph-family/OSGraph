@@ -45,7 +45,8 @@ class ProjectContributionServiceConfig(ServiceConfig):
             comment_zh="发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。",
             name_en="Project Contribution",
             comment_en="Discover core project contributors: Identify core contributors based on project development activities (Issues, PRs, Commits, CRs, etc.).",
-            inputTypes=["repo"],
+            inputTypes=["github_repo"],
+            path="project-contribution",
             filterKeys=[
                 FilterKey(
                     key="start-time",
@@ -82,7 +83,7 @@ class ProjectContributionService(BaseService):
         repo_limit: int = validated_data["repo-limit"]
         es = ElasticsearchClient()
         query = {"match_phrase": {"name": path}}
-        res = es.search(index=f"{platform}_{input}", query=query, size=1)
+        res = es.search(index=f"{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             cypher = (

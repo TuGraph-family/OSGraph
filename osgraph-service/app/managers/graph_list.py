@@ -23,6 +23,15 @@ class GraphListManager:
         pass
 
     def get_graph_list(self) -> Union[List, None]:
+        sort_order = [
+            "project-contribution",
+            "project-community",
+            "project-ecosystem",
+            "developer-activity",
+            "os-partner",
+            "os-interest"
+        ]
+        
         service = GraphListService()
         graph_list: List = []
         result = service.execute()
@@ -40,6 +49,14 @@ class GraphListManager:
                             processed_item[base_key] = value
                     else:
                         processed_item[key] = value
-                graph_list.append(processed_item)
+                sorted_item = {
+                    key: processed_item.get(key) for key in sort_order if key in processed_item
+                }
+                sorted_item.update({
+                    key: value for key, value in processed_item.items() if key not in sort_order
+                })
+                
+                graph_list.append(sorted_item)
+            graph_list.sort(key=lambda x: sort_order.index(x["path"]) if x["path"] in sort_order else len(sort_order))
             return graph_list
         return None

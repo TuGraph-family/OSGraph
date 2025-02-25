@@ -40,6 +40,7 @@ class ServiceConfig:
     comment_zh: str
     name_en: str
     comment_en: str
+    path:str
     inputTypes: List[str]
     filterKeys: List[FilterKey]
 
@@ -65,6 +66,7 @@ class ServiceConfig:
             "name_en": self.name_en,
             "comment_en": self.comment_en,
             "input_types": ";".join(self.inputTypes),
+            "path":self.path,
             "filter_keys": ";".join(
                 [f"key:{key.key},type:{key.type},default:{key.default},required:{key.required}" for key in self.filterKeys]
             ),
@@ -77,6 +79,7 @@ class ServiceConfig:
             comment_en=properties["comment_en"],
             input_types=properties["input_types"],
             filter_keys=properties["filter_keys"],
+            path=properties["path"],
         )
         client.upsert_vertex(GraphService.label, service.props)
 
