@@ -38,7 +38,8 @@ class OSPartnerServiceConfig(ServiceConfig):
             comment_zh="寻找个人开源伙伴：找到开发者在开源社区中，与之协作紧密的其他开发者。",
             name_en="Open-source Partner",
             comment_en="Finding open-source partners: Find other developers in the open-source community who collaborate closely with you.",
-            inputTypes=["user"],
+            inputTypes=["github_user"],
+            path="os-partner",
             filterKeys=[
                 FilterKey(key="user-limit", type="int", default=10, required=False),
             ],
@@ -53,11 +54,11 @@ class OSPartnerService(BaseService):
         validated_data = self.validate_params(data)
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
-        platform: str = validated_data["platform"]
+        # platform: str = validated_data["platform"]
         user_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
         query = {"match_phrase": {"name": path}}
-        res = es.search(index=f"{platform}_{input}", query=query, size=1)
+        res = es.search(index=f"{input}", query=query, size=1)
         if len(res):
             user_id = res[0]["id"]
             cypher = (

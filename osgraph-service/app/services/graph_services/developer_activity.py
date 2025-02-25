@@ -38,7 +38,8 @@ class DeveloperActivityServiceConfig(ServiceConfig):
             comment_zh="展示个人开源贡献：根据开发者研发活动信息（Issue、PR、Commit、CR等），找到参与的核心项目。",
             name_en="Developer Activity",
             comment_en="Showcasing individual open-source contributions: Find core projects participated in based on developer development activities (Issues, PRs, Commits, CRs, etc.).",
-            inputTypes=["user"],
+            inputTypes=["github_user"],
+            path="developer-activity",
             filterKeys=[
                 FilterKey(key="user-limit", type="int", default=10, required=False),
             ],
@@ -53,11 +54,11 @@ class DeveloperActivityService(BaseService):
         validated_data = self.validate_params(data)
         input:str = self.inputTypes[0]
         path: str = validated_data["path"]
-        platform: str = validated_data["platform"]
+        # platform: str = validated_data["platform"]
         user_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
         query = {"match_phrase": {"name": path}}
-        res = es.search(index=f"{platform}_{input}", query=query, size=1)
+        res = es.search(index=f"{input}", query=query, size=1)
         if len(res):
             develop_id = res[0]["id"]
             cypher = (

@@ -179,13 +179,13 @@ class Create(Edge):
 @dataclass
 class CreatePR(Edge):
     name_zh: Literal["创建 PR"] = field(default="创建 PR", init=False)
-    name_en: Literal["Create PR"] = field(default="Create PR", init=False)
+    name_en: Literal["Created PRs"] = field(default="Created PRs", init=False)
 
 
 @dataclass
 class CreateIssue(Edge):
     name_zh: Literal["创建 Issue"] = field(default="创建 Issue", init=False)
-    name_en: Literal["Create Issue"] = field(default="Create Issue", init=False)
+    name_en: Literal["Created Issues"] = field(default="Created Issues", init=False)
 
 
 @dataclass
@@ -209,83 +209,83 @@ class CreateCR(Edge):
 @dataclass
 class CodeReviewAction(Edge):
     name_zh: Literal["CR"] = field(default="CR", init=False)
-    name_en: Literal["CR"] = field(default="CR", init=False)
+    name_en: Literal["Code Reviews"] = field(default="Code Reviews", init=False)
 
 
 @dataclass
 class Belong(Edge):
     name_zh: Literal["属于"] = field(default="属于", init=False)
-    name_en: Literal["Belong"] = field(default="Belong", init=False)
+    name_en: Literal["Belongs To"] = field(default="Belongs To", init=False)
 
 
 @dataclass
 class Star(Edge):
-    name_zh: Literal["收藏"] = field(default="收藏", init=False)
-    name_en: Literal["Star"] = field(default="Star", init=False)
+    name_zh: Literal["Star"] = field(default="Star", init=False)
+    name_en: Literal["Stars"] = field(default="Stars", init=False)
 
 
 @dataclass
 class PullRequestAction(Edge):
     name_zh: Literal["PR"] = field(default="PR", init=False)
-    name_en: Literal["PR"] = field(default="PR", init=False)
+    name_en: Literal["PRs"] = field(default="PRs", init=False)
 
 
 @dataclass
 class Push(Edge):
-    name_zh: Literal["推送"] = field(default="推送", init=False)
-    name_en: Literal["Push"] = field(default="Push", init=False)
+    name_zh: Literal["提交"] = field(default="提交", init=False)
+    name_en: Literal["Commits"] = field(default="Commits", init=False)
 
 
 @dataclass
 class OpenPR(Edge):
-    name_zh: Literal["推送 PR"] = field(default="推送 PR", init=False)
-    name_en: Literal["Open PR"] = field(default="Open PR", init=False)
+    name_zh: Literal["创建 PR"] = field(default="创建 PR", init=False)
+    name_en: Literal["Created PRs"] = field(default="Created PRs", init=False)
 
 
 
 @dataclass
 class CommitAction(Edge):
     name_zh: Literal["提交"] = field(default="提交", init=False)
-    name_en: Literal["Commit"] = field(default="Commit", init=False)
+    name_en: Literal["Commits"] = field(default="Commits", init=False)
 
 
 @dataclass
 class CommentIssue(Edge):
     name_zh: Literal["评论 Issue"] = field(default="评论 Issue", init=False)
-    name_en: Literal["Comment Issue"] = field(default="Comment Issue", init=False)
+    name_en: Literal["Issue Comments"] = field(default="Issue Comments", init=False)
 
 
 @dataclass
 class CommonIssue(Edge):
     name_zh: Literal["合作 Issue"] = field(default="合作 Issue", init=False)
-    name_en: Literal["Common Issue"] = field(default="Common Issue", init=False)
+    name_en: Literal["Collaborative Issues"] = field(default="Collaborative Issues", init=False)
 
 
 
 @dataclass
 class CommonPR(Edge):
     name_zh: Literal["合作 PR"] = field(default="合作 PR", init=False)
-    name_en: Literal["Common PR"] = field(default="Common PR", init=False)
+    name_en: Literal["Collaborative PRs"] = field(default="Collaborative PRs", init=False)
 
 @dataclass
 class CommonStar(Edge):
     name_zh: Literal["共同关注"] = field(default="共同关注", init=False)
-    name_en: Literal["Common Star"] = field(default="Common Star", init=False)
+    name_en: Literal["Co-Followed Projects"] = field(default="Co-Followed Projects", init=False)
 
 
 @dataclass
 class CommonRepo(Edge):
     name_zh: Literal["合作项目"] = field(default="合作项目", init=False)
-    name_en: Literal["Common Repo"] = field(default="Common Repo", init=False)
+    name_en: Literal["Collaborative Projects"] = field(default="Collaborative Projects", init=False)
 
 
 @dataclass
 class CommonDevelop(Edge):
     name_zh: Literal["共建"] = field(default="共建", init=False)
-    name_en: Literal["Common Develop"] = field(default="Common Develop", init=False)
+    name_en: Literal["Joint Contributions"] = field(default="Joint Contributions", init=False)
 
 
 @dataclass
 class ContributeRepo(Edge):
-    name_zh: Literal["贡献项目"] = field(default="贡献项目", init=False)
-    name_en: Literal["Contribute Repo"] = field(default="Contribute Repo", init=False)
+    name_zh: Literal["合作项目"] = field(default="合作项目", init=False)
+    name_en: Literal["Collaborative Projects"] = field(default="Collaborative Projects", init=False)
