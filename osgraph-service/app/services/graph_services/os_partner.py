@@ -22,15 +22,6 @@ from app.services.graph_services.base import BaseService, FilterKey, ServiceConf
 
 load_dotenv()
 
-
-def get_default_start_time() -> int:
-    return int((datetime.now() - timedelta(days=30)).timestamp() * 1000)
-
-
-def get_default_end_time() -> int:
-    return int(datetime.now().timestamp() * 1000)
-
-
 class OSPartnerServiceConfig(ServiceConfig):
     def __init__(self):
         super().__init__(
