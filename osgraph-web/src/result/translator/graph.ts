@@ -4,8 +4,6 @@
  */
 
 import {
-  GRAPH_EXTEND_PARAMS_MAP,
-  GRAPH_LIMIT_MAP,
   GRAPH_SHARE_LINK_MAP,
 } from "../../constants/index";
 import {
@@ -59,29 +57,7 @@ const graphTranslator = () => {
     return params.toString();
   };
 
-  /** const  */
-  const limitExtendsParams = (
-    paramsKey: string,
-    paramsValue: string | number
-  ): number => {
-    if (!GRAPH_LIMIT_MAP[paramsKey]) {
-      return 0;
-    }
 
-    const paramsValueNumber = Number(paramsValue);
-
-    if (Number.isNaN(paramsValueNumber)) {
-      return 0;
-    }
-
-    if (paramsValueNumber > GRAPH_LIMIT_MAP[paramsKey].max) {
-      return GRAPH_LIMIT_MAP[paramsKey].max;
-    } else if (paramsValueNumber < GRAPH_LIMIT_MAP[paramsKey].min) {
-      return GRAPH_LIMIT_MAP[paramsKey].min;
-    } else {
-      return paramsValueNumber;
-    }
-  };
 
   /** map search params */
   const transUrlSearchParams = (search: string, templateType: string) => {
@@ -89,12 +65,7 @@ const graphTranslator = () => {
     const params = new URLSearchParams(search);
     /** Different restrictions are required according to different templateTypes */
     for (const [key, value] of params) {
-      if (GRAPH_EXTEND_PARAMS_MAP[templateType + key]) {
-        searchObj[GRAPH_EXTEND_PARAMS_MAP[templateType + key]] =
-          limitExtendsParams(templateType + key, value);
-      } else {
-        searchObj[key] = value;
-      }
+      searchObj[key] = value;
     }
 
     /** Process contrib-repo separately and add preprocessing parameters */

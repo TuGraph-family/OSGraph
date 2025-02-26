@@ -21,21 +21,17 @@ import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
 import { graphTranslator } from "./translator/graph";
 import {
-  GRAPH_SHARE_LINK_MAP,
-  GRAPH_TEMPLATE_ENUM,
   GRAPH_DOCUMENT_TITLE_MAP,
-  GRAPH_EXTEND_PARAMS_MAP,
-  GRAPH_TEMPLATE_TYPE_MAP,
   MAX_INVALID_TIME,
 } from "../constants/index";
 import { GRAPH_RENDER_MODEL } from "../constants/graph";
 import { getUrlParams } from "../utils";
-import { timestampToDate } from '../utils/date';
 import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
 import moment from "moment";
 import { DOWNLOAD_ICON, SHARE_ICON } from "../constants/links";
+import { ITemplateParameterItem } from "../interfaces";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -86,6 +82,9 @@ export default () => {
     };
   });
 
+  const [queryList, setQueryList] = useState<any[]>([]);
+
+
   const [historyStatus, setHistoryStatus] = useState<{
     undo: boolean;
     redo: boolean;
@@ -104,7 +103,6 @@ export default () => {
   const {
     data,
     warehouseValue,
-    projectValue,
     querySource,
     searchValue,
     templateId,
@@ -196,59 +194,31 @@ export default () => {
   const generateShareLink = (shareInfo: Record<string, any>) => {
     setState((draft) => {
       draft.locationState = shareInfo;
-      const { templateId, warehouseName } = shareInfo;
-      const projectValueFormat =
-        GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]];
+      const { warehouseName, path } = shareInfo;
       const searchPath = window.location.search
         ? window.location.search + "&"
         : "?";
       const host = window.location.origin;
+      const search = shareInfo?.templateParameterList?.map((item: ITemplateParameterItem) => {
+        const { parameterValue, parameterName } = item
+        return `${parameterName}=${parameterValue}`
+      })?.join('&')
 
-      /** repo contribute */
-      if (templateId === GRAPH_TEMPLATE_ENUM.REPO_CONTRIBUTE) {
-        /** translator start time and end time of query */
-        const startTime = timestampToDate(shareInfo["start-time"]);
-        const endTime = timestampToDate(shareInfo["end-time"]);
-        const search = `repo-limit=${shareInfo?.["repo-limit"]}&start-time=${startTime}&end-time=${endTime}`;
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
-          }`;
-        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-          }/github/${warehouseName}${searchPath + search}`;
-      } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_ECOLOGY) {
-        /** repo ecology */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-          }/github/${warehouseName}${searchPath}repo-limit=${shareInfo?.["repo-limit"]
-          }`;
-      } else if (templateId === GRAPH_TEMPLATE_ENUM.REPO_COMMUNITY) {
-        const search = `country-limit=${shareInfo["country-limit"]}&company-limit=${shareInfo["company-limit"]}&user-limit=${shareInfo["user-limit"]}`;
-        /** repo community */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
-          }`;
-        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-          }/github/${warehouseName}${searchPath + search}`;
-      } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_ACTIVITY) {
-        /** acct activity */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-          }/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]
-          }`;
-      } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_PARTNER) {
-        /** acct partner */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]}`;
-        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-          }/github/${warehouseName}${searchPath}user-limit=${shareInfo?.["user-limit"]
-          }`;
-      } else if (templateId === GRAPH_TEMPLATE_ENUM.ACCT_INTEREST) {
-        const search = `repo-limit=${shareInfo["repo-limit"]}&topic-limit=${shareInfo["topic-limit"]}`;
-        /** acct interest */
-        draft.shareLink = `${host}/graphs/${projectValueFormat}/github/${warehouseName}${searchPath + search
-          }`;
-        draft.pngShareLink = `${host}/png/graphs/${GRAPH_TEMPLATE_TYPE_MAP[GRAPH_SHARE_LINK_MAP[templateId]]
-          }/github/${warehouseName}${searchPath + search}`;
-      }
+      draft.shareLink = `${host}/graphs/${path}/github/${warehouseName}${searchPath + search
+        }`;
+      draft.pngShareLink = `${host}/png/graphs/${path}/github/${warehouseName}${searchPath + search}`;
     });
   };
+
+  const currentTemplate = useMemo(() => {
+    const currentTemplate = templateId ? queryList?.find(item => item.id === templateId) : queryList[0]
+    return {
+      templateParameterList: currentTemplate?.templateParameterList || [],
+      path: currentTemplate?.path || ''
+    }
+  }, [templateId, queryList]);
+
+
 
   /**
    * share logic
@@ -367,15 +337,7 @@ export default () => {
     }
   };
 
-  const graphExtendParams = useMemo(() => {
-    let newParams: Record<string, any> = {};
-    Object.keys(extendParams)?.forEach((key) => {
-      newParams[
-        GRAPH_EXTEND_PARAMS_MAP[GRAPH_SHARE_LINK_MAP[templateId] + key]
-      ] = extendParams[key];
-    });
-    return newParams;
-  }, [extendParams]);
+
 
   const onUpdateTemplateId = (templateId: number) => {
     setState((draft) => {
@@ -424,19 +386,21 @@ export default () => {
                 needFixed={false}
                 defaultStyle={true}
                 graphWarehouseValue={warehouseValue}
-                graphProjectValue={projectValue}
                 graphQuerySource={querySource}
                 graphSearchValue={searchValue}
                 graphTemplateId={templateId}
                 graphParameterList={templateParameterList}
                 onSearch={(data: any) => generateShareLink(data)}
                 getGraphLoading={getGraphLoading}
-                graphExtendParams={graphExtendParams}
+                graphExtendParams={extendParams}
                 onUpdateTemplateId={onUpdateTemplateId}
                 spmD="b118751.c400429.d535123"
+                getQueryList={(queryList) => setQueryList(queryList)}
               />
               <ExtendParams
                 templateId={templateId}
+                path={currentTemplate.path}
+                templateParameterList={currentTemplate.templateParameterList}
                 onChangeParams={(data: any) =>
                   setState((draft) => {
                     draft.extendParams = data;
@@ -524,6 +488,7 @@ export default () => {
               onReady={(graph) => (graphRef.current = graph)}
               setHistoryStatus={setHistoryStatus}
               ref={historyRef}
+              queryList={queryList}
             />
           </div>
         </Spin>

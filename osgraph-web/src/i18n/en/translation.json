@@ -3,6 +3,7 @@
     "desc": "Explore GitHub graph data to gain insights into development behaviors and community ecosystems.",
     "repository-placeholder": "Please enter the GitHub repository name",
     "account-placeholder": "Please enter the GitHub account name",
+    "graph": " Graph",
     "project": {
       "title1": "Project Contribution Graph",
       "desc1": "Discover core project contributors: Identify core contributors based on project development activities (Issues, PRs, Commits, CRs, etc.).",
@@ -74,16 +75,29 @@
   "reset": "Reset",
   "layout": "Layout",
   "forceLayout": "Force 布局",
-  "params": {
-    "start": "Start time",
-    "end": "End time",
-    "contrib": "Contrib Limit",
-    "repo": "Repo Limit",
-    "country": "Country Limit",
-    "org": "Org Limit",
-    "partner": "Partner Limit",
-    "topic": "Topic Limit"
-  },
   "web": "Web",
-  "png": "Image"
+  "png": "Image",
+  "project-contribution": {
+    "start-time": "Start time",
+    "end-time": "End time",
+    "repo-limit": "Contrib Limit"
+  },
+  "project-ecosystem": {
+    "repo-limit": "Repo Limit"
+  },
+  "project-community": {
+    "company-limit": "Country Limit",
+    "country-limit": "Org Limit",
+    "user-limit": "Contrib Limit"
+  },
+  "developer-activity": {
+    "user-limit": "Repo Limit"
+  },
+  "os-partner": {
+    "user-limit": "Partner Limit"
+  },
+  "os-interest": {
+    "topic-limit": "Topic Limit",
+    "repo-limit": "Repo Limit"
+  }
 }

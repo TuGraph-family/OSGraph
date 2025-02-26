@@ -3,25 +3,11 @@ import { EDGE_TYPE_MAP } from ".";
 
 export const getPlaceholder = (t: TFunction): Record<string, string> => {
   return {
-    REPO_CONTRIBUTE: t("home.repository-placeholder"),
-    REPO_ECOLOGY: t("home.repository-placeholder"),
-    REPO_COMMUNITY: t("home.repository-placeholder"),
-    ACCT_ACTIVITY: t("home.account-placeholder"),
-    ACCT_PARTNER: t("home.account-placeholder"),
-    ACCT_INTEREST: t("home.account-placeholder"),
+    github_repo: t("home.repository-placeholder"),
+    github_user: t("home.account-placeholder"),
   };
 };
 
-export const GET_TEMPLATE = (t: TFunction): Record<string, string> => {
-  return {
-    REPO_CONTRIBUTE: t("template.REPO_CONTRIBUTE"),
-    REPO_ECOLOGY: t("template.REPO_ECOLOGY"),
-    REPO_COMMUNITY: t("template.REPO_COMMUNITY"),
-    ACCT_ACTIVITY: t("template.ACCT_ACTIVITY"),
-    ACCT_PARTNER: t("template.ACCT_PARTNER"),
-    ACCT_INTEREST: t("template.ACCT_INTEREST"),
-  };
-};
 
 export const GET_EDGE_DISPLAY_NAME_MAP = (
   t: TFunction

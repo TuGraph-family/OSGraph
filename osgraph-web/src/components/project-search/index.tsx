@@ -3,7 +3,6 @@ import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useImmer } from "use-immer";
-import { GRAPH_TYPE_CLUSTER } from "../../constants";
 import { graphDataTranslator } from "../../result/translator";
 import { TranslatorTemplateList } from "./translator/transTemplateList";
 import * as homePageNew from "../../services/homePage_new";
@@ -22,26 +21,25 @@ export const ProjectSearch: React.FC<{
   needFixed: boolean;
   debounceTimeout?: number;
   graphWarehouseValue?: string | null;
-  graphProjectValue?: string;
   graphQuerySource?: string;
   graphSearchValue?: string;
   graphTemplateId?: string;
   graphParameterList?: any[];
   defaultStyle?: boolean;
   onSearch?: (searchData: any) => void;
-  templateType?: string | any;
+  templateIndex?: number | any;
   getGraphLoading?: (loading: boolean) => void;
   graphExtendParams?: Record<string, any>;
   onUpdateTemplateId?: (templateId: number) => void;
   spmD: string;
+  getQueryList?: (queryList: any) => void;
 }> = ({
   needFixed,
   debounceTimeout = 300,
   defaultStyle,
   onSearch,
-  templateType,
+  templateIndex,
   graphWarehouseValue,
-  graphProjectValue,
   graphQuerySource,
   graphSearchValue,
   graphTemplateId,
@@ -50,6 +48,7 @@ export const ProjectSearch: React.FC<{
   graphExtendParams,
   onUpdateTemplateId,
   spmD,
+  getQueryList,
 }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -59,16 +58,14 @@ export const ProjectSearch: React.FC<{
       templateParameterList: any[];
       textQuery: any[];
       warehouseValue?: string;
-      templateId: string;
-      projectValue: string;
+      templateId: string | undefined;
       searchValue: string;
       loadingProjects: boolean;
     }>({
       querySource: graphQuerySource || "github_repo",
       templateParameterList: graphParameterList || [],
       textQuery: [],
-      templateId: graphTemplateId || "1",
-      projectValue: "REPO_CONTRIBUTE",
+      templateId: graphTemplateId,
       searchValue: "",
       loadingProjects: false,
     });
@@ -78,7 +75,6 @@ export const ProjectSearch: React.FC<{
       textQuery,
       warehouseValue,
       templateId,
-      projectValue,
       searchValue,
       loadingProjects,
     } = state;
@@ -95,13 +91,6 @@ export const ProjectSearch: React.FC<{
       return {};
     }, [textQuery]);
 
-    useEffect(() => {
-      if (graphProjectValue) {
-        setState((draft) => {
-          draft.projectValue = graphProjectValue;
-        });
-      }
-    }, [graphProjectValue]);
 
     const dropdownWidth = useMemo(() => {
       switch (true) {
@@ -132,9 +121,8 @@ export const ProjectSearch: React.FC<{
     const handleProjectChange = (value: string, item: any) => {
       onUpdateTemplateId?.(item.data.id);
       if (
-        projectValue &&
-        GRAPH_TYPE_CLUSTER[projectValue as keyof typeof GRAPH_TYPE_CLUSTER] !==
-        GRAPH_TYPE_CLUSTER[value as keyof typeof GRAPH_TYPE_CLUSTER]
+        value &&
+        querySource !== item.data.input_types
       ) {
         setState((draft) => {
           draft.warehouseValue = undefined;
@@ -142,15 +130,14 @@ export const ProjectSearch: React.FC<{
         });
       } else {
         handelWarehouseChange(warehouseValue, {
-          templateId: item.data.id,
+          templateId: value,
           templateParameterList: item.data.templateParameterList,
         });
       }
       setState((draft) => {
-        draft.querySource = `github_${item.data.input_types}`;
+        draft.querySource = item.data.input_types;
         draft.templateParameterList = item.data.templateParameterList;
-        draft.templateId = item.data.id;
-        draft.projectValue = value;
+        draft.templateId = value;
       });
     };
 
@@ -191,7 +178,7 @@ export const ProjectSearch: React.FC<{
 
     const handelWarehouseChange = (
       value: any,
-      templateInfo: { templateId: string; templateParameterList: any[] },
+      templateInfo: { templateId: string | undefined; templateParameterList: any[] },
       isCall = true
     ) => {
       if (!value) return;
@@ -201,6 +188,7 @@ export const ProjectSearch: React.FC<{
         }
         );
       }
+
       const { templateId, templateParameterList } = templateInfo;
 
       setState((draft) => {
@@ -215,8 +203,10 @@ export const ProjectSearch: React.FC<{
 
       getGraphLoading?.(true);
 
+      const path = queryList?.find(item => item.id === templateId)?.path
+
       getExecuteQueryTemplate({
-        templateId: templateId,
+        path,
         value: value,
         templateParameterList: templateList,
       })
@@ -235,6 +225,7 @@ export const ProjectSearch: React.FC<{
             templateParameterList,
             warehouseValue: value,
             warehouseName: textQueryMap[value],
+            path,
             ...getTempPropsObj(templateList),
           };
 
@@ -251,7 +242,6 @@ export const ProjectSearch: React.FC<{
             navigate(`/graphs${window.location.search}`, {
               state: {
                 ...basicParams,
-                projectValue,
               },
             });
           } else {
@@ -271,22 +261,27 @@ export const ProjectSearch: React.FC<{
 
     useEffect(() => {
       if (queryList.length) {
+        getQueryList?.(queryList)
         const contributeTemplate = queryList.find(
-          (item) => item.templateType === projectValue
+          (item) => item.id === templateId
         );
         if (contributeTemplate) {
           setState((draft) => {
-            draft.templateId = contributeTemplate.id;
             draft.templateParameterList =
               contributeTemplate.templateParameterList;
           });
         }
       }
-    }, [queryList, projectValue]);
+    }, [queryList, templateId]);
 
     useEffect(() => {
       getListQueryTemplate().then((res) => {
         setQueryList(res);
+        if (!templateId) {
+          setState((draft) => {
+            draft.templateId = res[0].id;
+          });
+        }
       });
     }, []);
 
@@ -297,15 +292,15 @@ export const ProjectSearch: React.FC<{
     }, [graphQuerySource, graphSearchValue]);
 
     useEffect(() => {
-      if (templateType) {
+      if (typeof templateIndex === "number" && queryList?.length) {
         setState((draft) => {
-          draft.projectValue = templateType;
-          draft.querySource =
-            GRAPH_TYPE_CLUSTER[templateType as keyof typeof GRAPH_TYPE_CLUSTER];
+          const { input_types, id } = queryList[templateIndex] || {};
           draft.textQuery = [];
+          draft.querySource = input_types;
+          draft.templateId = id;
         });
       }
-    }, [templateType]);
+    }, [templateIndex]);
 
     useEffect(() => {
       if (graphExtendParams) {
@@ -348,7 +343,7 @@ export const ProjectSearch: React.FC<{
               defaultStyle ? styles["default-project"] : styles["project-sel"]
             }
             popupClassName={defaultStyle ? "" : "project"}
-            value={projectValue}
+            value={templateId}
             placeholder="Borderless"
             variant="borderless"
             suffixIcon={
@@ -371,8 +366,8 @@ export const ProjectSearch: React.FC<{
             {queryList.map((item) => {
               return (
                 <Select.Option
-                  value={item.templateType}
-                  key={item.templateType}
+                  value={item.id}
+                  key={item.id}
                   data={item}
                 >
                   {item.name}
@@ -392,7 +387,7 @@ export const ProjectSearch: React.FC<{
               width: dropdownWidth,
               lineHeight: 32,
             }}
-            placeholder={getPlaceholder(t)[projectValue]}
+            placeholder={getPlaceholder(t)[querySource]}
             optionFilterProp="children"
             variant="borderless"
             onSearch={handelWarehouseSearch}

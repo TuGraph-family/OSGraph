@@ -3,6 +3,7 @@
     "desc": "探索GitHub开源图谱数据，洞察开发行为与社区生态。 如：贡献、伙伴、兴趣、社区、生态等...",
     "repository-placeholder": "请输入 GitHub 仓库名称",
     "account-placeholder": "请输入 GitHub 账户名称",
+    "graph": "图谱",
     "project": {
       "title1": "项目贡献图谱",
       "desc1": "发现项目核心贡献：根据项目开发者研发活动信息（Issue、PR、Commit、CR等），找到项目核心贡献者。",
@@ -76,16 +77,29 @@
   "reset": "重置",
   "layout": "布局",
   "forceLayout": "力导布局",
-  "params": {
-    "start": "开始时间",
-    "end": "结束时间",
-    "contrib": "贡献者数量",
-    "repo": "项目数量",
-    "country": "国家数量",
-    "org": "组织数量",
-    "partner": "伙伴数量",
-    "topic": "标签数据"
-  },
   "web": "网页",
-  "png": "图片"
+  "png": "图片",
+  "project-contribution": {
+    "start-time": "开始时间",
+    "end-time": "结束时间",
+    "repo-limit": "贡献者数量"
+  },
+  "project-ecosystem": {
+    "repo-limit": "项目数量"
+  },
+  "project-community": {
+    "company-limit": "国家数量",
+    "country-limit": "组织数量",
+    "user-limit": "贡献者数量"
+  },
+  "developer-activity": {
+    "user-limit": "项目数量"
+  },
+  "os-partner": {
+    "user-limit": "伙伴数量"
+  },
+  "os-interest": {
+    "topic-limit": "标签数据",
+    "repo-limit": "项目数量"
+  }
 }
