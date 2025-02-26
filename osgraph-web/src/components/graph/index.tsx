@@ -39,7 +39,7 @@ import { GRAPH_RENDER_MODEL } from "../../constants/graph";
 import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from "./translator/filterGraphData";
 import { removeExistElement } from "./translator/removeExistElement";
-import { GRAPH_TEMPLATE_ENUM } from "../../constants/index";
+import { GRAPH_TEMPLATE_ENUM, HIDDEN_END_ARROW_TYPE } from "../../constants/index";
 import { getExecuteShareLinkQuery } from "../../services/result_new";
 import { graphDataTranslator } from "../../result/translator";
 import { GET_EDGE_DISPLAY_NAME_MAP } from "../../constants/data";
@@ -200,7 +200,7 @@ export const GraphView = React.memo(
                 return ` ${d?.name}${d?.edgeType !== 'Belong' ? "：" + (d?.properties?.count || 0) + " " : ""
                   }`;
               },
-              endArrow: (d) => !['CommonDevelop', 'CommonIssue', 'CommonPR', 'CommonRepo', 'ContributeRepo', 'CommonStar'].includes(d?.edgeType),
+              endArrow: (d) => !HIDDEN_END_ARROW_TYPE.includes(d?.edgeType),
               labelBackgroundFill: "#fff",
               labelBackground: true,
               stroke: (d) =>

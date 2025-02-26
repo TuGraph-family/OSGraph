@@ -76,7 +76,7 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction) => {
           .map((item) =>
             renderTooltipItem(
               isEdge
-                ? GET_EDGE_DISPLAY_NAME_MAP(t)[record[0]?.edgeType]?.displayName
+                ? elementInfo?.name
                 : item,
               properties[item]
             )

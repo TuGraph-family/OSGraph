@@ -116,3 +116,6 @@ export const GRAPH_QUERY_SOURCE_MAP: Record<string, string> = {
 };
 
 export const MAX_INVALID_TIME = 30000;
+
+
+export const HIDDEN_END_ARROW_TYPE = ['CommonDevelop', 'CommonIssue', 'CommonPR', 'CommonRepo', 'ContributeRepo', 'CommonStar']
