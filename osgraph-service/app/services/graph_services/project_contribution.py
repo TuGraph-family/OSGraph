@@ -24,7 +24,7 @@ load_dotenv()
 
 
 def get_default_start_time() -> str:
-    start_time = datetime.now() - timedelta(days=30)
+    start_time = datetime.now() - timedelta(days=365 * 10)
     return start_time.strftime('%Y-%m-%d')
 
 def get_default_end_time() -> str:
