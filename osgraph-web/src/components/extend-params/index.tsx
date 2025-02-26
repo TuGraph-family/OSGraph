@@ -2,12 +2,10 @@ import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, InputNumber, Popover } from "antd";
 import style from "./index.module.less";
 import { useEffect, useState } from "react";
-import { GRAPH_EXTEND_PARAMS_FORM } from "../../constants";
 import { useTranslation } from "react-i18next";
-import { getLast10YearsTimestampsInSeconds } from "../../utils/date";
 import dayjs from "dayjs";
 import { TooltipPlacement } from "antd/es/tooltip";
-import { IOptions } from "../../interfaces";
+import { ITemplateParameterItem } from "../../interfaces";
 
 const { Item } = Form;
 
@@ -17,6 +15,8 @@ interface Props {
   placement?: TooltipPlacement;
   popupContainer?: HTMLElement;
   isCall?: boolean;
+  templateParameterList?: ITemplateParameterItem[];
+  path: string;
 }
 const ExtendParams: React.FC<Props> = ({
   templateId,
@@ -24,40 +24,41 @@ const ExtendParams: React.FC<Props> = ({
   placement = "bottom",
   popupContainer = document.body,
   isCall = true,
+  templateParameterList,
+  path,
 }) => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
-  const { startTimestamp } = getLast10YearsTimestampsInSeconds();
-  const renderItem = (option: IOptions) => {
-    switch (option.type) {
-      case "inputNumber":
+  const renderItem = (option: any) => {
+    switch (option.valueType) {
+      case "int":
         return (
           <Item
-            key={option.key}
-            name={option.key}
-            label={t(option.label)}
-            initialValue={option?.defaultValue}
+            key={option.parameterName + templateId}
+            name={option.parameterName}
+            label={t(`${path}.${option.parameterName}`)}
+            initialValue={option?.parameterValue}
             required={false}
             rules={[{ required: true, message: "请输入" }]}
           >
             <InputNumber style={{ width: "auto" }} min={3} max={50} />
           </Item>
         );
-      case "date":
+      case "str":
         return (
           <Item
-            key={option.key}
-            name={option.key}
-            label={t(option.label)}
+            key={option.parameterName + templateId}
+            name={option.parameterName}
+            label={t(`${path}.${option.parameterName}`)}
             required={false}
             rules={[{ required: true, message: "请选择" }]}
             initialValue={
-              option.key === "start" ? dayjs(startTimestamp * 1000) : dayjs()
+              dayjs(option?.parameterValue)
             }
           >
-            <DatePicker />
+            <DatePicker format={"YYYY-MM-DD"} />
           </Item>
         );
       default:
@@ -67,24 +68,24 @@ const ExtendParams: React.FC<Props> = ({
 
   const onSubmit = () => {
     form.validateFields().then((values) => {
+      const formattedValues = Object.keys(values).reduce((acc, key) => {
+        if (key.includes('time')) {
+          acc[key] = dayjs(values[key]).format('YYYY-MM-DD');
+        } else {
+          acc[key] = values[key];
+        }
+        return acc;
+      }, {} as Record<string, any>);
       if (isCall) {
         window?.Tracert?.call?.("click", 'a4378.b118751.c400429.d533730');
       }
       setOpen(false);
-      if (+templateId === 1) {
-        onChangeParams({
-          ...values,
-          start: values?.start ? dayjs(values.start).valueOf() : undefined,
-          end: values?.end ? dayjs(values.end).valueOf() : undefined,
-        });
-        return;
-      }
-      onChangeParams(values);
+      onChangeParams(formattedValues);
     });
   };
 
   useEffect(() => {
-    form.resetFields();
+    form?.resetFields();
   }, [templateId]);
 
   const onReset = () => {
@@ -108,9 +109,7 @@ const ExtendParams: React.FC<Props> = ({
               <CloseOutlined onClick={() => setOpen(false)} />
             </div>
             <Form form={form}>
-              {GRAPH_EXTEND_PARAMS_FORM[
-                templateId as unknown as keyof typeof GRAPH_EXTEND_PARAMS_FORM
-              ]?.map((item: IOptions) => renderItem(item))}
+              {templateParameterList?.map((item: any) => renderItem(item))}
             </Form>
             <div className={style.footerBtn}>
               <Button onClick={onReset}>{t("reset")}</Button>

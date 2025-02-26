@@ -1,29 +1,24 @@
 import { useEffect, useState } from "react";
-import {
-  GRAPH_EXTEND_PARAMS_FORM,
-  GRAPH_EXTEND_PARAMS_MAP,
-  GRAPH_SHARE_LINK_MAP,
-} from "../../constants";
+
 import ExtendParams from "../extend-params";
 import { translatorParamsName } from "../project-search/translator/transParamsName";
 import style from "./index.module.less";
-import { getLast10YearsTimestampsInSeconds } from "../../utils/date";
-import dayjs from "dayjs";
-import { IOptions } from "../../interfaces";
+import { ITemplateParameterItem } from "../../interfaces";
 
 interface Props {
   title: string;
   templateId: string;
+  path: string;
   onSearch?: (params: any) => void;
+  templateParameterList?: any;
 }
-const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
+const GraphMenuItem: React.FC<Props> = ({ title, templateId, templateParameterList, onSearch, path }) => {
   const [value, setValue] = useState("");
 
   const onChangeParams = (data: any, isinit = false) => {
     const newParams = Object.keys(data)?.map((key) => {
-      const paramsName =
-        GRAPH_EXTEND_PARAMS_MAP[GRAPH_SHARE_LINK_MAP[templateId] + key];
-      return `${paramsName}=${translatorParamsName(paramsName, data[key], "")}`;
+
+      return `${key}=${translatorParamsName(key, data[key], "")}`;
     });
     setValue(newParams?.join("&"));
     if (!isinit) {
@@ -37,23 +32,12 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
   };
 
   useEffect(() => {
-    const { startTimestamp } = getLast10YearsTimestampsInSeconds();
-    const defaultValue: Record<string, any> = {};
-    GRAPH_EXTEND_PARAMS_FORM[
-      templateId as unknown as keyof typeof GRAPH_EXTEND_PARAMS_FORM
-    ]?.forEach((item: IOptions) => {
-      switch (true) {
-        case item.type === "inputNumber":
-          defaultValue[item.key] = item.defaultValue;
-          break;
-        case item.key === "start":
-          defaultValue[item.key] = dayjs(startTimestamp * 1000).valueOf();
-          break;
-        case item.key === "end":
-          defaultValue[item.key] = dayjs().valueOf();
-          break;
-      }
-    });
+
+    const defaultValue: any = {}
+    templateParameterList?.forEach((item: ITemplateParameterItem) => {
+      defaultValue[item.parameterName] = item?.parameterValue
+    })
+
     onChangeParams(defaultValue, true);
   }, []);
 
@@ -63,6 +47,7 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
         <div>{title}</div>
         <ExtendParams
           templateId={templateId}
+          path={path}
           onChangeParams={onChangeParams}
           placement="rightTop"
           popupContainer={
@@ -70,6 +55,7 @@ const GraphMenuItem: React.FC<Props> = ({ title, templateId, onSearch }) => {
               "g6-contextmenu"
             )?.[0] as HTMLElement
           }
+          templateParameterList={templateParameterList}
         />
       </div>
     </li>

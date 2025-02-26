@@ -39,7 +39,7 @@ import { GRAPH_RENDER_MODEL } from "../../constants/graph";
 import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from "./translator/filterGraphData";
 import { removeExistElement } from "./translator/removeExistElement";
-import { GRAPH_TEMPLATE_ENUM } from "../../constants/index";
+import { GRAPH_TEMPLATE_ENUM, HIDDEN_END_ARROW_TYPE } from "../../constants/index";
 import { getExecuteShareLinkQuery } from "../../services/result_new";
 import { graphDataTranslator } from "../../result/translator";
 import { GET_EDGE_DISPLAY_NAME_MAP } from "../../constants/data";
@@ -60,6 +60,7 @@ interface IProps {
   onReady?: (graph: Graph) => void;
   renderMode?: GRAPH_RENDER_MODEL["2D"] | GRAPH_RENDER_MODEL["3D"];
   renderTemplate?: GRAPH_TEMPLATE_ENUM;
+  queryList?: Record<string, any>[];
 }
 
 /** Detection tooltip status */
@@ -73,10 +74,9 @@ register(ExtensionCategory.BEHAVIOR, "multiple-selects", MultipleSelects);
 export const GraphView = React.memo(
   forwardRef(
     (
-      { data, renderMode, renderTemplate, setHistoryStatus, onReady }: IProps,
-      ref
+      { data, renderMode, renderTemplate, setHistoryStatus, onReady, queryList }: IProps,
+      ref,
     ) => {
-
       const containerRef = React.useRef(null);
       const graphRef = React.useRef<Graph>(null);
       const selectEdges = useRef<string[]>([]);
@@ -85,7 +85,6 @@ export const GraphView = React.memo(
       const isShare =
         location.pathname.includes("/graphs") &&
         location.pathname.includes("/github");
-
       const redoAndUndo = (action: "redo" | "undo") => {
         if (graphRef.current) {
           const history = graphRef.current.getPluginInstance("history");
@@ -142,6 +141,21 @@ export const GraphView = React.memo(
         }
       };
 
+      const getMenuList = useMemo(() => {
+        if (isShare) return [];
+        return queryList?.map(item => {
+          return {
+            type: item.input_types,
+            name: item.name,
+            key: item.id,
+            templateParameterList: item.templateParameterList,
+            path: item.path
+          }
+        }) || []
+      }, [queryList]);
+
+
+
       const updateDataXY = (nodeDataTODO: GraphData) => {
         const finishNodeData = nodeDataTODO.nodes.map((node) => {
           return graphDataMapForID.current[node.id];
@@ -183,13 +197,10 @@ export const GraphView = React.memo(
           edge: {
             style: {
               labelText: (d) => {
-                const { displayName, hasCount } =
-                  GET_EDGE_DISPLAY_NAME_MAP(t)[d?.edgeType];
-                return ` ${displayName}${hasCount ? "：" + (d?.properties?.count || 0) + " " : ""
+                return ` ${d?.name}${d?.edgeType !== 'Belong' ? "：" + (d?.properties?.count || 0) + " " : ""
                   }`;
               },
-              endArrow: (d) =>
-                GET_EDGE_DISPLAY_NAME_MAP(t)[d?.edgeType].hasArrow,
+              endArrow: (d) => !HIDDEN_END_ARROW_TYPE.includes(d?.edgeType),
               labelBackgroundFill: "#fff",
               labelBackground: true,
               stroke: (d) =>
@@ -292,10 +303,10 @@ export const GraphView = React.memo(
                 const id = event.target.id;
                 const data = graphRef.current?.getNodeData(id);
                 const { properties } = data;
-                const onClick = (templateType, extendsStr) => {
+                const onClick = (path, extendsStr) => {
                   setIsCanvasLoading(true);
                   getExecuteShareLinkQuery({
-                    templateType,
+                    templateType: path,
                     path: properties.name,
                     extendsStr,
                   })
@@ -383,61 +394,21 @@ export const GraphView = React.memo(
                     });
                 };
 
-                const getMenuItems = (type: string) => {
-                  if (isShare) return;
-
-                  if (type === NODE_TYPE_MAP.github_repo) {
-                    return [
-                      {
-                        name: t("template.REPO_CONTRIBUTE"),
-                        templateType: "project-contribution",
-                        key: "1",
-                      },
-                      {
-                        name: t("template.REPO_ECOLOGY"),
-                        templateType: "project-ecosystem",
-                        key: "2",
-                      },
-                      {
-                        name: t("template.REPO_COMMUNITY"),
-                        templateType: "project-community",
-                        key: "3",
-                      },
-                    ];
-                  } else if (type === NODE_TYPE_MAP.github_user) {
-                    return [
-                      {
-                        name: t("template.ACCT_ACTIVITY"),
-                        templateType: "developer-activity",
-                        key: "4",
-                      },
-                      {
-                        name: t("template.ACCT_PARTNER"),
-                        templateType: "os-partner",
-                        key: "5",
-                      },
-                      {
-                        name: t("template.ACCT_INTEREST"),
-                        templateType: "os-interest",
-                        key: "6",
-                      },
-                    ];
-                  }
-                  return [];
-                };
-                const menuList = getMenuItems(data.nodeType);
+                const menuList = getMenuList?.filter(item => item.type === data.nodeType);
                 const mountNode = document.createElement("div");
                 const root = createRoot(mountNode);
                 root.render(
                   <ul className="g6-contextmenu-ul">
-                    {getMenuItems(data.nodeType)?.map((item) => (
+                    {menuList?.map((item) => (
                       <GraphMenuItem
                         key={item.key}
                         title={item.name}
+                        path={item.path}
                         templateId={item.key}
                         onSearch={(params: string) =>
-                          onClick(item.templateType, params)
+                          onClick(item.path, params)
                         }
+                        templateParameterList={item?.templateParameterList}
                       />
                     ))}
                   </ul>
@@ -681,7 +652,7 @@ export const GraphView = React.memo(
             }
           };
         }
-      }, [containerRef.current, data, renderMode]);
+      }, [containerRef.current, data, renderMode, getMenuList]);
 
       const tooltipStyle: React.CSSProperties = {
         position: "absolute",
@@ -707,7 +678,7 @@ export const GraphView = React.memo(
   ),
   (pre: IProps, next: IProps) => {
     return (
-      isEqual(pre.data, next.data) && isEqual(pre?.renderMode, next?.renderMode)
+      isEqual(pre.data, next.data) && isEqual(pre?.renderMode, next?.renderMode) && isEqual(pre?.queryList, next?.queryList)
     );
   }
 );

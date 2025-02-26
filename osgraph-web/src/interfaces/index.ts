@@ -5,4 +5,10 @@ interface IOptions {
   defaultValue?: any;
 }
 
-export type { IOptions };
+interface ITemplateParameterItem {
+  parameterValue: string;
+  parameterName: string;
+  type: string
+}
+
+export type { IOptions, ITemplateParameterItem };

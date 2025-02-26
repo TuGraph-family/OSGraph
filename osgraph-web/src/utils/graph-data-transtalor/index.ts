@@ -28,62 +28,7 @@ export const graphDataTranslator = (
     return type;
   };
 
-  const changeEdgeType = (data: string) => {
-    let type = "";
-    switch (data) {
-      case "CommitAction":
-        type = "push";
-        break;
-      case "CreatePR":
-        type = "open_pr";
-        break;
-      case "CodeReviewAction":
-        type = "code_review";
-        break;
-      case "CreateIssue":
-        type = "open_issue";
-        break;
-      case "CommentIssue":
-        type = "comment_issue";
-        break;
-      case "Belong":
-        type = "belong_to";
-        break;
-      case "PullRequestAction":
-        type = "PR";
-        break;
-      case "Star":
-        type = "Star";
-        break;
-      case "CommonDevelop":
-        type = "common_developer";
-        break;
-      case "CommonIssue":
-        type = "common_issue";
-        break;
-      case "CommonPR":
-        type = "common_pr";
-        break;
-      case "CommonStar":
-        type = "common_star";
-        break;
-      case "CommonRepo":
-        type = "common_repo";
-        break;
-      case "ContributeRepo":
-        type = "common_repo";
-        break;
-      case "OpenPR":
-        type = "open_pr";
-        break;
-      case "Push":
-        type = "push";
-        break;
-      default:
-        type = "";
-    }
-    return type;
-  };
+
   response?.data?.nodes?.forEach((item: any) => {
     item.nodeType = changeNodeType(item?.nodeType);
     item.id = item?.id?.toString();
@@ -93,7 +38,6 @@ export const graphDataTranslator = (
     delete item?.type;
   });
   response?.data?.edges?.forEach((item: any) => {
-    item.edgeType = changeEdgeType(item?.edgeType);
     item.source = item?.source?.toString();
     item.target = item?.target?.toString();
     item.id =

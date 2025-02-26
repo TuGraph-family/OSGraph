@@ -17,31 +17,29 @@ import { MAX_INVALID_TIME } from "../constants";
 
 
 const HomePage: React.FC = () => {
+  const [queryList, setQueryList] = useState<any[]>([]);
   const [needFixed, setNeedFixed] = useState<boolean>(false);
-  const [templateType, setTemplateType] = useState<string>("REPO_CONTRIBUTE");
+  const [templateIndex, setTemplateIndex] = useState<number>(0);
   const isMobile = getIsMobile();
   const { t, i18n } = useTranslation();
 
   const switchType = (value: number) => {
-    if (value >= 980 && value <= 1580) {
-      return "REPO_CONTRIBUTE";
+    switch (true) {
+      case value >= 980 && value <= 1580:
+        return 0;
+      case value >= 1580 && value <= 2260:
+        return 1;
+      case value >= 2260 && value <= 2940:
+        return 2;
+      case value >= 2940 && value <= 3620:
+        return 3;
+      case value >= 3620 && value <= 4300:
+        return 4;
+      case value >= 4300 && value <= 4980:
+        return 5;
+      default:
+        return 0;
     }
-    if (value >= 1580 && value <= 2260) {
-      return "REPO_ECOLOGY";
-    }
-    if (value >= 2260 && value <= 2940) {
-      return "REPO_COMMUNITY";
-    }
-    if (value >= 2940 && value <= 3620) {
-      return "ACCT_ACTIVITY";
-    }
-    if (value >= 3620 && value <= 4300) {
-      return "ACCT_PARTNER";
-    }
-    if (value >= 4300 && value <= 4980) {
-      return "ACCT_INTEREST";
-    }
-    return "REPO_CONTRIBUTE";
   };
 
   const toGov = () => {
@@ -97,7 +95,7 @@ const HomePage: React.FC = () => {
     window.onscroll = function () {
       const { scrollHeight, clientHeight, scrollTop } =
         document.documentElement;
-      setTemplateType(switchType(scrollTop));
+      setTemplateIndex(switchType(scrollTop));
       if (scrollTop >= 600 && !needFixed) {
         setNeedFixed(true);
       }
@@ -125,21 +123,47 @@ const HomePage: React.FC = () => {
     return i18n.language === "en"
       ? [
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9vxoSI3Rm0IAAAAAAAAAAAAADp_eAQ/original",
-        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*3CNASKuv-SkAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*9KxVQIWeoMMAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*3CNASKuv-SkAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*WHt9R5DepBYAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*nN72RLT2HXMAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*cIgUTpIp3AEAAAAAAAAAAAAADp_eAQ/original",
       ]
       : [
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*1pkATrKdVqQAAAAAAAAAAAAADp_eAQ/original",
-        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*P4PtQ79tujEAAAAAAAAAAAAADp_eAQ/original",
+        "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*QMpmRKVlVyYAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*DtetRqhNvWQAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*oA2_QIQQ09IAAAAAAAAAAAAADp_eAQ/original",
         "https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*erDCTqGa9_MAAAAAAAAAAAAADp_eAQ/original",
       ];
   }, [i18n.language]);
+
+  const renderProjectList = () => {
+    return <>
+      {
+        queryList?.map((item, idx) => {
+          const isOdd = idx % 2 === 0
+          return <div className={styles["tuGraph-project"]} key={item?.id}>
+            <div className={styles["project-body"]} style={{ flexDirection: isOdd ? 'row' : 'row-reverse' }}>
+              <div className={styles["title"]}>
+                <div className={styles["project-info"]}>
+                  <img
+                    src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
+                    alt=""
+                  />
+                  <p className={styles["info-title"]}>{item?.name + t("home.graph")}</p>
+                </div>
+                <p className={styles["project-parse"]}>{item?.comment}</p>
+              </div>
+              <img className={styles["tuGraphImg"]} src={imgList[idx]} alt="" />
+            </div>
+          </div>
+        }
+        )
+      }
+    </>
+  };
 
   return (
     <div className={styles["home"]}>
@@ -167,7 +191,7 @@ const HomePage: React.FC = () => {
             alt=""
             className={styles["title"]}
           />
-          <ProjectSearch needFixed={needFixed} templateType={templateType} spmD="b118745.c400963.d535120" />
+          <ProjectSearch needFixed={needFixed} templateIndex={templateIndex} spmD="b118745.c400963.d535120" getQueryList={(queryList) => setQueryList(queryList)} />
           <div className={styles["tuGraph-icon"]}>
             <p>Powered by</p>
             <div
@@ -200,106 +224,7 @@ const HomePage: React.FC = () => {
         </div>
         <div className={styles["linear"]} />
       </div>
-      <div className={styles["tuGraph-project"]}>
-        <div className={styles["project-body"]}>
-          <div className={styles["title-left"]}>
-            <div className={styles["project-info"]}>
-              <img
-                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
-                alt=""
-              />
-              <p className={styles["info-title"]}>{t("home.project.title1")}</p>
-            </div>
-            <p className={styles["project-parse"]}>{t("home.project.desc1")}</p>
-          </div>
-
-          <img className={styles["tuGraphImg-right"]} src={imgList[0]} alt="" />
-        </div>
-      </div>
-      <div className={styles["tuGraph-project"]}>
-        <div className={styles["project-body"]}>
-          <img src={imgList[1]} alt="" className={styles["tuGraphImg-left"]} />
-
-          <div className={styles["title-right"]} style={{ marginLeft: 60 }}>
-            <div className={styles["project-info"]}>
-              <img
-                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
-                alt=""
-              />
-              <p className={styles["info-title"]}>{t("home.project.title2")}</p>
-            </div>
-            <p className={styles["project-parse"]}>{t("home.project.desc2")}</p>
-          </div>
-        </div>
-      </div>
-      <div className={styles["tuGraph-project"]}>
-        <div className={styles["project-body"]}>
-          <div className={styles["title-left"]}>
-            <div className={styles["project-info"]}>
-              <img
-                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
-                alt=""
-              />
-              <p className={styles["info-title"]}>{t("home.project.title3")}</p>
-            </div>
-            <p className={styles["project-parse"]}>{t("home.project.desc3")}</p>
-          </div>
-
-          <img src={imgList[2]} alt="" className={styles["tuGraphImg-right"]} />
-        </div>
-      </div>
-      <div className={styles["tuGraph-project"]}>
-        <div className={styles["project-body"]}>
-          <img src={imgList[3]} alt="" className={styles["tuGraphImg-left"]} />
-
-          <div className={styles["title-right"]} style={{ marginLeft: 60 }}>
-            <div className={styles["project-info"]}>
-              <img
-                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
-                alt=""
-              />
-              <p className={styles["info-title"]}>{t("home.project.title4")}</p>
-            </div>
-            <p className={styles["project-parse"]}>{t("home.project.desc4")}</p>
-          </div>
-        </div>
-      </div>
-      <div className={styles["tuGraph-project"]}>
-        <div className={styles["project-body"]}>
-          <div className={styles["title-left"]}>
-            <div className={styles["project-info"]}>
-              <img
-                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
-                alt=""
-              />
-              <p className={styles["info-title"]}>{t("home.project.title5")}</p>
-            </div>
-            <p className={styles["project-parse"]}>{t("home.project.desc5")}</p>
-          </div>
-          <img src={imgList[4]} alt="" className={styles["tuGraphImg-right"]} />
-        </div>
-      </div>
-      <div className={styles["tuGraph-project"]}>
-        <div className={styles["project-body"]}>
-          <img
-            src={imgList[5]}
-            alt=""
-            className={styles["tuGraphImg-left"]}
-            style={{ width: 400 }}
-          />
-
-          <div className={styles["title-right"]} style={{ marginLeft: 60 }}>
-            <div className={styles["project-info"]}>
-              <img
-                src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*kU6QRJfXtEQAAAAAAAAAAAAADu3UAQ/original"
-                alt=""
-              />
-              <p className={styles["info-title"]}>{t("home.project.title6")}</p>
-            </div>
-            <p className={styles["project-parse"]}>{t("home.project.desc6")}</p>
-          </div>
-        </div>
-      </div>
+      {renderProjectList()}
       <div className={styles["home-bottom"]}>
         <img
           src="https://mdn.alipayobjects.com/huamei_0bwegv/afts/img/A*lchoQ4PxAVAAAAAAAAAAAAAADu3UAQ/original"
