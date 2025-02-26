@@ -24,6 +24,7 @@ class GraphServiceProps:
     comment_en: str = ""
     input_types: str = ""
     filter_keys: str = ""
+    path:str = ""
 
 
 class GraphService:
@@ -32,9 +33,9 @@ class GraphService:
     type: str = "VERTEX"
     props: GraphServiceProps = GraphServiceProps()
 
-    def __init__(self,id:str, name_zh: str, comment_zh: str,name_en: str, comment_en: str, input_types: str, filter_keys: str):
+    def __init__(self,id:str, name_zh: str, comment_zh: str,name_en: str, comment_en: str, input_types: str, filter_keys: str, path=str):
         self.props = GraphServiceProps(
-            id = id, name_zh=name_zh, comment_zh=comment_zh,name_en=name_en, comment_en=comment_en, input_types=input_types, filter_keys=filter_keys
+            id = id, name_zh=name_zh, comment_zh=comment_zh,name_en=name_en, comment_en=comment_en, input_types=input_types, filter_keys=filter_keys, path=path
         )
 
     def __repr__(self):

@@ -31,7 +31,8 @@ class ProjectCommunityServiceConfig(ServiceConfig):
             comment_zh="分析项目社区分布：根据项目的开发活动、开发者组织等信息，提取项目核心开发者社区分布。",
             name_en="Project Community",
             comment_en="Analyze the distribution of the project community: Extract core developers' community distribution based on project development activities and developer organizations.",
-            inputTypes=["repo"],
+            inputTypes=["github_repo"],
+            path="project-community",
             filterKeys=[
                 FilterKey(key="company-limit", type="int", default=3, required=False),
                 FilterKey(key="country-limit", type="int", default=3, required=False),
@@ -54,7 +55,7 @@ class ProjectCommunityService(BaseService):
         developer_limit: int = validated_data["user-limit"]
         es = ElasticsearchClient()
         query = {"match_phrase": {"name": path}}
-        res = es.search(index=f"{platform}_{input}", query=query, size=1)
+        res = es.search(index=f"{input}", query=query, size=1)
         if len(res):
             repo_id = res[0]["id"]
             
