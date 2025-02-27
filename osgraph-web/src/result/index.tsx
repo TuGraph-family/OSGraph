@@ -218,6 +218,10 @@ export default () => {
     }
   }, [templateId, queryList]);
 
+  useEffect(() => {
+    setHistoryStatus({ undo: true, redo: true })
+  }, [templateId])
+
 
 
   /**

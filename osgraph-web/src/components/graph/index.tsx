@@ -603,7 +603,7 @@ export const GraphView = React.memo(
       };
 
       useEffect(() => {
-        if (!isEmpty(data?.nodes) || !isEmpty(data?.edges)) {
+        if ((!isEmpty(getMenuList) || isShare) && (!isEmpty(data?.nodes) || !isEmpty(data?.edges))) {
           if (!containerRef.current) return;
           renderMode === GRAPH_RENDER_MODEL["2D"]
             ? renderGraph()
