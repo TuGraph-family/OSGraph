@@ -1,12 +1,12 @@
 #
 # Copyright 2025 AntGroup CO., Ltd.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 # http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,12 +23,11 @@ class Vertex:
     name: str
     comment: Optional[str] = None
     source: Optional[str] = None
-    size: Optional[int] = None
 
     @property
     def vertex_type(self):
         return self.__class__.__name__
-    
+
     def to_dict(self) -> dict:
         data = asdict(self)
         data["nodeType"] = self.vertex_type
@@ -44,7 +43,6 @@ class Edge:
     name_en: str
     direction: Literal["both", "out", "in"] = "out"
     comment: Optional[int] = None
-    weight: Optional[int] = None
     count: Optional[int] = None
 
     @property
@@ -59,7 +57,7 @@ class Edge:
             data["name"] = data.get("name_zh")
         data["edgeType"] = self.edge_type
         data.pop("name_en", None)
-        data.pop("name_zh",  None)
+        data.pop("name_zh", None)
         return data
 
 
@@ -242,7 +240,6 @@ class OpenPR(Edge):
     name_en: Literal["Created PRs"] = field(default="Created PRs", init=False)
 
 
-
 @dataclass
 class CommitAction(Edge):
     name_zh: Literal["提交"] = field(default="提交", init=False)
@@ -258,34 +255,46 @@ class CommentIssue(Edge):
 @dataclass
 class CommonIssue(Edge):
     name_zh: Literal["合作 Issue"] = field(default="合作 Issue", init=False)
-    name_en: Literal["Collaborative Issues"] = field(default="Collaborative Issues", init=False)
-
+    name_en: Literal["Collaborative Issues"] = field(
+        default="Collaborative Issues", init=False
+    )
 
 
 @dataclass
 class CommonPR(Edge):
     name_zh: Literal["合作 PR"] = field(default="合作 PR", init=False)
-    name_en: Literal["Collaborative PRs"] = field(default="Collaborative PRs", init=False)
+    name_en: Literal["Collaborative PRs"] = field(
+        default="Collaborative PRs", init=False
+    )
+
 
 @dataclass
 class CommonStar(Edge):
     name_zh: Literal["共同关注"] = field(default="共同关注", init=False)
-    name_en: Literal["Co-Followed Projects"] = field(default="Co-Followed Projects", init=False)
+    name_en: Literal["Co-Followed Projects"] = field(
+        default="Co-Followed Projects", init=False
+    )
 
 
 @dataclass
 class CommonRepo(Edge):
     name_zh: Literal["合作项目"] = field(default="合作项目", init=False)
-    name_en: Literal["Collaborative Projects"] = field(default="Collaborative Projects", init=False)
+    name_en: Literal["Collaborative Projects"] = field(
+        default="Collaborative Projects", init=False
+    )
 
 
 @dataclass
 class CommonDevelop(Edge):
     name_zh: Literal["共建"] = field(default="共建", init=False)
-    name_en: Literal["Joint Contributions"] = field(default="Joint Contributions", init=False)
+    name_en: Literal["Joint Contributions"] = field(
+        default="Joint Contributions", init=False
+    )
 
 
 @dataclass
 class ContributeRepo(Edge):
     name_zh: Literal["合作项目"] = field(default="合作项目", init=False)
-    name_en: Literal["Collaborative Projects"] = field(default="Collaborative Projects", init=False)
+    name_en: Literal["Collaborative Projects"] = field(
+        default="Collaborative Projects", init=False
+    )

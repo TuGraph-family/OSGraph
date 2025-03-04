@@ -26,6 +26,7 @@ jobs:
           echo "Switch to branch $DEPLOY_BRANCH"
           git checkout master
           git show-ref --verify --quiet refs/heads/deploy && git branch -D deploy
+          git fetch
           git checkout -b deploy origin/$DEPLOY_BRANCH
           
           echo "Build OSGraph"
