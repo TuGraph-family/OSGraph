@@ -56,6 +56,10 @@
         color: #ffffff;
         padding-left: 16px;
       }
+
+      .ant-select-selection-search-input {
+        font-size: 20px !important;
+      }
     }
   }
 }
@@ -73,10 +77,15 @@
 }
 
 :global {
+
   .ant-select-dropdown.project {
     background: #2b2e48;
     border-radius: 12px;
     color: #fff;
+
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      background-color: #3a3b4b;
+    }
 
     .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
       background: #3a3b4b;

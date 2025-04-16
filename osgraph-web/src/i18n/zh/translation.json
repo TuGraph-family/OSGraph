@@ -51,7 +51,13 @@
     "real_time_code": "可在 md 文档中显示实时OSGraph图谱，示例代码如下",
     "link": "链接",
     "share_link": "分享链接",
-    "share_link_code": "可在博客或网站中嵌入OSGraph图谱，示例代码如下"
+    "share_link_code": "可在博客或网站中嵌入OSGraph图谱，示例代码如下",
+    "extension": "浏览器扩展程序",
+    "extension_desc": "OSGraph的浏览器扩展程序由Hypercrx提供。",
+    "extension_edge": "点击安装 Edge 扩展程序",
+    "extension_chrome": "点击安装 Chrome 扩展程序",
+    "visit": "访问",
+    "detail": "了解详情。"
   },
   "template": {
     "REPO_CONTRIBUTE": "项目贡献",

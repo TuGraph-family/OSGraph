@@ -51,7 +51,13 @@
     "real_time_code": "You can display real-time OSGraph charts in Markdown documentation. Sample code is as follows",
     "link": "Link",
     "share_link": "Share Link",
-    "share_link_code": "You can embed the OSGraph chart in a blog or website. Sample code is as follows"
+    "share_link_code": "You can embed the OSGraph chart in a blog or website. Sample code is as follows",
+    "extension": "browser extension",
+    "extension_desc": "The browser extension for OSGraph is provided by Hypercrx.。",
+    "extension_edge": "Click here to install Chrome extension",
+    "extension_chrome": "Click here to install Edge extension",
+    "visit": "Visit",
+    "detail": "for more details."
   },
   "template": {
     "REPO_CONTRIBUTE": "Project Contribution",
