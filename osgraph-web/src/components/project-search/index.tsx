@@ -205,6 +205,29 @@ export const ProjectSearch: React.FC<{
 
       const path = queryList?.find(item => item.id === templateId)?.path
 
+
+      const basicParams = {
+
+        querySource,
+        searchValue,
+        templateId,
+        paramsValue,
+        templateParameterList,
+        warehouseValue: value,
+        warehouseName: textQueryMap[value],
+        path,
+        ...getTempPropsObj(templateList),
+      };
+
+
+      if (!defaultStyle) {
+        navigate(`/graphs${window.location.search}`, {
+          state: basicParams
+        });
+      }
+
+
+
       getExecuteQueryTemplate({
         path,
         value: value,
@@ -216,23 +239,14 @@ export const ProjectSearch: React.FC<{
           }
           const graphData = graphDataTranslator(res.data);
           getGraphLoading?.(false);
-          const basicParams = {
-            data: graphData,
-            querySource,
-            searchValue,
-            templateId,
-            paramsValue,
-            templateParameterList,
-            warehouseValue: value,
-            warehouseName: textQueryMap[value],
-            path,
-            ...getTempPropsObj(templateList),
-          };
+
+
 
           if (res?.success) {
             if (defaultStyle) {
               onSearch?.({
                 ...basicParams,
+                data: graphData,
                 searchData: graphData,
                 graphTemplateId: templateId,
                 graphParamsValue: paramsValue,
@@ -241,9 +255,11 @@ export const ProjectSearch: React.FC<{
             }
             navigate(`/graphs${window.location.search}`, {
               state: {
+                data: graphData,
                 ...basicParams,
               },
             });
+
           } else {
             message.error(res?.message);
           }
