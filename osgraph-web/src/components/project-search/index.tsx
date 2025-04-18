@@ -278,6 +278,11 @@ export const ProjectSearch: React.FC<{
     useEffect(() => {
       if (queryList.length) {
         getQueryList?.(queryList)
+        if (!templateId) {
+          setState((draft) => {
+            draft.templateId = graphTemplateId ?? queryList[0].id;
+          });
+        }
         const contributeTemplate = queryList.find(
           (item) => item.id === templateId
         );
@@ -293,11 +298,6 @@ export const ProjectSearch: React.FC<{
     useEffect(() => {
       getListQueryTemplate().then((res) => {
         setQueryList(res);
-        if (!templateId) {
-          setState((draft) => {
-            draft.templateId = res[0].id;
-          });
-        }
       });
     }, []);
 
