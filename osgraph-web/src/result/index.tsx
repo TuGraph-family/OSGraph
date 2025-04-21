@@ -30,8 +30,9 @@ import LayoutSelect from "../components/layout-select";
 import ExtendParams from "../components/extend-params";
 import { getExecuteShareLinkQuery } from "../services/result_new";
 import moment from "moment";
-import { DOWNLOAD_ICON, SHARE_ICON } from "../constants/links";
+import { DOWNLOAD_ICON, PLUGIN_ICON, SHARE_ICON } from "../constants/links";
 import { ITemplateParameterItem } from "../interfaces";
+import ExtensionModal from "./components/extension-modal";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
@@ -56,6 +57,7 @@ export default () => {
     isErrorShareParams: boolean;
     renderMode: string;
     extendParams: Record<string, any>;
+    isExtensionOpen: boolean;
   }>(() => {
     /** Used to initialize rendering mode */
     const initializeRenderMode: () => string = () => {
@@ -79,6 +81,7 @@ export default () => {
       isErrorShareParams: false,
       renderMode: initializeRenderMode(),
       extendParams: {},
+      isExtensionOpen: false
     };
   });
 
@@ -98,6 +101,7 @@ export default () => {
     shareLink,
     extendParams,
     pngShareLink,
+    isExtensionOpen
   } = state;
 
   const {
@@ -385,7 +389,6 @@ export default () => {
                 onClick={goBack}
                 style={{ cursor: "pointer" }}
               />
-
               <ProjectSearch
                 needFixed={false}
                 defaultStyle={true}
@@ -477,6 +480,15 @@ export default () => {
                 }}
               >
                 <img src={SHARE_ICON} alt="" className={styles['button-icon']} />{t("graph.real_time")}
+              </button>
+              <button
+                onClick={() => {
+                  setState((draft) => {
+                    draft.isExtensionOpen = true;
+                  });
+                }}
+              >
+                <img src={PLUGIN_ICON} alt="" className={styles['button-icon']} />{t("graph.extension")}
               </button>
             </div>
           </div>
@@ -593,6 +605,8 @@ export default () => {
           </div>
         </div>
       </Modal>
+
+      <ExtensionModal open={isExtensionOpen} onClose={() => setState((draft) => { draft.isExtensionOpen = false; })} />
     </OSGraph>
   );
 };
