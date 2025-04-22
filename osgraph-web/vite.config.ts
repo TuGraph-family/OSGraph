@@ -20,13 +20,12 @@ export default defineConfig({
       },
       output: {
         chunkFileNames: "static/js/[name]-[hash].js",
-        entryFileNames: "static/js/[name]-[hash].js",
         assetFileNames: (assetInfo) => {
           if (
             assetInfo.type === "asset" &&
             /\.(jpe?g|png|gif|svg)$/i.test(assetInfo.name!)
           ) {
-            return "static/img/[name].[ext]";
+            return "static/img/[name].[hash][ext]";
           }
           if (
             assetInfo.type === "asset" &&
