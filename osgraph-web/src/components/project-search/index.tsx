@@ -99,7 +99,7 @@ export const ProjectSearch: React.FC<{
         case defaultStyle && i18n.language !== "en":
           return "400px";
         case defaultStyle && i18n.language === "en":
-          return "520px";
+          return "485px";
         case i18n.language === "en":
           return "770px";
         default:

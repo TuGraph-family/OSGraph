@@ -417,19 +417,19 @@ export default () => {
               <div style={{ display: "flex" }}>
                 <span onClick={() => historyRef.current?.undo?.()}>
                   <Button
-                    style={{ width: "auto" }}
+                    className={styles["undo-redo"]}
                     disabled={historyStatus.undo}
+                    icon={<UndoOutlined />}
                   >
-                    <UndoOutlined />
                     {t("historyAction.undo")}
                   </Button>
                 </span>
                 <span onClick={() => historyRef.current?.redo?.()}>
                   <Button
-                    style={{ width: "auto" }}
+                    className={styles["undo-redo"]}
                     disabled={historyStatus.redo}
+                    icon={<RedoOutlined />}
                   >
-                    <RedoOutlined />
                     {t("historyAction.redo")}
                   </Button>
                 </span>
