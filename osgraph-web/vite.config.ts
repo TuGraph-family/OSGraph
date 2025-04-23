@@ -19,6 +19,7 @@ export default defineConfig({
       },
       output: {
         chunkFileNames: "static/js/[name]-[hash].js",
+        entryFileNames: "static/js/[name]-[hash].js",
         assetFileNames: (assetInfo) => {
           if (
             assetInfo.type === "asset" &&
