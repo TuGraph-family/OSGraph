@@ -1,4 +1,4 @@
-import { ConfigProvider, Select, message, theme } from "antd";
+import { ConfigProvider, Empty, Select, message, theme } from "antd";
 import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -222,7 +222,10 @@ export const ProjectSearch: React.FC<{
 
       if (!defaultStyle) {
         navigate(`/graphs${window.location.search}`, {
-          state: basicParams
+          state: {
+            ...basicParams,
+            homeLoading: true,
+          }
         });
       }
 
@@ -413,6 +416,11 @@ export const ProjectSearch: React.FC<{
             value={warehouseValue}
             loading={loadingProjects}
             filterOption={false}
+            notFoundContent={
+              !textQuery?.length ? (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<p style={{ fontSize: 16 }}>{t("home.noData")}</p>} />
+              ) : null
+            }
           >
             {textQuery?.map((item) => {
               return (

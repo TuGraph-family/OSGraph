@@ -24,7 +24,7 @@ const renderTooltipItem = (label: string, text: string) => {
         text={text}
         onCopy={(_, result) => {
           if (result) {
-            message.success(t`copySuccess`);
+            message.success(t('copySuccess'));
           } else {
             message.error("复制失败，请稍后再试");
           }

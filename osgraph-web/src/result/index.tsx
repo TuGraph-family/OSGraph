@@ -111,6 +111,7 @@ export default () => {
     searchValue,
     templateId,
     templateParameterList,
+    homeLoading = false,
   } = locationState || {};
   const query = new URLSearchParams(location.search);
   const shareId = query.get("shareId");
@@ -247,6 +248,7 @@ export default () => {
       location.pathname.includes("/graphs") &&
       location.pathname.includes("/github")
     ) {
+
       getExecuteShareLinkQuery(graphTranslator())
         .then((res) => {
           setState((draft) => {
@@ -257,7 +259,7 @@ export default () => {
           setState((draft) => {
             draft.isErrorShareParams = true;
           });
-        });
+        })
     }
   }, [shareId, shareParams]);
 
@@ -290,8 +292,6 @@ export default () => {
     };
     resizePowerBy();
   }, [powerByRef.current]);
-
-
 
   useEffect(() => {
     const startTime = moment().valueOf();
@@ -493,7 +493,7 @@ export default () => {
             </div>
           </div>
         )}
-        <Spin spinning={isLoading}>
+        <Spin spinning={isLoading || homeLoading}>
           {/* There is no search bar on the sharing page, and the height of the canvas needs to be differentiated */}
           <div className={`${isShare ? "graph-share" : "graph"}`}>
             <GraphView
@@ -567,7 +567,7 @@ export default () => {
               text={isRealTimeOpen ? pngShareLink : shareLink}
               onCopy={(_, result) => {
                 if (result) {
-                  message.success(t`copySuccess`);
+                  message.success(t('copySuccess'));
                 } else {
                   message.error("复制失败，请稍后再试");
                 }
@@ -594,7 +594,7 @@ export default () => {
               text={getEmbedCode(isRealTimeOpen ? pngShareLink : shareLink)}
               onCopy={(_, result) => {
                 if (result) {
-                  message.success(t`copySuccess`);
+                  message.success(t('copySuccess'));
                 } else {
                   message.error("复制失败，请稍后再试");
                 }

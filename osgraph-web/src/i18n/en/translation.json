@@ -17,7 +17,8 @@
       "desc5": "Finding open-source partners: Find other developers in the open-source community who collaborate closely with you.",
       "title6": "Open-source Interest Graph",
       "desc6": "Discover individual open-source interests: Analyze the developer's technical domain and interests based on the themes and tags of the projects participated in."
-    }
+    },
+    "noData": "No Data"
   },
   "graph": {
     "type": {
