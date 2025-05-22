@@ -377,7 +377,7 @@ export default () => {
   return (
     <OSGraph>
       <div
-        className={isMobile ? styles["mobile-result"] : "graph-container"}
+        className={"graph-container"}
         css={GRAPH_STYLE}
       >
         {!isShare && (
