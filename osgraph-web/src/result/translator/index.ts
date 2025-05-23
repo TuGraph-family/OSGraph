@@ -8,7 +8,7 @@ export const graphDataTranslator = (graphData: GraphData) => {
   const nodeCountMap: Record<string, number> = {};
   let edgeMaxCount = -Infinity;
   let edgeMinCount = Infinity;
-  graphData.edges?.forEach((item) => {
+  graphData.edges?.filter(d => !d.id?.startsWith('merge-edge'))?.forEach((item) => {
     const { source, target, properties } = item;
     const { count } = properties as any;
 
@@ -31,6 +31,9 @@ export const graphDataTranslator = (graphData: GraphData) => {
   });
   const edgeRange = (edgeMaxCount - edgeMinCount) / 2;
   const edges = graphData.edges?.map((item) => {
+    if (item.id?.startsWith('merge-edge')) {
+      return item
+    }
     const { target, properties } = item;
     const { count = edgeMinCount } = properties as any;
     const diffCount = parseInt(String((count - edgeMinCount) / edgeRange)) || 0;
@@ -59,16 +62,16 @@ export const graphDataTranslator = (graphData: GraphData) => {
     const diffCount = (nodeCount - nodeMinCount) / nodeCountRange;
 
     let size = 16;
-    let iconFontSize = 10;
+    let iconFontSize = 8;
     if (diffCount > 1 && diffCount < 2) {
       size = 26;
-      iconFontSize = 18;
+      iconFontSize = 13;
     } else if (diffCount >= 2 && diffCount <= 4) {
       size = 36;
-      iconFontSize = 24;
+      iconFontSize = 18;
     } else if (nodeCount === sourtedCount[0]) {
       size = 56;
-      iconFontSize = 40;
+      iconFontSize = 28;
     }
 
     if (
@@ -77,11 +80,11 @@ export const graphDataTranslator = (graphData: GraphData) => {
       size === 16
     ) {
       size = 22;
-      iconFontSize = 16;
+      iconFontSize = 11;
     }
     if (nodeType === NODE_TYPE_MAP.country && size === 16) {
       size = 28;
-      iconFontSize = 20;
+      iconFontSize = 14;
     }
 
     return {

@@ -2,12 +2,18 @@
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <meta property="og:url" content="https://osgraph.com">
-    <meta property="og:site_name" content="OSGraph">
-    <meta property="og:image" content="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*4zJvS75FFfgAAAAAAAAAAAAAep_eAQ/original">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:title" content="OSGraph">
-    <meta property="og:description" content="探索GitHub开源图谱数据，洞察开发行为与社区生态。 如：贡献、伙伴、兴趣、社区、生态等...">
+    <meta property="og:url" content="https://osgraph.com" />
+    <meta property="og:site_name" content="OSGraph" />
+    <meta
+      property="og:image"
+      content="https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*4zJvS75FFfgAAAAAAAAAAAAAep_eAQ/original"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:title" content="OSGraph" />
+    <meta
+      property="og:description"
+      content="探索GitHub开源图谱数据，洞察开发行为与社区生态。 如：贡献、伙伴、兴趣、社区、生态等..."
+    />
     <link rel="stylesheet" type="text/css" href="index.css" />
     <link
       rel="shortcut icon"
@@ -21,13 +27,20 @@
         padding: 0;
       }
     </style>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=0,user-scalable=no,maximum-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
       // To solve the warning of Multiple instances of Three.js being imported., reference: https://yanyunfeng.com/article/2
       window.__THREE__ = null;
+      window.onload = () => {
+        const currentWidth = window.innerWidth;
+        if (currentWidth < 768) {
+          const baseWidth = 1440;
+          const scaleValue = currentWidth / baseWidth;
+          const rootElement = document.body;
+          rootElement.style.transform = "scale(" + scaleValue + ")";
+          rootElement.style.width = baseWidth + "px";
+        }
+      };
     </script>
     <script
       src="https://ur.alipay.com/tracert_a4378.js"
@@ -37,7 +50,7 @@
   </head>
 
   <body>
-    <div id="root"> </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
