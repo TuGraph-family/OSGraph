@@ -15,7 +15,7 @@ import PageNotFound from "../404";
 import { OSGraph } from "../controller";
 import { getExecuteShareQueryTemplate } from "../services/result";
 
-import { getIsMobile } from "../utils/isMobile";
+// import { getIsMobile } from "../utils/isMobile";
 import styles from "./index.module.less";
 import { GRAPH_STYLE } from "./style";
 import { graphDataTranslator } from "./translator";
@@ -37,7 +37,7 @@ import ExtensionModal from "./components/extension-modal";
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
   const location = useLocation();
-  const isMobile = getIsMobile();
+  // const isMobile = getIsMobile();
   const navigate = useNavigate();
 
 
