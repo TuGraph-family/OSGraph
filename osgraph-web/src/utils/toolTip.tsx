@@ -49,7 +49,6 @@ const getTooltipContent = (record: Record<string, any>, t: TFunction, graph?: Gr
 
   if (record[0].id?.startsWith('merge-edge')) {
     const edges = graph.current?.getEdgeData(record[0].mergeEdgeId)
-    console.log("edges", edges)
     container.render(
       <>
         <Space direction="vertical" key={record[0].id}>

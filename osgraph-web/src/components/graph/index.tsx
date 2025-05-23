@@ -417,7 +417,6 @@ export const GraphView = React.memo(
                   // merge edge
 
                   const mergeEdgeIds = checkConsistency(selectedEdges)
-                  console.log(mergeEdgeIds, 'mergeEdgeIds')
                   if (mergeEdgeIds.length > 1) {
                     const onClick = () => {
                       const edge = graphRef.current?.getEdgeData(mergeEdgeIds[0]);
