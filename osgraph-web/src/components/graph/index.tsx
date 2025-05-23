@@ -212,7 +212,7 @@ export const GraphView = React.memo(
               stroke: (d) =>
                 d.targetNodeType === NODE_TYPE_MAP.github_user
                   ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
-                  : NODE_TYPE_COLOR_MAP[d.targetNodeType] || 'red',
+                  : NODE_TYPE_COLOR_MAP[d.targetNodeType],
               labelOpacity: 1,
               lineWidth: (d) => d?.lineWidth || 2,
               endArrowSize: (d) => d?.endArrowSize || 10,
@@ -390,7 +390,7 @@ export const GraphView = React.memo(
                     const adjacentEdgeGrpup = groupBySourceAndTarget(adjacentEdge);
 
                     if (adjacentEdgeGrpup.some((item) => item.length > 1)) {
-                      // 相邻边存在可合并
+                      // have merge edge
                       adjacentEdgeGrpup
                         ?.filter((item) => item.length > 1)
                         .forEach((edgeList, idx) => {
@@ -435,9 +435,6 @@ export const GraphView = React.memo(
                       </ul>
                     );
                   }
-
-
-
                 } else if (event.targetType === "node") {
                   const data = graphRef.current?.getNodeData(id);
                   const { properties } = data;
@@ -644,10 +641,6 @@ export const GraphView = React.memo(
                     });
 
                     graphRef.current?.draw();
-                    // graphRef.current?.updateCombo(event.item.id, {
-                    //   collapsed: false,
-                    // });
-                    // graphRef.current?.draw();
                   };
                   root.render(
                     <ul className="g6-contextmenu-ul">
@@ -709,7 +702,7 @@ export const GraphView = React.memo(
             });
           }
         });
-        graphRef.current = window.graph = graph;
+        graphRef.current = graph;
         graph.on(GraphEvent.AFTER_LAYOUT, handleAfterLayout);
         graph.on(CanvasEvent.CLICK, (e) => {
           if (e.metaKey || e.ctrlKey || e.shiftKey) {
