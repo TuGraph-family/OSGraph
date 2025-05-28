@@ -36,6 +36,7 @@ import {
   NODE_TYPE_MAP,
 } from "../../constants";
 import { GRAPH_RENDER_MODEL } from "../../constants/graph";
+import { mergeEdgeIdReg } from '../../constants/regExp';
 import { iconLoader } from "../icon-font";
 import { filterGraphDataTranslator } from "./translator/filterGraphData";
 import { removeExistElement } from "./translator/removeExistElement";
@@ -48,6 +49,8 @@ import LayoutSelect from "../layout-select";
 import GraphMenuItem from "../graph-menu-item";
 import { createRoot } from "react-dom/client";
 import MultipleSelects from "./plugin/multiple-selects";
+import { checkConsistency, runMergeEdge, groupBySourceAndTarget } from '@/utils/graph-merge'
+import moment from "moment";
 
 interface IProps {
   data: GraphData;
@@ -197,7 +200,10 @@ export const GraphView = React.memo(
           edge: {
             style: {
               labelText: (d) => {
-                return ` ${d?.name}${d?.edgeType !== 'Belong' ? "：" + (d?.properties?.count || 0) + " " : ""
+                if (mergeEdgeIdReg.test(d?.id)) {
+                  return d?.style?.labelText
+                }
+                return `${d?.name}${d?.edgeType !== 'Belong' ? "：" + (d?.properties?.count || 0) + " " : ""
                   }`;
               },
               endArrow: (d) => !HIDDEN_END_ARROW_TYPE.includes(d?.edgeType),
@@ -208,9 +214,10 @@ export const GraphView = React.memo(
                   ? NODE_TYPE_COLOR_MAP[d.targetNodeType][d.target % 4]
                   : NODE_TYPE_COLOR_MAP[d.targetNodeType],
               labelOpacity: 1,
-              lineWidth: (d) => d.lineWidth,
-              endArrowSize: (d) => d.endArrowSize,
+              lineWidth: (d) => d?.lineWidth || 2,
+              endArrowSize: (d) => d?.endArrowSize || 10,
               labelFontSize: 10,
+              haloStrokeOpacity: 0.11,
             },
           },
           layout: {
@@ -257,6 +264,13 @@ export const GraphView = React.memo(
             },
             "multiple-selects",
           ],
+          combo: {
+            type: 'circle',
+            // 组合类型
+            style: {
+              collapsed: true,
+            },
+          },
           autoResize: true,
           zoomRange: [0.1, 5],
           transforms: [
@@ -272,6 +286,9 @@ export const GraphView = React.memo(
               key: "tooltip",
               trigger: "click",
               enable: (e) => {
+                if (e.target.parsedStyle?.opacity === 0) {
+                  return false;
+                }
                 if (e.metaKey || e.ctrlKey || e.shiftKey) {
                   const tooltipElement =
                     document.getElementsByClassName("tooltip")[0];
@@ -285,7 +302,7 @@ export const GraphView = React.memo(
               },
               enterable: true,
               getContent: (_, record: Record<string, any>) =>
-                getTooltipContent(record, t),
+                getTooltipContent(record, t, graphRef),
             },
             {
               type: "history",
@@ -295,127 +312,344 @@ export const GraphView = React.memo(
               type: "contextmenu",
               trigger: "contextmenu",
               getContent: (event) => {
+                if (event.target.parsedStyle?.opacity === 0) {
+                  return null;
+                }
                 const g6ContextMenuDom =
                   document.getElementsByClassName("g6-contextmenu")[0];
                 if (g6ContextMenuDom) {
                   g6ContextMenuDom.style.overflow = "visible";
                 }
                 const id = event.target.id;
-                const data = graphRef.current?.getNodeData(id);
-                const { properties } = data;
-                const onClick = (path, extendsStr) => {
-                  setIsCanvasLoading(true);
-                  getExecuteShareLinkQuery({
-                    templateType: path,
-                    path: properties.name,
-                    extendsStr,
-                  })
-                    .then(async (res) => {
-                      if (graphRef.current) {
-                        const translatorData = graphDataTranslator(res);
 
-                        /** Find diff nodes that require addData */
-                        const graphData = graph.getData();
-                        const formatData = removeExistElement(
-                          graphData,
-                          translatorData
-                        );
-
-                        if (
-                          !formatData.nodes.length &&
-                          !formatData.edges.length
-                        ) {
-                          setIsCanvasLoading(false);
-                          return;
-                        }
-
-                        window.Tracert.call('click', "a4378.b118751.c400430.d533737")
-
-                        const extendId = id;
-                        const extendData =
-                          graphRef.current?.getNodeData(extendId);
-
-                        /** The init node style is required in addData and the initial coordinates of the extended node are set */
-                        graphRef.current.addData({
-                          nodes: formatData?.nodes?.map((node) => ({
-                            ...node,
-                            style: extendData?.style,
-                          })),
-                          edges: formatData.edges,
-                        });
-
-                        /** Whether the extended point needs to update the style, such as nodeSize */
-                        if (formatData.nodes.length > 1) {
-                          const updateNodeData = translatorData.nodes.find(
-                            (node) => {
-                              return node.id === extendId;
-                            }
-                          );
-                          graphRef.current.updateNodeData([updateNodeData]);
-                        }
-
-                        /** Update node size */
-                        const mergeData = graphRef.current.getData();
-                        graphRef.current.updateData(
-                          graphDataTranslator(mergeData)
-                        );
-
-                        /** used3 force */
-                        graphRef.current?.setOptions({
-                          layout: {
-                            type: "d3-force",
-                            x: {},
-                            y: {},
-                            link: {
-                              distance: 200,
-                            },
-                            collide: {
-                              radius: 36,
-                            },
-                            manyBody: {
-                              strength: -900,
-                            },
-                          },
-                        });
-                        await graphRef.current.render();
-                        setIsCanvasLoading(false);
-                        setHistoryStatus({ undo: false, redo: true });
-                        const history =
-                          graphRef.current?.getPluginInstance("history");
-                        history.redoStack = [];
-                        updateGraphDataMapXY(graphRef.current);
-                      }
-                    })
-                    .catch((err) => {
-                      console.log("更新失败：", err);
-                    })
-                    .finally(() => {
-                      setIsCanvasLoading(false);
-                    });
-                };
-
-                const menuList = getMenuList?.filter(item => item.type === data.nodeType);
                 const mountNode = document.createElement("div");
                 const root = createRoot(mountNode);
-                root.render(
-                  <ul className="g6-contextmenu-ul">
-                    {menuList?.map((item) => (
-                      <GraphMenuItem
-                        key={item.key}
-                        title={item.name}
-                        path={item.path}
-                        templateId={item.key}
-                        onSearch={(params: string) =>
-                          onClick(item.path, params)
+                const selectedNodes = graphRef.current?.getElementDataByState('node', 'selected');
+                const selectedEdges = graphRef.current?.getElementDataByState('edge', 'selected');
+                if (selectedNodes?.length > 1 && selectedEdges?.length === 0) {
+                  //merge node
+
+                  const onClick = () => {
+                    const comboId = `combo-${moment().valueOf()}`;
+                    graphRef.current?.addComboData([{ id: comboId }]);
+                    const adjacentEdge: Record<string, any>[] = [];
+                    const selectedNodeId = selectedNodes.map(item => item.id);
+                    let newEdges = []
+                    graphRef.current.setData((prev) => {
+                      newEdges = prev.edges?.map((item) => {
+                        const { source, target } = item;
+                        if (
+                          selectedNodeId.includes(source) &&
+                          selectedNodeId.includes(target)
+                        ) {
+                          return {
+                            ...item,
+                            combo: comboId,
+                            style: {
+                              ...item.style,
+                              opacity: 0,
+                            },
+                          };
+                        } else {
+                          if (selectedNodeId.includes(source)) {
+                            item.source = comboId;
+                            item.originSource = source;
+                            adjacentEdge.push(item);
+                          }
+                          if (selectedNodeId.includes(target)) {
+                            item.target = comboId;
+                            item.originTarget = target;
+                            adjacentEdge.push(item);
+                          }
+                          return item;
                         }
-                        templateParameterList={item?.templateParameterList}
-                      />
-                    ))}
-                  </ul>
-                );
+                      })
+
+                      return ({
+                        ...prev,
+                        nodes: prev.nodes?.map((item) => {
+                          if (selectedNodeId.includes(item?.id)) {
+                            return {
+                              ...item,
+                              combo: comboId,
+                              states: [],
+                              style: {
+                                ...item.style,
+                                opacity: 0,
+                              },
+                            };
+                          } else {
+                            return item;
+                          }
+                        }),
+                        edges: newEdges,
+                      })
+
+                    });
+
+                    const adjacentEdgeGrpup = groupBySourceAndTarget(adjacentEdge);
+
+                    if (adjacentEdgeGrpup.some((item) => item.length > 1)) {
+                      // have merge edge
+                      adjacentEdgeGrpup
+                        ?.filter((item) => item.length > 1)
+                        .forEach((edgeList, idx) => {
+                          const edgeIds = edgeList?.map((item) => item.id);
+                          newEdges = runMergeEdge(edgeIds, edgeList[0]?.source, edgeList[0]?.target, idx, [...newEdges]);
+                        });
+
+                      graphRef.current.setData((prev) => ({
+                        ...prev,
+                        edges: newEdges
+                      }))
+                    }
+                    graphRef.current?.draw();
+                  };
+
+                  root.render(
+                    <ul className="g6-contextmenu-ul">
+                      <li className="g6-contextmenu-li" onClick={onClick}>合并节点</li>
+                    </ul>
+                  );
+
+
+                } else if (selectedNodes?.length === 0 && selectedEdges?.length > 1) {
+                  // merge edge
+
+                  const mergeEdgeIds = checkConsistency(selectedEdges)
+                  if (mergeEdgeIds.length > 1) {
+                    const onClick = () => {
+                      const edge = graphRef.current?.getEdgeData(mergeEdgeIds[0]);
+                      graphRef.current?.setData((prev) => ({
+                        ...prev,
+                        edges: runMergeEdge(mergeEdgeIds, edge?.source, edge?.target, 0, prev.edges)
+                      }))
+                      graphRef.current?.draw();
+                    };
+
+
+                    root.render(
+                      <ul className="g6-contextmenu-ul">
+                        <li className="g6-contextmenu-li" onClick={onClick}>合并边</li>
+                      </ul>
+                    );
+                  }
+                } else if (event.targetType === "node") {
+                  const data = graphRef.current?.getNodeData(id);
+                  const { properties } = data;
+                  const onClick = (path, extendsStr) => {
+                    setIsCanvasLoading(true);
+                    getExecuteShareLinkQuery({
+                      templateType: path,
+                      path: properties.name,
+                      extendsStr,
+                    })
+                      .then(async (res) => {
+                        if (graphRef.current) {
+                          const translatorData = graphDataTranslator(res);
+
+                          /** Find diff nodes that require addData */
+                          const graphData = graph.getData();
+                          const formatData = removeExistElement(
+                            graphData,
+                            translatorData
+                          );
+
+                          if (
+                            !formatData.nodes.length &&
+                            !formatData.edges.length
+                          ) {
+                            setIsCanvasLoading(false);
+                            return;
+                          }
+
+                          window.Tracert.call('click', "a4378.b118751.c400430.d533737")
+
+                          const extendId = id;
+                          const extendData =
+                            graphRef.current?.getNodeData(extendId);
+
+                          /** The init node style is required in addData and the initial coordinates of the extended node are set */
+                          graphRef.current.addData({
+                            nodes: formatData?.nodes?.map((node) => ({
+                              ...node,
+                              style: extendData?.style,
+                            })),
+                            edges: formatData.edges,
+                          });
+
+                          /** Whether the extended point needs to update the style, such as nodeSize */
+                          if (formatData.nodes.length > 1) {
+                            const updateNodeData = translatorData.nodes.find(
+                              (node) => {
+                                return node.id === extendId;
+                              }
+                            );
+                            graphRef.current.updateNodeData([updateNodeData]);
+                          }
+
+                          /** Update node size */
+                          const mergeData = graphRef.current.getData();
+                          graphRef.current.updateData(
+                            graphDataTranslator(mergeData)
+                          );
+
+                          /** used3 force */
+                          graphRef.current?.setOptions({
+                            layout: {
+                              type: "d3-force",
+                              x: {},
+                              y: {},
+                              link: {
+                                distance: 200,
+                              },
+                              collide: {
+                                radius: 36,
+                              },
+                              manyBody: {
+                                strength: -900,
+                              },
+                            },
+                          });
+                          await graphRef.current.render();
+                          setIsCanvasLoading(false);
+                          setHistoryStatus({ undo: false, redo: true });
+                          const history =
+                            graphRef.current?.getPluginInstance("history");
+                          history.redoStack = [];
+                          updateGraphDataMapXY(graphRef.current);
+                        }
+                      })
+                      .catch((err) => {
+                        console.log("更新失败：", err);
+                      })
+                      .finally(() => {
+                        setIsCanvasLoading(false);
+                      });
+                  };
+
+                  const menuList = getMenuList?.filter(item => item.type === data.nodeType);
+
+                  root.render(
+                    <ul className="g6-contextmenu-ul">
+                      {menuList?.map((item) => (
+                        <GraphMenuItem
+                          key={item.key}
+                          title={item.name}
+                          path={item.path}
+                          templateId={item.key}
+                          onSearch={(params: string) =>
+                            onClick(item.path, params)
+                          }
+                          templateParameterList={item?.templateParameterList}
+                        />
+                      ))}
+                    </ul>
+                  );
+
+                } else if (event.targetType === "edge" && id.startsWith('merge-edge')) {
+                  const data = graphRef.current?.getEdgeData(id);
+
+                  const onClick = () => {
+                    if (graphRef.current) {
+                      graphRef.current?.setData((prev) => ({
+                        ...prev,
+                        edges: prev.edges.map((item) => {
+                          if (data?.mergeEdgeId.includes(item?.id)) {
+                            return {
+                              ...item,
+                              style: {
+                                ...item.style,
+                                opacity: 1,
+                              },
+                            };
+                          } else {
+                            return item;
+                          }
+                        }),
+                      }));
+                      graphRef.current?.removeEdgeData([id]);
+                      graphRef.current?.draw();
+                    }
+                  };
+                  root.render(
+                    <ul className="g6-contextmenu-ul">
+                      <li className="g6-contextmenu-li" onClick={onClick}>展开边</li>
+                    </ul>
+                  );
+
+                } else if (event.targetType === "combo") {
+
+                  const comboId = event.target.id;
+                  const onClick = () => {
+                    graphRef.current?.setData((prev) => {
+                      data = {
+                        ...prev,
+                        nodes: prev.nodes?.map((item) => {
+                          if (item.combo === comboId) {
+                            delete item.combo;
+                            return {
+                              ...item,
+                              style: {
+                                ...item.style,
+                                opacity: 1,
+                              },
+                            };
+                          } else {
+                            return item;
+                          }
+                        }),
+                        edges: prev.edges
+                          ?.filter((edgeItem) => {
+                            return !(
+                              mergeEdgeIdReg.test(edgeItem?.id) &&
+                              [edgeItem?.combo, edgeItem?.source, edgeItem?.target].includes(
+                                comboId,
+                              )
+                            );
+                          })
+                          .map((item) => {
+                            if (item?.combo === comboId) {
+                              delete item?.combo;
+                              return {
+                                ...item,
+                                style: {
+                                  ...item?.style,
+                                  opacity: 1,
+                                },
+                              };
+                            } else if ([item?.source, item?.target].includes(comboId)) {
+                              item.style.opacity = 1;
+                              if (item?.originSource) {
+                                item.source = item.originSource;
+                                item.style.sourceNode = item.originSource;
+                                delete item.originSource;
+                              }
+                              if (item?.originTarget) {
+                                item.target = item.originTarget;
+                                item.style.targetNode = item.originTarget;
+                                delete item.originTarget;
+                              }
+                              return item;
+                            }
+                            return item
+                          }),
+                        combos: prev.combos?.filter((item) => item?.id !== comboId),
+                      };
+                      return data;
+                    });
+
+                    graphRef.current?.draw();
+                  };
+                  root.render(
+                    <ul className="g6-contextmenu-ul">
+                      <li className="g6-contextmenu-li" onClick={onClick}>展开节点</li>
+                    </ul>
+                  );
+                }
                 return mountNode;
               },
-              enable: (e) => e.targetType === "node",
+
             },
           ],
         });
