@@ -54,16 +54,18 @@ const runMergeEdge = (
 
     edges?.forEach((item) => {
         if (edgeIds.includes(item.id)) {
+            if (!targetNodeType) {
+                targetNodeType = item.targetNodeType
+            }
             if (mergeEdgeIdReg.test(item.id)) {
                 newMergeEdgeId.push(...item.mergeEdgeId)
             } else {
-                targetNodeType = item.targetNodeType
                 newEdges.push({
                     ...item,
                     states: [],
                     style: {
                         ...item.style,
-                        opacity: 0,
+                        visibility: 'hidden'
                     },
                 });
                 newMergeEdgeId.push(item.id)

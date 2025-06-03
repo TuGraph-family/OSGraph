@@ -286,9 +286,6 @@ export const GraphView = React.memo(
               key: "tooltip",
               trigger: "click",
               enable: (e) => {
-                if (e.target.parsedStyle?.opacity === 0) {
-                  return false;
-                }
                 if (e.metaKey || e.ctrlKey || e.shiftKey) {
                   const tooltipElement =
                     document.getElementsByClassName("tooltip")[0];
@@ -312,15 +309,13 @@ export const GraphView = React.memo(
               type: "contextmenu",
               trigger: "contextmenu",
               getContent: (event) => {
-                if (event.target.parsedStyle?.opacity === 0) {
-                  return null;
-                }
+                const id = event.target.id;
                 const g6ContextMenuDom =
                   document.getElementsByClassName("g6-contextmenu")[0];
                 if (g6ContextMenuDom) {
                   g6ContextMenuDom.style.overflow = "visible";
                 }
-                const id = event.target.id;
+
 
                 const mountNode = document.createElement("div");
                 const root = createRoot(mountNode);
@@ -347,7 +342,7 @@ export const GraphView = React.memo(
                             combo: comboId,
                             style: {
                               ...item.style,
-                              opacity: 0,
+                              visibility: 'hidden'
                             },
                           };
                         } else {
@@ -375,7 +370,7 @@ export const GraphView = React.memo(
                               states: [],
                               style: {
                                 ...item.style,
-                                opacity: 0,
+                                visibility: 'hidden'
                               },
                             };
                           } else {
@@ -560,7 +555,7 @@ export const GraphView = React.memo(
                               ...item,
                               style: {
                                 ...item.style,
-                                opacity: 1,
+                                visibility: 'visible'
                               },
                             };
                           } else {
@@ -592,7 +587,7 @@ export const GraphView = React.memo(
                               ...item,
                               style: {
                                 ...item.style,
-                                opacity: 1,
+                                visibility: 'visible'
                               },
                             };
                           } else {
@@ -615,11 +610,10 @@ export const GraphView = React.memo(
                                 ...item,
                                 style: {
                                   ...item?.style,
-                                  opacity: 1,
+                                  visibility: 'visible'
                                 },
                               };
                             } else if ([item?.source, item?.target].includes(comboId)) {
-                              item.style.opacity = 1;
                               if (item?.originSource) {
                                 item.source = item.originSource;
                                 item.style.sourceNode = item.originSource;
@@ -630,7 +624,13 @@ export const GraphView = React.memo(
                                 item.style.targetNode = item.originTarget;
                                 delete item.originTarget;
                               }
-                              return item;
+                              return {
+                                ...item,
+                                style: {
+                                  ...item?.style,
+                                  visibility: 'visible'
+                                },
+                              };
                             }
                             return item
                           }),
@@ -649,7 +649,9 @@ export const GraphView = React.memo(
                 }
                 return mountNode;
               },
-
+              enable: (e) => {
+                return ['edge', 'node', 'combo'].includes(e.targetType)
+              }
             },
           ],
         });
