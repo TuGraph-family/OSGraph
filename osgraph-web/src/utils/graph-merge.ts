@@ -2,20 +2,24 @@ import { mergeEdgeIdReg } from "@/constants/regExp";
 import moment from "moment";
 
 // check merge edges
-const checkConsistency = (edges: Record<string, any>[]) => {
-    const newEdges = edges?.filter((edgesItem: Record<string, any>) => edgesItem?.style?.opacity !== 0)
+const checkConsistency = (edges: Record<string, any>[], id: string) => {
+    const newEdges = edges?.filter((edgesItem: Record<string, any>) => edgesItem?.style?.visibility !== 'hidden')
     if (newEdges.length === 0) {
         return [];
     }
-    const baseSource = newEdges[0]?.source;
-    const baseTarget = newEdges[0]?.target;
-    const ids = [];
-    for (const item of newEdges) {
-        if (item?.source !== baseSource || item?.target !== baseTarget) {
-            return [];
-        }
-        ids.push(item.id);
+
+    const { source: baseSource, target: baseTarget } = newEdges.find((item: Record<string, any>) => item.id === id) || {}
+
+    if (!baseSource || !baseTarget) {
+        return []
     }
+
+    const ids: string[] = [];
+    newEdges.forEach((item: Record<string, any>) => {
+        if (item?.source === baseSource && item?.target === baseTarget) {
+            ids.push(item.id);
+        }
+    })
     return ids;
 };
 
@@ -84,6 +88,7 @@ const runMergeEdge = (
         mergeEdgeId: newMergeEdgeId,
         label: newMergeEdgeId?.length,
         targetNodeType,
+        type: 'line',
         style: {
             labelText: `${newMergeEdgeId.length}`,
             lineWidth: newMergeEdgeId.length,

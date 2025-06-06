@@ -195,9 +195,17 @@ export const GraphView = React.memo(
               iconWidth: (d) => d.size,
               iconHeight: (d) => d.size,
               iconFontSize: (d) => d.iconFontSize,
+              cursor: 'default'
             },
           },
           edge: {
+            type: (edge) => {
+              if (mergeEdgeIdReg.test(edge?.id)) {
+                return 'line'
+              }
+              return edge?.type
+
+            },
             style: {
               labelText: (d) => {
                 if (mergeEdgeIdReg.test(d?.id)) {
@@ -218,6 +226,7 @@ export const GraphView = React.memo(
               endArrowSize: (d) => d?.endArrowSize || 10,
               labelFontSize: 10,
               haloStrokeOpacity: 0.11,
+              cursor: 'default'
             },
           },
           layout: {
@@ -321,7 +330,7 @@ export const GraphView = React.memo(
                 const root = createRoot(mountNode);
                 const selectedNodes = graphRef.current?.getElementDataByState('node', 'selected');
                 const selectedEdges = graphRef.current?.getElementDataByState('edge', 'selected');
-                if (selectedNodes?.length > 1 && selectedEdges?.length === 0) {
+                if (selectedNodes?.length > 1 && event.targetType === "node") {
                   //merge node
 
                   const onClick = () => {
@@ -408,10 +417,10 @@ export const GraphView = React.memo(
                   );
 
 
-                } else if (selectedNodes?.length === 0 && selectedEdges?.length > 1) {
+                } else if (selectedEdges?.length > 1 && event.targetType === "edge") {
                   // merge edge
 
-                  const mergeEdgeIds = checkConsistency(selectedEdges)
+                  const mergeEdgeIds = checkConsistency(selectedEdges, id)
                   if (mergeEdgeIds.length > 1) {
                     const onClick = () => {
                       const edge = graphRef.current?.getEdgeData(mergeEdgeIds[0]);
