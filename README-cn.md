@@ -70,7 +70,7 @@
 
 ## 联系我们
 
-![](docs/img/contacts-cn.png)
+![](https://github.com/TuGraph-family/community/blob/master/assets/contacts-cn.png)
 
 
 
