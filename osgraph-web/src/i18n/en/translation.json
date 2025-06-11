@@ -58,7 +58,9 @@
     "extension_edge": "Click here to install Chrome extension",
     "extension_chrome": "Click here to install Edge extension",
     "visit": "Visit",
-    "detail": "for more details."
+    "detail": "for more details.",
+    "mergeNode": "Merge Node",
+    "mergeEdge": "Merge Edge"
   },
   "template": {
     "REPO_CONTRIBUTE": "Project Contribution",

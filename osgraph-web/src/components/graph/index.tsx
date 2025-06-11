@@ -9,7 +9,7 @@ import {
   register,
 } from "@antv/g6";
 import { Spin } from "antd";
-import { isEmpty, isEqual, isFunction } from "lodash";
+import { cloneDeep, isEmpty, isEqual, isFunction } from "lodash";
 import React, {
   useRef,
   useMemo,
@@ -209,7 +209,7 @@ export const GraphView = React.memo(
             style: {
               labelText: (d) => {
                 if (mergeEdgeIdReg.test(d?.id)) {
-                  return d?.style?.labelText
+                  return `${t('graph.mergeEdge')}:${d?.style?.labelText}`
                 }
                 return `${d?.name}${d?.edgeType !== 'Belong' ? "：" + (d?.properties?.count || 0) + " " : ""
                   }`;
@@ -252,7 +252,6 @@ export const GraphView = React.memo(
                 );
               },
             },
-
             {
               type: "click-select",
               enable: (e) => {
@@ -278,6 +277,7 @@ export const GraphView = React.memo(
             // 组合类型
             style: {
               collapsed: true,
+              labelText: () => t('graph.mergeNode'),
             },
           },
           autoResize: true,
@@ -325,15 +325,13 @@ export const GraphView = React.memo(
                   g6ContextMenuDom.style.overflow = "visible";
                 }
 
-
                 const mountNode = document.createElement("div");
                 const root = createRoot(mountNode);
                 const selectedNodes = graphRef.current?.getElementDataByState('node', 'selected');
                 const selectedEdges = graphRef.current?.getElementDataByState('edge', 'selected');
-                if (selectedNodes?.length > 1 && event.targetType === "node") {
+                if (selectedNodes?.length > 1 || selectedEdges?.length > 1 || event.targetType === "combo" || id.startsWith('merge-edge')) {
                   //merge node
-
-                  const onClick = () => {
+                  const onMergeNode = () => {
                     const comboId = `combo-${moment().valueOf()}`;
                     graphRef.current?.addComboData([{ id: comboId }]);
                     const adjacentEdge: Record<string, any>[] = [];
@@ -353,6 +351,7 @@ export const GraphView = React.memo(
                               ...item.style,
                               visibility: 'hidden'
                             },
+                            states: [],
                           };
                         } else {
                           if (selectedNodeId.includes(source)) {
@@ -365,7 +364,10 @@ export const GraphView = React.memo(
                             item.originTarget = target;
                             adjacentEdge.push(item);
                           }
-                          return item;
+                          return {
+                            ...item,
+                            states: [],
+                          }
                         }
                       })
 
@@ -410,34 +412,142 @@ export const GraphView = React.memo(
                     graphRef.current?.draw();
                   };
 
+                  // merge edge
+                  const mergeEdgeGroup = groupBySourceAndTarget(selectedEdges)?.filter(item => item.length > 1);
+
+                  // const mergeEdgeIds = checkConsistency(selectedEdges, id)
+                  const onMergeEdge = () => {
+                    // const edge = graphRef.current?.getEdgeData();
+
+                    let newEdges = cloneDeep(graphRef.current?.getEdgeData() || [])
+
+                    mergeEdgeGroup?.forEach((edgeList, idx) => {
+                      const edgeIds = edgeList?.map((item) => item.id);
+                      newEdges = runMergeEdge(edgeIds, edgeList[0]?.source, edgeList[0]?.target, idx, [...newEdges]);
+                    });
+
+                    graphRef.current.setData((prev) => ({
+                      ...prev,
+                      edges: newEdges
+                    }))
+                    graphRef.current?.draw();
+                  };
+
+                  // expand edge
+                  let mergeEdgeId = []
+                  const expandEdgeIds = selectedEdges?.filter(item => item.id?.startsWith('merge-edge')).map(item => {
+                    mergeEdgeId.push(...item.mergeEdgeId)
+                    return item.id
+                  }) || []
+                  if (id.startsWith('merge-edge') && !expandEdgeIds?.includes(id)) {
+                    mergeEdgeId.push(...(graphRef.current?.getEdgeData(id)?.mergeEdgeId || []))
+                    expandEdgeIds.push(id)
+                  }
+
+                  mergeEdgeId = [...new Set(mergeEdgeId)]
+
+                  const onExpandEdge = () => {
+                    if (graphRef.current) {
+                      graphRef.current?.setData((prev) => ({
+                        ...prev,
+                        edges: prev.edges.map((item) => {
+                          if (mergeEdgeId.includes(item?.id)) {
+                            return {
+                              ...item,
+                              style: {
+                                ...item.style,
+                                visibility: 'visible'
+                              },
+                            };
+                          } else {
+                            return item;
+                          }
+                        }),
+                      }));
+                      graphRef.current?.removeEdgeData(expandEdgeIds);
+                      graphRef.current?.draw();
+                    }
+                  };
+
+
+                  //  expand combo node
+                  const comboId = event.target.id;
+                  const onExpandNode = () => {
+                    graphRef.current?.setData((prev) => {
+                      return {
+                        ...prev,
+                        nodes: prev.nodes?.map((item) => {
+                          if (item.combo === comboId) {
+                            delete item.combo;
+                            return {
+                              ...item,
+                              style: {
+                                ...item.style,
+                                visibility: 'visible'
+                              },
+                            };
+                          } else {
+                            return item;
+                          }
+                        }),
+                        edges: prev.edges
+                          ?.filter((edgeItem) => {
+                            return !(
+                              mergeEdgeIdReg.test(edgeItem?.id) &&
+                              [edgeItem?.combo, edgeItem?.source, edgeItem?.target].includes(
+                                comboId,
+                              )
+                            );
+                          })
+                          .map((item) => {
+                            if (item?.combo === comboId) {
+                              delete item?.combo;
+                              return {
+                                ...item,
+                                style: {
+                                  ...item?.style,
+                                  visibility: 'visible'
+                                },
+                              };
+                            } else if ([item?.source, item?.target].includes(comboId)) {
+                              if (item?.originSource) {
+                                item.source = item.originSource;
+                                item.style.sourceNode = item.originSource;
+                                delete item.originSource;
+                              }
+                              if (item?.originTarget) {
+                                item.target = item.originTarget;
+                                item.style.targetNode = item.originTarget;
+                                delete item.originTarget;
+                              }
+                              return {
+                                ...item,
+                                style: {
+                                  ...item?.style,
+                                  visibility: 'visible'
+                                },
+                              };
+                            }
+                            return item
+                          }),
+                        combos: prev.combos?.filter((item) => item?.id !== comboId),
+                      };
+                    });
+
+                    graphRef.current?.draw();
+                  };
+
+
                   root.render(
                     <ul className="g6-contextmenu-ul">
-                      <li className="g6-contextmenu-li" onClick={onClick}>合并节点</li>
+                      {selectedNodes?.length > 1 && <li className="g6-contextmenu-li" onClick={onMergeNode}>合并节点</li>}
+                      {mergeEdgeGroup.length > 0 && <li className="g6-contextmenu-li" onClick={onMergeEdge}>合并边</li>}
+                      {expandEdgeIds.length > 0 && <li className="g6-contextmenu-li" onClick={onExpandEdge}>展开边</li>}
+                      {event.targetType === "combo" && <li className="g6-contextmenu-li" onClick={onExpandNode}>展开节点</li>}
                     </ul>
                   );
 
 
-                } else if (selectedEdges?.length > 1 && event.targetType === "edge") {
-                  // merge edge
-
-                  const mergeEdgeIds = checkConsistency(selectedEdges, id)
-                  if (mergeEdgeIds.length > 1) {
-                    const onClick = () => {
-                      const edge = graphRef.current?.getEdgeData(mergeEdgeIds[0]);
-                      graphRef.current?.setData((prev) => ({
-                        ...prev,
-                        edges: runMergeEdge(mergeEdgeIds, edge?.source, edge?.target, 0, prev.edges)
-                      }))
-                      graphRef.current?.draw();
-                    };
-
-
-                    root.render(
-                      <ul className="g6-contextmenu-ul">
-                        <li className="g6-contextmenu-li" onClick={onClick}>合并边</li>
-                      </ul>
-                    );
-                  }
                 } else if (event.targetType === "node") {
                   const data = graphRef.current?.getNodeData(id);
                   const { properties } = data;
@@ -551,111 +661,8 @@ export const GraphView = React.memo(
                     </ul>
                   );
 
-                } else if (event.targetType === "edge" && id.startsWith('merge-edge')) {
-                  const data = graphRef.current?.getEdgeData(id);
-
-                  const onClick = () => {
-                    if (graphRef.current) {
-                      graphRef.current?.setData((prev) => ({
-                        ...prev,
-                        edges: prev.edges.map((item) => {
-                          if (data?.mergeEdgeId.includes(item?.id)) {
-                            return {
-                              ...item,
-                              style: {
-                                ...item.style,
-                                visibility: 'visible'
-                              },
-                            };
-                          } else {
-                            return item;
-                          }
-                        }),
-                      }));
-                      graphRef.current?.removeEdgeData([id]);
-                      graphRef.current?.draw();
-                    }
-                  };
-                  root.render(
-                    <ul className="g6-contextmenu-ul">
-                      <li className="g6-contextmenu-li" onClick={onClick}>展开边</li>
-                    </ul>
-                  );
-
-                } else if (event.targetType === "combo") {
-
-                  const comboId = event.target.id;
-                  const onClick = () => {
-                    graphRef.current?.setData((prev) => {
-                      data = {
-                        ...prev,
-                        nodes: prev.nodes?.map((item) => {
-                          if (item.combo === comboId) {
-                            delete item.combo;
-                            return {
-                              ...item,
-                              style: {
-                                ...item.style,
-                                visibility: 'visible'
-                              },
-                            };
-                          } else {
-                            return item;
-                          }
-                        }),
-                        edges: prev.edges
-                          ?.filter((edgeItem) => {
-                            return !(
-                              mergeEdgeIdReg.test(edgeItem?.id) &&
-                              [edgeItem?.combo, edgeItem?.source, edgeItem?.target].includes(
-                                comboId,
-                              )
-                            );
-                          })
-                          .map((item) => {
-                            if (item?.combo === comboId) {
-                              delete item?.combo;
-                              return {
-                                ...item,
-                                style: {
-                                  ...item?.style,
-                                  visibility: 'visible'
-                                },
-                              };
-                            } else if ([item?.source, item?.target].includes(comboId)) {
-                              if (item?.originSource) {
-                                item.source = item.originSource;
-                                item.style.sourceNode = item.originSource;
-                                delete item.originSource;
-                              }
-                              if (item?.originTarget) {
-                                item.target = item.originTarget;
-                                item.style.targetNode = item.originTarget;
-                                delete item.originTarget;
-                              }
-                              return {
-                                ...item,
-                                style: {
-                                  ...item?.style,
-                                  visibility: 'visible'
-                                },
-                              };
-                            }
-                            return item
-                          }),
-                        combos: prev.combos?.filter((item) => item?.id !== comboId),
-                      };
-                      return data;
-                    });
-
-                    graphRef.current?.draw();
-                  };
-                  root.render(
-                    <ul className="g6-contextmenu-ul">
-                      <li className="g6-contextmenu-li" onClick={onClick}>展开节点</li>
-                    </ul>
-                  );
                 }
+
                 return mountNode;
               },
               enable: (e) => {
