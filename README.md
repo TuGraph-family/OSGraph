@@ -64,7 +64,7 @@ You can reference [Contributing](community/CONTRIBUTING.md) document and submit 
 
 ## Contacts
 
-![](docs/img/contacts-en.png)
+![](https://github.com/TuGraph-family/community/blob/master/assets/contacts.png)
 
 ## Acknowledgments
 
