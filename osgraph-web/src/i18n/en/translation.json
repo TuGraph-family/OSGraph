@@ -60,7 +60,9 @@
     "visit": "Visit",
     "detail": "for more details.",
     "mergeNode": "Merge Node",
-    "mergeEdge": "Merge Edge"
+    "mergeEdge": "Merge Edge",
+    "expandNode": "Expand Node",
+    "expandEdge": "Expand Edge"
   },
   "template": {
     "REPO_CONTRIBUTE": "Project Contribution",

@@ -540,10 +540,10 @@ export const GraphView = React.memo(
 
                   root.render(
                     <ul className="g6-contextmenu-ul">
-                      {selectedNodes?.length > 1 && <li className="g6-contextmenu-li" onClick={onMergeNode}>合并节点</li>}
-                      {mergeEdgeGroup.length > 0 && <li className="g6-contextmenu-li" onClick={onMergeEdge}>合并边</li>}
-                      {expandEdgeIds.length > 0 && <li className="g6-contextmenu-li" onClick={onExpandEdge}>展开边</li>}
-                      {event.targetType === "combo" && <li className="g6-contextmenu-li" onClick={onExpandNode}>展开节点</li>}
+                      {selectedNodes?.length > 1 && <li className="g6-contextmenu-li" onClick={onMergeNode}>{t('graph.mergeNode')}</li>}
+                      {mergeEdgeGroup.length > 0 && <li className="g6-contextmenu-li" onClick={onMergeEdge}>{t('graph.mergeEdge')}</li>}
+                      {expandEdgeIds.length > 0 && <li className="g6-contextmenu-li" onClick={onExpandEdge}>{t('graph.expandEdge')}</li>}
+                      {event.targetType === "combo" && <li className="g6-contextmenu-li" onClick={onExpandNode}>{t('graph.expandNode')}</li>}
                     </ul>
                   );
 

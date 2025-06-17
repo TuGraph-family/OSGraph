@@ -60,7 +60,9 @@
     "visit": "访问",
     "detail": "了解详情。",
     "mergeNode": "合并点",
-    "mergeEdge": "合并边"
+    "mergeEdge": "合并边",
+    "expandNode": "展开节点",
+    "expandEdge": "展开边"
   },
   "template": {
     "REPO_CONTRIBUTE": "项目贡献",
