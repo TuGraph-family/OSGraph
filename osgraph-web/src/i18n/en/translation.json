@@ -97,7 +97,7 @@
     "repo-limit": "Repo Limit"
   },
   "project-community": {
-    "company-limit": "Country Limit",
+    "company-limit": "Location Limit",
     "country-limit": "Org Limit",
     "user-limit": "Contrib Limit"
   },

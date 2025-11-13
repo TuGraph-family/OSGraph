@@ -99,7 +99,7 @@
     "repo-limit": "项目数量"
   },
   "project-community": {
-    "company-limit": "国家数量",
+    "company-limit": "所在地数量",
     "country-limit": "组织数量",
     "user-limit": "贡献者数量"
   },
