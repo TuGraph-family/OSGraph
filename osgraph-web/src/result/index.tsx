@@ -533,6 +533,9 @@ export default () => {
               }
             />
           </div>
+          <div className={styles["power-by-statement"]}>
+            {t("statement")}
+          </div>
         </div>
       </div>
 

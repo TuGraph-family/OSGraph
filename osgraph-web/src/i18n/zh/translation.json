@@ -112,5 +112,6 @@
   "os-interest": {
     "topic-limit": "标签数据",
     "repo-limit": "项目数量"
-  }
+  },
+  "statement": "数据来源于GitHub及X-lab。"
 }
