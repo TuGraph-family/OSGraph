@@ -262,6 +262,8 @@ const HomePage: React.FC = () => {
           </div>
         </div>
         <div className={styles["gov"]}>
+          <img src='https://mdn.alipayobjects.com/huamei_tu4rvn/afts/img/A*Ky0xT5cjEkAAAAAAQBAAAAgAep_eAQ/original' />
+          <a className={styles["gov-text"]} href="https://beian.mps.gov.cn/#/query/webSearch?code=11010802047078" rel="noreferrer" target="_blank">京公网安备11010802047078号</a>
           <div className={styles["gov-text"]} onClick={toGov}>
             ICP备案：京ICP备15032932号-51
           </div>
