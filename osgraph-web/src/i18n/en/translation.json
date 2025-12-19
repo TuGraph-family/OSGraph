@@ -110,5 +110,6 @@
   "os-interest": {
     "topic-limit": "Topic Limit",
     "repo-limit": "Repo Limit"
-  }
+  },
+  "statement": "Data is sourced from GitHub and X-lab."
 }
