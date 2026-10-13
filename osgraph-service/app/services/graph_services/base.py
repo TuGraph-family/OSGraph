@@ -133,8 +133,9 @@ class BaseService(ABC):
             if filter_key.type == "int":
                 try:
                     int_value = int(value)
-                    if int_value < 0:
-                        int_value = filter_key.default if not callable(filter_key.default) else filter_key.default()
+                    default_value = filter_key.default if not callable(filter_key.default) else filter_key.default()
+                    if int_value < 0 or int_value > 50:
+                        int_value = default_value
                     validated_filters[filter_key.key] = int_value
                 except ValueError:
                     raise InvalidUsage(
